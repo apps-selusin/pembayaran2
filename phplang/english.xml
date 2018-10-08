@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2018/10/8" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2018/10/9" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -586,6 +586,9 @@
     <menu id="5">
       <phrase id="menutext" value="Home" />
     </menu>
+    <menu id="27">
+      <phrase id="menutext" value="Pembayaran Rutin" />
+    </menu>
     <menu id="6">
       <phrase id="menutext" value="Setup" />
     </menu>
@@ -957,6 +960,72 @@
       </field>
       <field id="kelas_nama">
         <phrase id="fldcaption" value="kelas nama" />
+      </field>
+    </table>
+    <table id="v02_rutin">
+      <phrase id="tblcaption" value="Pembayaran Rutin" />
+      <field id="tahunajaran_id">
+        <phrase id="fldcaption" value="tahunajaran id" />
+      </field>
+      <field id="awal_bulan">
+        <phrase id="fldcaption" value="awal bulan" />
+      </field>
+      <field id="awal_tahun">
+        <phrase id="fldcaption" value="awal tahun" />
+      </field>
+      <field id="akhir_bulan">
+        <phrase id="fldcaption" value="akhir bulan" />
+      </field>
+      <field id="akhir_tahun">
+        <phrase id="fldcaption" value="akhir tahun" />
+      </field>
+      <field id="sekolah_id">
+        <phrase id="fldcaption" value="sekolah id" />
+      </field>
+      <field id="sekolah">
+        <phrase id="fldcaption" value="Sekolah" />
+      </field>
+      <field id="kelas_id">
+        <phrase id="fldcaption" value="kelas id" />
+      </field>
+      <field id="kelas">
+        <phrase id="fldcaption" value="Kelas" />
+      </field>
+      <field id="siswa_id">
+        <phrase id="fldcaption" value="siswa id" />
+      </field>
+      <field id="nomor_induk">
+        <phrase id="fldcaption" value="Nomor Induk" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+      <field id="rutin_id">
+        <phrase id="fldcaption" value="rutin id" />
+      </field>
+      <field id="pembayaran_rutin">
+        <phrase id="fldcaption" value="Pembayaran Rutin" />
+      </field>
+      <field id="nilai">
+        <phrase id="fldcaption" value="nilai" />
+      </field>
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="siswarutin_id">
+        <phrase id="fldcaption" value="siswarutin id" />
+      </field>
+      <field id="bulan">
+        <phrase id="fldcaption" value="Bulan" />
+      </field>
+      <field id="tahun">
+        <phrase id="fldcaption" value="Tahun" />
+      </field>
+      <field id="bayar_tgl">
+        <phrase id="fldcaption" value="Bayar Tgl" />
+      </field>
+      <field id="bayar_jumlah">
+        <phrase id="fldcaption" value="Bayar Jumlah" />
       </field>
     </table>
   </project>

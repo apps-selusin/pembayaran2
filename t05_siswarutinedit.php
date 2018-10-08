@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "t05_siswarutininfo.php" ?>
 <?php include_once "t03_siswainfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
+<?php include_once "t06_siswarutinbayargridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -307,6 +308,14 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
+
+			// Process auto fill for detail table 't06_siswarutinbayar'
+			if (@$_POST["grid"] == "ft06_siswarutinbayargrid") {
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid;
+				$GLOBALS["t06_siswarutinbayar_grid"]->Page_Init();
+				$this->Page_Terminate();
+				exit();
+			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -448,6 +457,9 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 		if (@$_POST["a_edit"] <> "") {
 			$this->CurrentAction = $_POST["a_edit"]; // Get action code
 			$this->LoadFormValues(); // Get form values
+
+			// Set up detail parameters
+			$this->SetUpDetailParms();
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
 		}
@@ -470,9 +482,15 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 				} else {
 					$this->LoadRowValues($this->Recordset); // Load row values
 				}
+
+				// Set up detail parameters
+				$this->SetUpDetailParms();
 				break;
 			Case "U": // Update
-				$sReturnUrl = $this->getReturnUrl();
+				if ($this->getCurrentDetailTable() <> "") // Master/detail edit
+					$sReturnUrl = $this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=" . $this->getCurrentDetailTable()); // Master/Detail view page
+				else
+					$sReturnUrl = $this->getReturnUrl();
 				if (ew_GetPageName($sReturnUrl) == "t05_siswarutinlist.php")
 					$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to list page with correct master key if necessary
 				$this->SendEmail = TRUE; // Send email on update success
@@ -485,6 +503,9 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->RestoreFormValues(); // Restore form values if update failed
+
+					// Set up detail parameters
+					$this->SetUpDetailParms();
 				}
 		}
 
@@ -777,6 +798,13 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 			ew_AddMessage($gsFormError, $this->Nilai->FldErrMsg());
 		}
 
+		// Validate detail grid
+		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
+		if (in_array("t06_siswarutinbayar", $DetailTblVar) && $GLOBALS["t06_siswarutinbayar"]->DetailEdit) {
+			if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid(); // get detail page object
+			$GLOBALS["t06_siswarutinbayar_grid"]->ValidateGridForm();
+		}
+
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
 
@@ -806,6 +834,10 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 			$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
 			$EditRow = FALSE; // Update Failed
 		} else {
+
+			// Begin transaction
+			if ($this->getCurrentDetailTable() <> "")
+				$conn->BeginTrans();
 
 			// Save old values
 			$rsold = &$rs->fields;
@@ -850,6 +882,26 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 					$EditRow = TRUE; // No field to update
 				$conn->raiseErrorFn = '';
 				if ($EditRow) {
+				}
+
+				// Update detail records
+				$DetailTblVar = explode(",", $this->getCurrentDetailTable());
+				if ($EditRow) {
+					if (in_array("t06_siswarutinbayar", $DetailTblVar) && $GLOBALS["t06_siswarutinbayar"]->DetailEdit) {
+						if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid(); // Get detail page object
+						$Security->LoadCurrentUserLevel($this->ProjectID . "t06_siswarutinbayar"); // Load user level of detail table
+						$EditRow = $GLOBALS["t06_siswarutinbayar_grid"]->GridUpdate();
+						$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+					}
+				}
+
+				// Commit/Rollback transaction
+				if ($this->getCurrentDetailTable() <> "") {
+					if ($EditRow) {
+						$conn->CommitTrans(); // Commit transaction
+					} else {
+						$conn->RollbackTrans(); // Rollback transaction
+					}
 				}
 			} else {
 				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
@@ -931,6 +983,36 @@ class ct05_siswarutin_edit extends ct05_siswarutin {
 		}
 		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
 		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
+	}
+
+	// Set up detail parms based on QueryString
+	function SetUpDetailParms() {
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
+			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
+			$this->setCurrentDetailTable($sDetailTblVar);
+		} else {
+			$sDetailTblVar = $this->getCurrentDetailTable();
+		}
+		if ($sDetailTblVar <> "") {
+			$DetailTblVar = explode(",", $sDetailTblVar);
+			if (in_array("t06_siswarutinbayar", $DetailTblVar)) {
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"]))
+					$GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid;
+				if ($GLOBALS["t06_siswarutinbayar_grid"]->DetailEdit) {
+					$GLOBALS["t06_siswarutinbayar_grid"]->CurrentMode = "edit";
+					$GLOBALS["t06_siswarutinbayar_grid"]->CurrentAction = "gridedit";
+
+					// Save current master table to detail table
+					$GLOBALS["t06_siswarutinbayar_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t06_siswarutinbayar_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue = $this->id->CurrentValue;
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->setSessionValue($GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue);
+				}
+			}
+		}
 	}
 
 	// Set up Breadcrumb
@@ -1226,6 +1308,14 @@ $t05_siswarutin_edit->ShowMessage();
 <?php } ?>
 </div>
 <input type="hidden" data-table="t05_siswarutin" data-field="x_id" name="x_id" id="x_id" value="<?php echo ew_HtmlEncode($t05_siswarutin->id->CurrentValue) ?>">
+<?php
+	if (in_array("t06_siswarutinbayar", explode(",", $t05_siswarutin->getCurrentDetailTable())) && $t06_siswarutinbayar->DetailEdit) {
+?>
+<?php if ($t05_siswarutin->getCurrentDetailTable() <> "") { ?>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t06_siswarutinbayar", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "t06_siswarutinbayargrid.php" ?>
+<?php } ?>
 <?php if (!$t05_siswarutin_edit->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">

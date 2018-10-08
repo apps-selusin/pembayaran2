@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "t05_siswarutininfo.php" ?>
 <?php include_once "t03_siswainfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
+<?php include_once "t06_siswarutinbayargridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -308,6 +309,14 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
+
+			// Process auto fill for detail table 't06_siswarutinbayar'
+			if (@$_POST["grid"] == "ft06_siswarutinbayargrid") {
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid;
+				$GLOBALS["t06_siswarutinbayar_grid"]->Page_Init();
+				$this->Page_Terminate();
+				exit();
+			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -424,6 +433,9 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
 
+		// Set up detail parameters
+		$this->SetUpDetailParms();
+
 		// Validate form if post back
 		if (@$_POST["a_add"] <> "") {
 			if (!$this->ValidateForm()) {
@@ -446,13 +458,19 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
 					$this->Page_Terminate("t05_siswarutinlist.php"); // No matching record, return to list
 				}
+
+				// Set up detail parameters
+				$this->SetUpDetailParms();
 				break;
 			case "A": // Add new record
 				$this->SendEmail = TRUE; // Send email on add success
 				if ($this->AddRow($this->OldRecordset)) { // Add successful
 					if ($this->getSuccessMessage() == "")
 						$this->setSuccessMessage($Language->Phrase("AddSuccess")); // Set up success message
-					$sReturnUrl = $this->getReturnUrl();
+					if ($this->getCurrentDetailTable() <> "") // Master/detail add
+						$sReturnUrl = $this->GetDetailUrl();
+					else
+						$sReturnUrl = $this->getReturnUrl();
 					if (ew_GetPageName($sReturnUrl) == "t05_siswarutinlist.php")
 						$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to list page with correct master key if necessary
 					elseif (ew_GetPageName($sReturnUrl) == "t05_siswarutinview.php")
@@ -461,6 +479,9 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->RestoreFormValues(); // Add failed, restore form values
+
+					// Set up detail parameters
+					$this->SetUpDetailParms();
 				}
 		}
 
@@ -750,6 +771,13 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 			ew_AddMessage($gsFormError, $this->Nilai->FldErrMsg());
 		}
 
+		// Validate detail grid
+		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
+		if (in_array("t06_siswarutinbayar", $DetailTblVar) && $GLOBALS["t06_siswarutinbayar"]->DetailAdd) {
+			if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid(); // get detail page object
+			$GLOBALS["t06_siswarutinbayar_grid"]->ValidateGridForm();
+		}
+
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
 
@@ -787,6 +815,10 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 		}
 		$conn = &$this->Connection();
 
+		// Begin transaction
+		if ($this->getCurrentDetailTable() <> "")
+			$conn->BeginTrans();
+
 		// Load db values from rsold
 		if ($rsold) {
 			$this->LoadDbValues($rsold);
@@ -822,6 +854,29 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 				$this->setFailureMessage($Language->Phrase("InsertCancelled"));
 			}
 			$AddRow = FALSE;
+		}
+
+		// Add detail records
+		if ($AddRow) {
+			$DetailTblVar = explode(",", $this->getCurrentDetailTable());
+			if (in_array("t06_siswarutinbayar", $DetailTblVar) && $GLOBALS["t06_siswarutinbayar"]->DetailAdd) {
+				$GLOBALS["t06_siswarutinbayar"]->siswarutin_id->setSessionValue($this->id->CurrentValue); // Set master key
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid(); // Get detail page object
+				$Security->LoadCurrentUserLevel($this->ProjectID . "t06_siswarutinbayar"); // Load user level of detail table
+				$AddRow = $GLOBALS["t06_siswarutinbayar_grid"]->GridInsert();
+				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+				if (!$AddRow)
+					$GLOBALS["t06_siswarutinbayar"]->siswarutin_id->setSessionValue(""); // Clear master key if insert failed
+			}
+		}
+
+		// Commit/Rollback transaction
+		if ($this->getCurrentDetailTable() <> "") {
+			if ($AddRow) {
+				$conn->CommitTrans(); // Commit transaction
+			} else {
+				$conn->RollbackTrans(); // Rollback transaction
+			}
 		}
 		if ($AddRow) {
 
@@ -890,6 +945,39 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 		}
 		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
 		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
+	}
+
+	// Set up detail parms based on QueryString
+	function SetUpDetailParms() {
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
+			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
+			$this->setCurrentDetailTable($sDetailTblVar);
+		} else {
+			$sDetailTblVar = $this->getCurrentDetailTable();
+		}
+		if ($sDetailTblVar <> "") {
+			$DetailTblVar = explode(",", $sDetailTblVar);
+			if (in_array("t06_siswarutinbayar", $DetailTblVar)) {
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"]))
+					$GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid;
+				if ($GLOBALS["t06_siswarutinbayar_grid"]->DetailAdd) {
+					if ($this->CopyRecord)
+						$GLOBALS["t06_siswarutinbayar_grid"]->CurrentMode = "copy";
+					else
+						$GLOBALS["t06_siswarutinbayar_grid"]->CurrentMode = "add";
+					$GLOBALS["t06_siswarutinbayar_grid"]->CurrentAction = "gridadd";
+
+					// Save current master table to detail table
+					$GLOBALS["t06_siswarutinbayar_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t06_siswarutinbayar_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue = $this->id->CurrentValue;
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->setSessionValue($GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue);
+				}
+			}
+		}
 	}
 
 	// Set up Breadcrumb
@@ -1163,6 +1251,14 @@ $t05_siswarutin_add->ShowMessage();
 	</div>
 <?php } ?>
 </div>
+<?php
+	if (in_array("t06_siswarutinbayar", explode(",", $t05_siswarutin->getCurrentDetailTable())) && $t06_siswarutinbayar->DetailAdd) {
+?>
+<?php if ($t05_siswarutin->getCurrentDetailTable() <> "") { ?>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t06_siswarutinbayar", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "t06_siswarutinbayargrid.php" ?>
+<?php } ?>
 <?php if (!$t05_siswarutin_add->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">

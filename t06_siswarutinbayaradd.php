@@ -6,6 +6,7 @@ ob_start(); // Turn on output buffering
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
 <?php include_once "t06_siswarutinbayarinfo.php" ?>
+<?php include_once "t05_siswarutininfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
@@ -232,6 +233,9 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 			$GLOBALS["Table"] = &$GLOBALS["t06_siswarutinbayar"];
 		}
 
+		// Table object (t05_siswarutin)
+		if (!isset($GLOBALS['t05_siswarutin'])) $GLOBALS['t05_siswarutin'] = new ct05_siswarutin();
+
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
 
@@ -392,6 +396,9 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 		$this->IsModal = (@$_GET["modal"] == "1" || @$_POST["modal"] == "1");
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
+
+		// Set up master/detail parameters
+		$this->SetUpMasterParms();
 
 		// Process form if post back
 		if (@$_POST["a_add"] <> "") {
@@ -671,8 +678,14 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 			// siswarutin_id
 			$this->siswarutin_id->EditAttrs["class"] = "form-control";
 			$this->siswarutin_id->EditCustomAttributes = "";
+			if ($this->siswarutin_id->getSessionValue() <> "") {
+				$this->siswarutin_id->CurrentValue = $this->siswarutin_id->getSessionValue();
+			$this->siswarutin_id->ViewValue = $this->siswarutin_id->CurrentValue;
+			$this->siswarutin_id->ViewCustomAttributes = "";
+			} else {
 			$this->siswarutin_id->EditValue = ew_HtmlEncode($this->siswarutin_id->CurrentValue);
 			$this->siswarutin_id->PlaceHolder = ew_RemoveHtml($this->siswarutin_id->FldCaption());
+			}
 
 			// Bulan
 			$this->Bulan->EditAttrs["class"] = "form-control";
@@ -782,6 +795,26 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 	// Add record
 	function AddRow($rsold = NULL) {
 		global $Language, $Security;
+
+		// Check referential integrity for master table 't05_siswarutin'
+		$bValidMasterRecord = TRUE;
+		$sMasterFilter = $this->SqlMasterFilter_t05_siswarutin();
+		if (strval($this->siswarutin_id->CurrentValue) <> "") {
+			$sMasterFilter = str_replace("@id@", ew_AdjustSql($this->siswarutin_id->CurrentValue, "DB"), $sMasterFilter);
+		} else {
+			$bValidMasterRecord = FALSE;
+		}
+		if ($bValidMasterRecord) {
+			if (!isset($GLOBALS["t05_siswarutin"])) $GLOBALS["t05_siswarutin"] = new ct05_siswarutin();
+			$rsmaster = $GLOBALS["t05_siswarutin"]->LoadRs($sMasterFilter);
+			$bValidMasterRecord = ($rsmaster && !$rsmaster->EOF);
+			$rsmaster->Close();
+		}
+		if (!$bValidMasterRecord) {
+			$sRelatedRecordMsg = str_replace("%t", "t05_siswarutin", $Language->Phrase("RelatedRecordRequired"));
+			$this->setFailureMessage($sRelatedRecordMsg);
+			return FALSE;
+		}
 		$conn = &$this->Connection();
 
 		// Load db values from rsold
@@ -833,6 +866,66 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 			$this->Row_Inserted($rs, $rsnew);
 		}
 		return $AddRow;
+	}
+
+	// Set up master/detail based on QueryString
+	function SetUpMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
+					$this->siswarutin_id->setQueryStringValue($GLOBALS["t05_siswarutin"]->id->QueryStringValue);
+					$this->siswarutin_id->setSessionValue($this->siswarutin_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setFormValue($_POST["fk_id"]);
+					$this->siswarutin_id->setFormValue($GLOBALS["t05_siswarutin"]->id->FormValue);
+					$this->siswarutin_id->setSessionValue($this->siswarutin_id->FormValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+
+			// Reset start record counter (new master key)
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "t05_siswarutin") {
+				if ($this->siswarutin_id->CurrentValue == "") $this->siswarutin_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -1053,14 +1146,26 @@ $t06_siswarutinbayar_add->ShowMessage();
 <?php if ($t06_siswarutinbayar_add->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
+<?php if ($t06_siswarutinbayar->getCurrentMasterTable() == "t05_siswarutin") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t05_siswarutin">
+<input type="hidden" name="fk_id" value="<?php echo $t06_siswarutinbayar->siswarutin_id->getSessionValue() ?>">
+<?php } ?>
 <div>
 <?php if ($t06_siswarutinbayar->siswarutin_id->Visible) { // siswarutin_id ?>
 	<div id="r_siswarutin_id" class="form-group">
 		<label id="elh_t06_siswarutinbayar_siswarutin_id" for="x_siswarutin_id" class="col-sm-2 control-label ewLabel"><?php echo $t06_siswarutinbayar->siswarutin_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
 		<div class="col-sm-10"><div<?php echo $t06_siswarutinbayar->siswarutin_id->CellAttributes() ?>>
+<?php if ($t06_siswarutinbayar->siswarutin_id->getSessionValue() <> "") { ?>
+<span id="el_t06_siswarutinbayar_siswarutin_id">
+<span<?php echo $t06_siswarutinbayar->siswarutin_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->siswarutin_id->ViewValue ?></p></span>
+</span>
+<input type="hidden" id="x_siswarutin_id" name="x_siswarutin_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->siswarutin_id->CurrentValue) ?>">
+<?php } else { ?>
 <span id="el_t06_siswarutinbayar_siswarutin_id">
 <input type="text" data-table="t06_siswarutinbayar" data-field="x_siswarutin_id" name="x_siswarutin_id" id="x_siswarutin_id" size="30" placeholder="<?php echo ew_HtmlEncode($t06_siswarutinbayar->siswarutin_id->getPlaceHolder()) ?>" value="<?php echo $t06_siswarutinbayar->siswarutin_id->EditValue ?>"<?php echo $t06_siswarutinbayar->siswarutin_id->EditAttributes() ?>>
 </span>
+<?php } ?>
 <?php echo $t06_siswarutinbayar->siswarutin_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
