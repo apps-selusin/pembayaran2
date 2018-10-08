@@ -274,6 +274,8 @@ class cdefault {
 			$this->Page_Terminate("t01_sekolahlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't02_kelas'))
 			$this->Page_Terminate("t02_kelaslist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't03_siswa'))
+			$this->Page_Terminate("t03_siswalist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't96_employees'))
 			$this->Page_Terminate("t96_employeeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't97_userlevels'))

@@ -593,10 +593,13 @@
       <phrase id="menutext" value="Tahun Ajaran" />
     </menu>
     <menu id="8">
-      <phrase id="menutext" value="Sekolah" />
+      <phrase id="menutext" value="Sekolah &amp; Kelas" />
     </menu>
     <menu id="9">
       <phrase id="menutext" value="Kelas" />
+    </menu>
+    <menu id="10">
+      <phrase id="menutext" value="Siswa" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="User" />
@@ -680,7 +683,7 @@
       </field>
     </table>
     <table id="t01_sekolah">
-      <phrase id="tblcaption" value="Sekolah" />
+      <phrase id="tblcaption" value="Sekolah &amp; Kelas" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -701,6 +704,24 @@
       </field>
       <field id="sekolah_id">
         <phrase id="fldcaption" value="Sekolah" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
+      </field>
+    </table>
+    <table id="t03_siswa">
+      <phrase id="tblcaption" value="Siswa" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="tahunajaran_id">
+        <phrase id="fldcaption" value="Tahun Ajaran" />
+      </field>
+      <field id="kelas_id">
+        <phrase id="fldcaption" value="Sekolah &amp; Kelas" />
+      </field>
+      <field id="nomor_induk">
+        <phrase id="fldcaption" value="Nomor Induk" />
       </field>
       <field id="nama">
         <phrase id="fldcaption" value="Nama" />

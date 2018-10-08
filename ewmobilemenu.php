@@ -7,6 +7,7 @@ $RootMenu->AddMenuItem(5, "mmi_cf01_home_php", $Language->MenuPhrase("5", "MenuT
 $RootMenu->AddMenuItem(6, "mmci_Setup", $Language->MenuPhrase("6", "MenuText"), "", -1, "", TRUE, FALSE, TRUE);
 $RootMenu->AddMenuItem(7, "mmi_t00_tahunajaran", $Language->MenuPhrase("7", "MenuText"), "t00_tahunajaranlist.php", 6, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}t00_tahunajaran'), FALSE, FALSE);
 $RootMenu->AddMenuItem(8, "mmi_t01_sekolah", $Language->MenuPhrase("8", "MenuText"), "t01_sekolahlist.php", 6, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}t01_sekolah'), FALSE, FALSE);
+$RootMenu->AddMenuItem(10, "mmi_t03_siswa", $Language->MenuPhrase("10", "MenuText"), "t03_siswalist.php", 6, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}t03_siswa'), FALSE, FALSE);
 $RootMenu->AddMenuItem(1, "mmi_t96_employees", $Language->MenuPhrase("1", "MenuText"), "t96_employeeslist.php", 6, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}t96_employees'), FALSE, FALSE);
 $RootMenu->AddMenuItem(2, "mmi_t97_userlevels", $Language->MenuPhrase("2", "MenuText"), "t97_userlevelslist.php", 6, "", (@$_SESSION[EW_SESSION_USER_LEVEL] & EW_ALLOW_ADMIN) == EW_ALLOW_ADMIN, FALSE, FALSE);
 $RootMenu->AddMenuItem(-2, "mmi_changepwd", $Language->Phrase("ChangePwd"), "changepwd.php", -1, "", IsLoggedIn() && !IsSysAdmin());

@@ -467,6 +467,7 @@ class ct98_userlevelpermissions_view extends ct98_userlevelpermissions {
 	var $StopRec;
 	var $TotalRecs = 0;
 	var $RecRange = 10;
+	var $Pager;
 	var $RecCnt;
 	var $RecKey = array();
 	var $IsModal = FALSE;
@@ -496,7 +497,7 @@ class ct98_userlevelpermissions_view extends ct98_userlevelpermissions {
 				$this->userlevelid->setFormValue($_POST["userlevelid"]);
 				$this->RecKey["userlevelid"] = $this->userlevelid->FormValue;
 			} else {
-				$sReturnUrl = "t98_userlevelpermissionslist.php"; // Return to list
+				$bLoadCurrentRecord = TRUE;
 			}
 			if (@$_GET["_tablename"] <> "") {
 				$this->_tablename->setQueryStringValue($_GET["_tablename"]);
@@ -505,17 +506,46 @@ class ct98_userlevelpermissions_view extends ct98_userlevelpermissions {
 				$this->_tablename->setFormValue($_POST["_tablename"]);
 				$this->RecKey["_tablename"] = $this->_tablename->FormValue;
 			} else {
-				$sReturnUrl = "t98_userlevelpermissionslist.php"; // Return to list
+				$bLoadCurrentRecord = TRUE;
 			}
 
 			// Get action
 			$this->CurrentAction = "I"; // Display form
 			switch ($this->CurrentAction) {
 				case "I": // Get a record to display
-					if (!$this->LoadRow()) { // Load record based on key
+					$this->StartRec = 1; // Initialize start position
+					if ($this->Recordset = $this->LoadRecordset()) // Load records
+						$this->TotalRecs = $this->Recordset->RecordCount(); // Get record count
+					if ($this->TotalRecs <= 0) { // No record found
+						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
+							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+						$this->Page_Terminate("t98_userlevelpermissionslist.php"); // Return to list page
+					} elseif ($bLoadCurrentRecord) { // Load current record position
+						$this->SetUpStartRec(); // Set up start record position
+
+						// Point to current record
+						if (intval($this->StartRec) <= intval($this->TotalRecs)) {
+							$bMatchRecord = TRUE;
+							$this->Recordset->Move($this->StartRec-1);
+						}
+					} else { // Match key values
+						while (!$this->Recordset->EOF) {
+							if (strval($this->userlevelid->CurrentValue) == strval($this->Recordset->fields('userlevelid')) && strval($this->_tablename->CurrentValue) == strval($this->Recordset->fields('tablename'))) {
+								$this->setStartRecordNumber($this->StartRec); // Save record position
+								$bMatchRecord = TRUE;
+								break;
+							} else {
+								$this->StartRec++;
+								$this->Recordset->MoveNext();
+							}
+						}
+					}
+					if (!$bMatchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
 						$sReturnUrl = "t98_userlevelpermissionslist.php"; // No matching record, return to list
+					} else {
+						$this->LoadRowValues($this->Recordset); // Load row values
 					}
 			}
 
@@ -1188,6 +1218,53 @@ ft98_userlevelpermissionsview.ValidateRequired = false;
 <?php
 $t98_userlevelpermissions_view->ShowMessage();
 ?>
+<?php if (!$t98_userlevelpermissions_view->IsModal) { ?>
+<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
+<?php if (!isset($t98_userlevelpermissions_view->Pager)) $t98_userlevelpermissions_view->Pager = new cPrevNextPager($t98_userlevelpermissions_view->StartRec, $t98_userlevelpermissions_view->DisplayRecs, $t98_userlevelpermissions_view->TotalRecs) ?>
+<?php if ($t98_userlevelpermissions_view->Pager->RecordCount > 0 && $t98_userlevelpermissions_view->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t98_userlevelpermissions_view->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t98_userlevelpermissions_view->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
 <form name="ft98_userlevelpermissionsview" id="ft98_userlevelpermissionsview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
 <?php if ($t98_userlevelpermissions_view->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t98_userlevelpermissions_view->Token ?>">
@@ -1231,6 +1308,51 @@ $t98_userlevelpermissions_view->ShowMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php if (!$t98_userlevelpermissions_view->IsModal) { ?>
+<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<?php if (!isset($t98_userlevelpermissions_view->Pager)) $t98_userlevelpermissions_view->Pager = new cPrevNextPager($t98_userlevelpermissions_view->StartRec, $t98_userlevelpermissions_view->DisplayRecs, $t98_userlevelpermissions_view->TotalRecs) ?>
+<?php if ($t98_userlevelpermissions_view->Pager->RecordCount > 0 && $t98_userlevelpermissions_view->Pager->Visible) { ?>
+<div class="ewPager">
+<span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
+<div class="ewPrevNext"><div class="input-group">
+<div class="input-group-btn">
+<!--first page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
+	<?php } ?>
+<!--previous page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php } ?>
+</div>
+<!--current page number-->
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t98_userlevelpermissions_view->Pager->CurrentPage ?>">
+<div class="input-group-btn">
+<!--next page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
+	<?php } ?>
+<!--last page button-->
+	<?php if ($t98_userlevelpermissions_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t98_userlevelpermissions_view->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } else { ?>
+	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
+	<?php } ?>
+</div>
+</div>
+</div>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t98_userlevelpermissions_view->Pager->PageCount ?></span>
+</div>
+<?php } ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
 </form>
 <?php if ($t98_userlevelpermissions->Export == "") { ?>
 <script type="text/javascript">

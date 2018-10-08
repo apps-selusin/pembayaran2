@@ -141,6 +141,15 @@ $t02_kelas_grid->ShowMessage();
 <?php if ($t02_kelas_grid->TotalRecs > 0 || $t02_kelas->CurrentAction <> "") { ?>
 <div class="panel panel-default ewGrid t02_kelas">
 <div id="ft02_kelasgrid" class="ewForm form-inline">
+<?php if ($t02_kelas_grid->ShowOtherOptions) { ?>
+<div class="panel-heading ewGridUpperPanel">
+<?php
+	foreach ($t02_kelas_grid->OtherOptions as &$option)
+		$option->Render("body");
+?>
+</div>
+<div class="clearfix"></div>
+<?php } ?>
 <div id="gmp_t02_kelas" class="<?php if (ew_IsResponsiveLayout()) { echo "table-responsive "; } ?>ewGridMiddlePanel">
 <table id="tbl_t02_kelasgrid" class="table ewTable">
 <?php echo $t02_kelas->TableCustomInnerHtml ?>
