@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg13.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
-<?php include_once "t03_siswainfo.php" ?>
+<?php include_once "t04_rutininfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t03_siswa_delete = NULL; // Initialize page object first
+$t04_rutin_delete = NULL; // Initialize page object first
 
-class ct03_siswa_delete extends ct03_siswa {
+class ct04_rutin_delete extends ct04_rutin {
 
 	// Page ID
 	var $PageID = 'delete';
@@ -25,10 +25,10 @@ class ct03_siswa_delete extends ct03_siswa {
 	var $ProjectID = "{8F2DFBC1-53BE-44C3-91F5-73D45F821091}";
 
 	// Table name
-	var $TableName = 't03_siswa';
+	var $TableName = 't04_rutin';
 
 	// Page object name
-	var $PageObjName = 't03_siswa_delete';
+	var $PageObjName = 't04_rutin_delete';
 
 	// Page name
 	function PageName() {
@@ -226,10 +226,10 @@ class ct03_siswa_delete extends ct03_siswa {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t03_siswa)
-		if (!isset($GLOBALS["t03_siswa"]) || get_class($GLOBALS["t03_siswa"]) == "ct03_siswa") {
-			$GLOBALS["t03_siswa"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t03_siswa"];
+		// Table object (t04_rutin)
+		if (!isset($GLOBALS["t04_rutin"]) || get_class($GLOBALS["t04_rutin"]) == "ct04_rutin") {
+			$GLOBALS["t04_rutin"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t04_rutin"];
 		}
 
 		// Table object (t96_employees)
@@ -241,7 +241,7 @@ class ct03_siswa_delete extends ct03_siswa {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't03_siswa', TRUE);
+			define("EW_TABLE_NAME", 't04_rutin', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -272,7 +272,7 @@ class ct03_siswa_delete extends ct03_siswa {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t03_siswalist.php"));
+				$this->Page_Terminate(ew_GetUrl("t04_rutinlist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -282,11 +282,6 @@ class ct03_siswa_delete extends ct03_siswa {
 			$Security->UserID_Loaded();
 		}
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->id->SetVisibility();
-		$this->id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
-		$this->tahunajaran_id->SetVisibility();
-		$this->kelas_id->SetVisibility();
-		$this->Nomor_Induk->SetVisibility();
 		$this->Nama->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
@@ -319,13 +314,13 @@ class ct03_siswa_delete extends ct03_siswa {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t03_siswa;
+		global $EW_EXPORT, $t04_rutin;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t03_siswa);
+				$doc = new $class($t04_rutin);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -371,10 +366,10 @@ class ct03_siswa_delete extends ct03_siswa {
 		$this->RecKeys = $this->GetRecordKeys(); // Load record keys
 		$sFilter = $this->GetKeyFilter();
 		if ($sFilter == "")
-			$this->Page_Terminate("t03_siswalist.php"); // Prevent SQL injection, return to list
+			$this->Page_Terminate("t04_rutinlist.php"); // Prevent SQL injection, return to list
 
 		// Set up filter (SQL WHHERE clause) and get return SQL
-		// SQL constructor in t03_siswa class, t03_siswainfo.php
+		// SQL constructor in t04_rutin class, t04_rutininfo.php
 
 		$this->CurrentFilter = $sFilter;
 
@@ -402,7 +397,7 @@ class ct03_siswa_delete extends ct03_siswa {
 			if ($this->TotalRecs <= 0) { // No record found, exit
 				if ($this->Recordset)
 					$this->Recordset->Close();
-				$this->Page_Terminate("t03_siswalist.php"); // Return to list
+				$this->Page_Terminate("t04_rutinlist.php"); // Return to list
 			}
 		}
 	}
@@ -463,9 +458,6 @@ class ct03_siswa_delete extends ct03_siswa {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->id->setDbValue($rs->fields('id'));
-		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
-		$this->kelas_id->setDbValue($rs->fields('kelas_id'));
-		$this->Nomor_Induk->setDbValue($rs->fields('Nomor_Induk'));
 		$this->Nama->setDbValue($rs->fields('Nama'));
 	}
 
@@ -474,9 +466,6 @@ class ct03_siswa_delete extends ct03_siswa {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->tahunajaran_id->DbValue = $row['tahunajaran_id'];
-		$this->kelas_id->DbValue = $row['kelas_id'];
-		$this->Nomor_Induk->DbValue = $row['Nomor_Induk'];
 		$this->Nama->DbValue = $row['Nama'];
 	}
 
@@ -491,9 +480,6 @@ class ct03_siswa_delete extends ct03_siswa {
 
 		// Common render codes for all row types
 		// id
-		// tahunajaran_id
-		// kelas_id
-		// Nomor_Induk
 		// Nama
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
@@ -502,80 +488,9 @@ class ct03_siswa_delete extends ct03_siswa {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// tahunajaran_id
-		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->tahunajaran_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v00_tahunajaran`";
-		$sWhereWrk = "";
-		$this->tahunajaran_id->LookupFilters = array("dx1" => '`tahun_pelajaran`');
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->CurrentValue;
-			}
-		} else {
-			$this->tahunajaran_id->ViewValue = NULL;
-		}
-		$this->tahunajaran_id->ViewCustomAttributes = "";
-
-		// kelas_id
-		if (strval($this->kelas_id->CurrentValue) <> "") {
-			$sFilterWrk = "`kelas_id`" . ew_SearchString("=", $this->kelas_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `kelas_id`, `sekolah_nama` AS `DispFld`, `kelas_nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_sekolah_kelas`";
-		$sWhereWrk = "";
-		$this->kelas_id->LookupFilters = array("dx1" => '`sekolah_nama`', "dx2" => '`kelas_nama`');
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->kelas_id->ViewValue = $this->kelas_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->kelas_id->ViewValue = $this->kelas_id->CurrentValue;
-			}
-		} else {
-			$this->kelas_id->ViewValue = NULL;
-		}
-		$this->kelas_id->ViewCustomAttributes = "";
-
-		// Nomor_Induk
-		$this->Nomor_Induk->ViewValue = $this->Nomor_Induk->CurrentValue;
-		$this->Nomor_Induk->ViewCustomAttributes = "";
-
 		// Nama
 		$this->Nama->ViewValue = $this->Nama->CurrentValue;
 		$this->Nama->ViewCustomAttributes = "";
-
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
-
-			// tahunajaran_id
-			$this->tahunajaran_id->LinkCustomAttributes = "";
-			$this->tahunajaran_id->HrefValue = "";
-			$this->tahunajaran_id->TooltipValue = "";
-
-			// kelas_id
-			$this->kelas_id->LinkCustomAttributes = "";
-			$this->kelas_id->HrefValue = "";
-			$this->kelas_id->TooltipValue = "";
-
-			// Nomor_Induk
-			$this->Nomor_Induk->LinkCustomAttributes = "";
-			$this->Nomor_Induk->HrefValue = "";
-			$this->Nomor_Induk->TooltipValue = "";
 
 			// Nama
 			$this->Nama->LinkCustomAttributes = "";
@@ -679,7 +594,7 @@ class ct03_siswa_delete extends ct03_siswa {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t03_siswalist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t04_rutinlist.php"), "", $this->TableVar, TRUE);
 		$PageId = "delete";
 		$Breadcrumb->Add("delete", $PageId, $url);
 	}
@@ -765,29 +680,29 @@ class ct03_siswa_delete extends ct03_siswa {
 <?php
 
 // Create page object
-if (!isset($t03_siswa_delete)) $t03_siswa_delete = new ct03_siswa_delete();
+if (!isset($t04_rutin_delete)) $t04_rutin_delete = new ct04_rutin_delete();
 
 // Page init
-$t03_siswa_delete->Page_Init();
+$t04_rutin_delete->Page_Init();
 
 // Page main
-$t03_siswa_delete->Page_Main();
+$t04_rutin_delete->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t03_siswa_delete->Page_Render();
+$t04_rutin_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "delete";
-var CurrentForm = ft03_siswadelete = new ew_Form("ft03_siswadelete", "delete");
+var CurrentForm = ft04_rutindelete = new ew_Form("ft04_rutindelete", "delete");
 
 // Form_CustomValidate event
-ft03_siswadelete.Form_CustomValidate = 
+ft04_rutindelete.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -796,16 +711,14 @@ ft03_siswadelete.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-ft03_siswadelete.ValidateRequired = true;
+ft04_rutindelete.ValidateRequired = true;
 <?php } else { ?>
-ft03_siswadelete.ValidateRequired = false; 
+ft04_rutindelete.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-ft03_siswadelete.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_tahun_pelajaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v00_tahunajaran"};
-ft03_siswadelete.Lists["x_kelas_id"] = {"LinkField":"x_kelas_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_sekolah_nama","x_kelas_nama","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_sekolah_kelas"};
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
@@ -816,107 +729,63 @@ ft03_siswadelete.Lists["x_kelas_id"] = {"LinkField":"x_kelas_id","Ajax":true,"Au
 <?php echo $Language->SelectionForm(); ?>
 <div class="clearfix"></div>
 </div>
-<?php $t03_siswa_delete->ShowPageHeader(); ?>
+<?php $t04_rutin_delete->ShowPageHeader(); ?>
 <?php
-$t03_siswa_delete->ShowMessage();
+$t04_rutin_delete->ShowMessage();
 ?>
-<form name="ft03_siswadelete" id="ft03_siswadelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t03_siswa_delete->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t03_siswa_delete->Token ?>">
+<form name="ft04_rutindelete" id="ft04_rutindelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t04_rutin_delete->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_rutin_delete->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t03_siswa">
+<input type="hidden" name="t" value="t04_rutin">
 <input type="hidden" name="a_delete" id="a_delete" value="D">
-<?php foreach ($t03_siswa_delete->RecKeys as $key) { ?>
+<?php foreach ($t04_rutin_delete->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
 <div class="ewGrid">
 <div class="<?php if (ew_IsResponsiveLayout()) { echo "table-responsive "; } ?>ewGridMiddlePanel">
 <table class="table ewTable">
-<?php echo $t03_siswa->TableCustomInnerHtml ?>
+<?php echo $t04_rutin->TableCustomInnerHtml ?>
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($t03_siswa->id->Visible) { // id ?>
-		<th><span id="elh_t03_siswa_id" class="t03_siswa_id"><?php echo $t03_siswa->id->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($t03_siswa->tahunajaran_id->Visible) { // tahunajaran_id ?>
-		<th><span id="elh_t03_siswa_tahunajaran_id" class="t03_siswa_tahunajaran_id"><?php echo $t03_siswa->tahunajaran_id->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($t03_siswa->kelas_id->Visible) { // kelas_id ?>
-		<th><span id="elh_t03_siswa_kelas_id" class="t03_siswa_kelas_id"><?php echo $t03_siswa->kelas_id->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($t03_siswa->Nomor_Induk->Visible) { // Nomor_Induk ?>
-		<th><span id="elh_t03_siswa_Nomor_Induk" class="t03_siswa_Nomor_Induk"><?php echo $t03_siswa->Nomor_Induk->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($t03_siswa->Nama->Visible) { // Nama ?>
-		<th><span id="elh_t03_siswa_Nama" class="t03_siswa_Nama"><?php echo $t03_siswa->Nama->FldCaption() ?></span></th>
+<?php if ($t04_rutin->Nama->Visible) { // Nama ?>
+		<th><span id="elh_t04_rutin_Nama" class="t04_rutin_Nama"><?php echo $t04_rutin->Nama->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-$t03_siswa_delete->RecCnt = 0;
+$t04_rutin_delete->RecCnt = 0;
 $i = 0;
-while (!$t03_siswa_delete->Recordset->EOF) {
-	$t03_siswa_delete->RecCnt++;
-	$t03_siswa_delete->RowCnt++;
+while (!$t04_rutin_delete->Recordset->EOF) {
+	$t04_rutin_delete->RecCnt++;
+	$t04_rutin_delete->RowCnt++;
 
 	// Set row properties
-	$t03_siswa->ResetAttrs();
-	$t03_siswa->RowType = EW_ROWTYPE_VIEW; // View
+	$t04_rutin->ResetAttrs();
+	$t04_rutin->RowType = EW_ROWTYPE_VIEW; // View
 
 	// Get the field contents
-	$t03_siswa_delete->LoadRowValues($t03_siswa_delete->Recordset);
+	$t04_rutin_delete->LoadRowValues($t04_rutin_delete->Recordset);
 
 	// Render row
-	$t03_siswa_delete->RenderRow();
+	$t04_rutin_delete->RenderRow();
 ?>
-	<tr<?php echo $t03_siswa->RowAttributes() ?>>
-<?php if ($t03_siswa->id->Visible) { // id ?>
-		<td<?php echo $t03_siswa->id->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_delete->RowCnt ?>_t03_siswa_id" class="t03_siswa_id">
-<span<?php echo $t03_siswa->id->ViewAttributes() ?>>
-<?php echo $t03_siswa->id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($t03_siswa->tahunajaran_id->Visible) { // tahunajaran_id ?>
-		<td<?php echo $t03_siswa->tahunajaran_id->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_delete->RowCnt ?>_t03_siswa_tahunajaran_id" class="t03_siswa_tahunajaran_id">
-<span<?php echo $t03_siswa->tahunajaran_id->ViewAttributes() ?>>
-<?php echo $t03_siswa->tahunajaran_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($t03_siswa->kelas_id->Visible) { // kelas_id ?>
-		<td<?php echo $t03_siswa->kelas_id->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_delete->RowCnt ?>_t03_siswa_kelas_id" class="t03_siswa_kelas_id">
-<span<?php echo $t03_siswa->kelas_id->ViewAttributes() ?>>
-<?php echo $t03_siswa->kelas_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($t03_siswa->Nomor_Induk->Visible) { // Nomor_Induk ?>
-		<td<?php echo $t03_siswa->Nomor_Induk->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_delete->RowCnt ?>_t03_siswa_Nomor_Induk" class="t03_siswa_Nomor_Induk">
-<span<?php echo $t03_siswa->Nomor_Induk->ViewAttributes() ?>>
-<?php echo $t03_siswa->Nomor_Induk->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($t03_siswa->Nama->Visible) { // Nama ?>
-		<td<?php echo $t03_siswa->Nama->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_delete->RowCnt ?>_t03_siswa_Nama" class="t03_siswa_Nama">
-<span<?php echo $t03_siswa->Nama->ViewAttributes() ?>>
-<?php echo $t03_siswa->Nama->ListViewValue() ?></span>
+	<tr<?php echo $t04_rutin->RowAttributes() ?>>
+<?php if ($t04_rutin->Nama->Visible) { // Nama ?>
+		<td<?php echo $t04_rutin->Nama->CellAttributes() ?>>
+<span id="el<?php echo $t04_rutin_delete->RowCnt ?>_t04_rutin_Nama" class="t04_rutin_Nama">
+<span<?php echo $t04_rutin->Nama->ViewAttributes() ?>>
+<?php echo $t04_rutin->Nama->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
 	</tr>
 <?php
-	$t03_siswa_delete->Recordset->MoveNext();
+	$t04_rutin_delete->Recordset->MoveNext();
 }
-$t03_siswa_delete->Recordset->Close();
+$t04_rutin_delete->Recordset->Close();
 ?>
 </tbody>
 </table>
@@ -924,14 +793,14 @@ $t03_siswa_delete->Recordset->Close();
 </div>
 <div>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("DeleteBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t03_siswa_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t04_rutin_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 </div>
 </form>
 <script type="text/javascript">
-ft03_siswadelete.Init();
+ft04_rutindelete.Init();
 </script>
 <?php
-$t03_siswa_delete->ShowPageFooter();
+$t04_rutin_delete->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -943,5 +812,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$t03_siswa_delete->Page_Terminate();
+$t04_rutin_delete->Page_Terminate();
 ?>

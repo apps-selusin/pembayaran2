@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg13.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
-<?php include_once "t03_siswainfo.php" ?>
+<?php include_once "t04_rutininfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t03_siswa_list = NULL; // Initialize page object first
+$t04_rutin_list = NULL; // Initialize page object first
 
-class ct03_siswa_list extends ct03_siswa {
+class ct04_rutin_list extends ct04_rutin {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +25,13 @@ class ct03_siswa_list extends ct03_siswa {
 	var $ProjectID = "{8F2DFBC1-53BE-44C3-91F5-73D45F821091}";
 
 	// Table name
-	var $TableName = 't03_siswa';
+	var $TableName = 't04_rutin';
 
 	// Page object name
-	var $PageObjName = 't03_siswa_list';
+	var $PageObjName = 't04_rutin_list';
 
 	// Grid form hidden field names
-	var $FormName = 'ft03_siswalist';
+	var $FormName = 'ft04_rutinlist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -266,10 +266,10 @@ class ct03_siswa_list extends ct03_siswa {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t03_siswa)
-		if (!isset($GLOBALS["t03_siswa"]) || get_class($GLOBALS["t03_siswa"]) == "ct03_siswa") {
-			$GLOBALS["t03_siswa"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t03_siswa"];
+		// Table object (t04_rutin)
+		if (!isset($GLOBALS["t04_rutin"]) || get_class($GLOBALS["t04_rutin"]) == "ct04_rutin") {
+			$GLOBALS["t04_rutin"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t04_rutin"];
 		}
 
 		// Initialize URLs
@@ -280,12 +280,12 @@ class ct03_siswa_list extends ct03_siswa {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "t03_siswaadd.php";
+		$this->AddUrl = "t04_rutinadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "t03_siswadelete.php";
-		$this->MultiUpdateUrl = "t03_siswaupdate.php";
+		$this->MultiDeleteUrl = "t04_rutindelete.php";
+		$this->MultiUpdateUrl = "t04_rutinupdate.php";
 
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
@@ -296,7 +296,7 @@ class ct03_siswa_list extends ct03_siswa {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't03_siswa', TRUE);
+			define("EW_TABLE_NAME", 't04_rutin', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -333,7 +333,7 @@ class ct03_siswa_list extends ct03_siswa {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption ft03_siswalistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption ft04_rutinlistsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -410,11 +410,6 @@ class ct03_siswa_list extends ct03_siswa {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->id->SetVisibility();
-		$this->id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
-		$this->tahunajaran_id->SetVisibility();
-		$this->kelas_id->SetVisibility();
-		$this->Nomor_Induk->SetVisibility();
 		$this->Nama->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
@@ -476,13 +471,13 @@ class ct03_siswa_list extends ct03_siswa {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t03_siswa;
+		global $EW_EXPORT, $t04_rutin;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t03_siswa);
+				$doc = new $class($t04_rutin);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -734,7 +729,7 @@ class ct03_siswa_list extends ct03_siswa {
 
 		// Load server side filters
 		if (EW_SEARCH_FILTER_OPTION == "Server") {
-			$sSavedFilterList = isset($UserProfile) ? $UserProfile->GetSearchFilters(CurrentUserName(), "ft03_siswalistsrch") : "";
+			$sSavedFilterList = isset($UserProfile) ? $UserProfile->GetSearchFilters(CurrentUserName(), "ft04_rutinlistsrch") : "";
 		} else {
 			$sSavedFilterList = "";
 		}
@@ -742,9 +737,6 @@ class ct03_siswa_list extends ct03_siswa {
 		// Initialize
 		$sFilterList = "";
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJSON(), ","); // Field id
-		$sFilterList = ew_Concat($sFilterList, $this->tahunajaran_id->AdvancedSearch->ToJSON(), ","); // Field tahunajaran_id
-		$sFilterList = ew_Concat($sFilterList, $this->kelas_id->AdvancedSearch->ToJSON(), ","); // Field kelas_id
-		$sFilterList = ew_Concat($sFilterList, $this->Nomor_Induk->AdvancedSearch->ToJSON(), ","); // Field Nomor_Induk
 		$sFilterList = ew_Concat($sFilterList, $this->Nama->AdvancedSearch->ToJSON(), ","); // Field Nama
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
@@ -768,7 +760,7 @@ class ct03_siswa_list extends ct03_siswa {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = ew_StripSlashes(@$_POST["filters"]);
-			$UserProfile->SetSearchFilters(CurrentUserName(), "ft03_siswalistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "ft04_rutinlistsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -798,30 +790,6 @@ class ct03_siswa_list extends ct03_siswa {
 		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
 		$this->id->AdvancedSearch->Save();
 
-		// Field tahunajaran_id
-		$this->tahunajaran_id->AdvancedSearch->SearchValue = @$filter["x_tahunajaran_id"];
-		$this->tahunajaran_id->AdvancedSearch->SearchOperator = @$filter["z_tahunajaran_id"];
-		$this->tahunajaran_id->AdvancedSearch->SearchCondition = @$filter["v_tahunajaran_id"];
-		$this->tahunajaran_id->AdvancedSearch->SearchValue2 = @$filter["y_tahunajaran_id"];
-		$this->tahunajaran_id->AdvancedSearch->SearchOperator2 = @$filter["w_tahunajaran_id"];
-		$this->tahunajaran_id->AdvancedSearch->Save();
-
-		// Field kelas_id
-		$this->kelas_id->AdvancedSearch->SearchValue = @$filter["x_kelas_id"];
-		$this->kelas_id->AdvancedSearch->SearchOperator = @$filter["z_kelas_id"];
-		$this->kelas_id->AdvancedSearch->SearchCondition = @$filter["v_kelas_id"];
-		$this->kelas_id->AdvancedSearch->SearchValue2 = @$filter["y_kelas_id"];
-		$this->kelas_id->AdvancedSearch->SearchOperator2 = @$filter["w_kelas_id"];
-		$this->kelas_id->AdvancedSearch->Save();
-
-		// Field Nomor_Induk
-		$this->Nomor_Induk->AdvancedSearch->SearchValue = @$filter["x_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchOperator = @$filter["z_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchCondition = @$filter["v_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchValue2 = @$filter["y_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchOperator2 = @$filter["w_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->Save();
-
 		// Field Nama
 		$this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
 		$this->Nama->AdvancedSearch->SearchOperator = @$filter["z_Nama"];
@@ -836,7 +804,6 @@ class ct03_siswa_list extends ct03_siswa {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->Nomor_Induk, $arKeywords, $type);
 		$this->BuildBasicSearchSQL($sWhere, $this->Nama, $arKeywords, $type);
 		return $sWhere;
 	}
@@ -1006,10 +973,6 @@ class ct03_siswa_list extends ct03_siswa {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->id, $bCtrl); // id
-			$this->UpdateSort($this->tahunajaran_id, $bCtrl); // tahunajaran_id
-			$this->UpdateSort($this->kelas_id, $bCtrl); // kelas_id
-			$this->UpdateSort($this->Nomor_Induk, $bCtrl); // Nomor_Induk
 			$this->UpdateSort($this->Nama, $bCtrl); // Nama
 			$this->setStartRecordNumber(1); // Reset start position
 		}
@@ -1043,10 +1006,6 @@ class ct03_siswa_list extends ct03_siswa {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->id->setSort("");
-				$this->tahunajaran_id->setSort("");
-				$this->kelas_id->setSort("");
-				$this->Nomor_Induk->setSort("");
 				$this->Nama->setSort("");
 			}
 
@@ -1241,10 +1200,10 @@ class ct03_siswa_list extends ct03_siswa {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft03_siswalistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft04_rutinlistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft03_siswalistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft04_rutinlistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1268,7 +1227,7 @@ class ct03_siswa_list extends ct03_siswa {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft03_siswalist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft04_rutinlist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1372,7 +1331,7 @@ class ct03_siswa_list extends ct03_siswa {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft03_siswalistsrch\">" . $Language->Phrase("SearchBtn") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft04_rutinlistsrch\">" . $Language->Phrase("SearchBtn") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1508,9 +1467,6 @@ class ct03_siswa_list extends ct03_siswa {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->id->setDbValue($rs->fields('id'));
-		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
-		$this->kelas_id->setDbValue($rs->fields('kelas_id'));
-		$this->Nomor_Induk->setDbValue($rs->fields('Nomor_Induk'));
 		$this->Nama->setDbValue($rs->fields('Nama'));
 	}
 
@@ -1519,9 +1475,6 @@ class ct03_siswa_list extends ct03_siswa {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->tahunajaran_id->DbValue = $row['tahunajaran_id'];
-		$this->kelas_id->DbValue = $row['kelas_id'];
-		$this->Nomor_Induk->DbValue = $row['Nomor_Induk'];
 		$this->Nama->DbValue = $row['Nama'];
 	}
 
@@ -1565,9 +1518,6 @@ class ct03_siswa_list extends ct03_siswa {
 
 		// Common render codes for all row types
 		// id
-		// tahunajaran_id
-		// kelas_id
-		// Nomor_Induk
 		// Nama
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
@@ -1576,80 +1526,9 @@ class ct03_siswa_list extends ct03_siswa {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// tahunajaran_id
-		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->tahunajaran_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v00_tahunajaran`";
-		$sWhereWrk = "";
-		$this->tahunajaran_id->LookupFilters = array("dx1" => '`tahun_pelajaran`');
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->CurrentValue;
-			}
-		} else {
-			$this->tahunajaran_id->ViewValue = NULL;
-		}
-		$this->tahunajaran_id->ViewCustomAttributes = "";
-
-		// kelas_id
-		if (strval($this->kelas_id->CurrentValue) <> "") {
-			$sFilterWrk = "`kelas_id`" . ew_SearchString("=", $this->kelas_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `kelas_id`, `sekolah_nama` AS `DispFld`, `kelas_nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_sekolah_kelas`";
-		$sWhereWrk = "";
-		$this->kelas_id->LookupFilters = array("dx1" => '`sekolah_nama`', "dx2" => '`kelas_nama`');
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->kelas_id->ViewValue = $this->kelas_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->kelas_id->ViewValue = $this->kelas_id->CurrentValue;
-			}
-		} else {
-			$this->kelas_id->ViewValue = NULL;
-		}
-		$this->kelas_id->ViewCustomAttributes = "";
-
-		// Nomor_Induk
-		$this->Nomor_Induk->ViewValue = $this->Nomor_Induk->CurrentValue;
-		$this->Nomor_Induk->ViewCustomAttributes = "";
-
 		// Nama
 		$this->Nama->ViewValue = $this->Nama->CurrentValue;
 		$this->Nama->ViewCustomAttributes = "";
-
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
-
-			// tahunajaran_id
-			$this->tahunajaran_id->LinkCustomAttributes = "";
-			$this->tahunajaran_id->HrefValue = "";
-			$this->tahunajaran_id->TooltipValue = "";
-
-			// kelas_id
-			$this->kelas_id->LinkCustomAttributes = "";
-			$this->kelas_id->HrefValue = "";
-			$this->kelas_id->TooltipValue = "";
-
-			// Nomor_Induk
-			$this->Nomor_Induk->LinkCustomAttributes = "";
-			$this->Nomor_Induk->HrefValue = "";
-			$this->Nomor_Induk->TooltipValue = "";
 
 			// Nama
 			$this->Nama->LinkCustomAttributes = "";
@@ -1704,7 +1583,7 @@ class ct03_siswa_list extends ct03_siswa {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t03_siswa\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t03_siswa',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft03_siswalist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t04_rutin\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t04_rutin',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft04_rutinlist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -2085,31 +1964,31 @@ class ct03_siswa_list extends ct03_siswa {
 <?php
 
 // Create page object
-if (!isset($t03_siswa_list)) $t03_siswa_list = new ct03_siswa_list();
+if (!isset($t04_rutin_list)) $t04_rutin_list = new ct04_rutin_list();
 
 // Page init
-$t03_siswa_list->Page_Init();
+$t04_rutin_list->Page_Init();
 
 // Page main
-$t03_siswa_list->Page_Main();
+$t04_rutin_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t03_siswa_list->Page_Render();
+$t04_rutin_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = ft03_siswalist = new ew_Form("ft03_siswalist", "list");
-ft03_siswalist.FormKeyCountName = '<?php echo $t03_siswa_list->FormKeyCountName ?>';
+var CurrentForm = ft04_rutinlist = new ew_Form("ft04_rutinlist", "list");
+ft04_rutinlist.FormKeyCountName = '<?php echo $t04_rutin_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-ft03_siswalist.Form_CustomValidate = 
+ft04_rutinlist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -2118,97 +1997,95 @@ ft03_siswalist.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-ft03_siswalist.ValidateRequired = true;
+ft04_rutinlist.ValidateRequired = true;
 <?php } else { ?>
-ft03_siswalist.ValidateRequired = false; 
+ft04_rutinlist.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-ft03_siswalist.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_tahun_pelajaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v00_tahunajaran"};
-ft03_siswalist.Lists["x_kelas_id"] = {"LinkField":"x_kelas_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_sekolah_nama","x_kelas_nama","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_sekolah_kelas"};
-
 // Form object for search
-var CurrentSearchForm = ft03_siswalistsrch = new ew_Form("ft03_siswalistsrch");
+
+var CurrentSearchForm = ft04_rutinlistsrch = new ew_Form("ft04_rutinlistsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin->Export == "") { ?>
 <div class="ewToolbar">
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
-<?php if ($t03_siswa_list->TotalRecs > 0 && $t03_siswa_list->ExportOptions->Visible()) { ?>
-<?php $t03_siswa_list->ExportOptions->Render("body") ?>
+<?php if ($t04_rutin_list->TotalRecs > 0 && $t04_rutin_list->ExportOptions->Visible()) { ?>
+<?php $t04_rutin_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t03_siswa_list->SearchOptions->Visible()) { ?>
-<?php $t03_siswa_list->SearchOptions->Render("body") ?>
+<?php if ($t04_rutin_list->SearchOptions->Visible()) { ?>
+<?php $t04_rutin_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t03_siswa_list->FilterOptions->Visible()) { ?>
-<?php $t03_siswa_list->FilterOptions->Render("body") ?>
+<?php if ($t04_rutin_list->FilterOptions->Visible()) { ?>
+<?php $t04_rutin_list->FilterOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin->Export == "") { ?>
 <?php echo $Language->SelectionForm(); ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
-	$bSelectLimit = $t03_siswa_list->UseSelectLimit;
+	$bSelectLimit = $t04_rutin_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($t03_siswa_list->TotalRecs <= 0)
-			$t03_siswa_list->TotalRecs = $t03_siswa->SelectRecordCount();
+		if ($t04_rutin_list->TotalRecs <= 0)
+			$t04_rutin_list->TotalRecs = $t04_rutin->SelectRecordCount();
 	} else {
-		if (!$t03_siswa_list->Recordset && ($t03_siswa_list->Recordset = $t03_siswa_list->LoadRecordset()))
-			$t03_siswa_list->TotalRecs = $t03_siswa_list->Recordset->RecordCount();
+		if (!$t04_rutin_list->Recordset && ($t04_rutin_list->Recordset = $t04_rutin_list->LoadRecordset()))
+			$t04_rutin_list->TotalRecs = $t04_rutin_list->Recordset->RecordCount();
 	}
-	$t03_siswa_list->StartRec = 1;
-	if ($t03_siswa_list->DisplayRecs <= 0 || ($t03_siswa->Export <> "" && $t03_siswa->ExportAll)) // Display all records
-		$t03_siswa_list->DisplayRecs = $t03_siswa_list->TotalRecs;
-	if (!($t03_siswa->Export <> "" && $t03_siswa->ExportAll))
-		$t03_siswa_list->SetUpStartRec(); // Set up start record position
+	$t04_rutin_list->StartRec = 1;
+	if ($t04_rutin_list->DisplayRecs <= 0 || ($t04_rutin->Export <> "" && $t04_rutin->ExportAll)) // Display all records
+		$t04_rutin_list->DisplayRecs = $t04_rutin_list->TotalRecs;
+	if (!($t04_rutin->Export <> "" && $t04_rutin->ExportAll))
+		$t04_rutin_list->SetUpStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$t03_siswa_list->Recordset = $t03_siswa_list->LoadRecordset($t03_siswa_list->StartRec-1, $t03_siswa_list->DisplayRecs);
+		$t04_rutin_list->Recordset = $t04_rutin_list->LoadRecordset($t04_rutin_list->StartRec-1, $t04_rutin_list->DisplayRecs);
 
 	// Set no record found message
-	if ($t03_siswa->CurrentAction == "" && $t03_siswa_list->TotalRecs == 0) {
+	if ($t04_rutin->CurrentAction == "" && $t04_rutin_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$t03_siswa_list->setWarningMessage(ew_DeniedMsg());
-		if ($t03_siswa_list->SearchWhere == "0=101")
-			$t03_siswa_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$t04_rutin_list->setWarningMessage(ew_DeniedMsg());
+		if ($t04_rutin_list->SearchWhere == "0=101")
+			$t04_rutin_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$t03_siswa_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$t04_rutin_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
 
 	// Audit trail on search
-	if ($t03_siswa_list->AuditTrailOnSearch && $t03_siswa_list->Command == "search" && !$t03_siswa_list->RestoreSearch) {
+	if ($t04_rutin_list->AuditTrailOnSearch && $t04_rutin_list->Command == "search" && !$t04_rutin_list->RestoreSearch) {
 		$searchparm = ew_ServerVar("QUERY_STRING");
-		$searchsql = $t03_siswa_list->getSessionWhere();
-		$t03_siswa_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
+		$searchsql = $t04_rutin_list->getSessionWhere();
+		$t04_rutin_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
 	}
-$t03_siswa_list->RenderOtherOptions();
+$t04_rutin_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($t03_siswa->Export == "" && $t03_siswa->CurrentAction == "") { ?>
-<form name="ft03_siswalistsrch" id="ft03_siswalistsrch" class="form-inline ewForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($t03_siswa_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="ft03_siswalistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($t04_rutin->Export == "" && $t04_rutin->CurrentAction == "") { ?>
+<form name="ft04_rutinlistsrch" id="ft04_rutinlistsrch" class="form-inline ewForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($t04_rutin_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="ft04_rutinlistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="t03_siswa">
+<input type="hidden" name="t" value="t04_rutin">
 	<div class="ewBasicSearch">
 <div id="xsr_1" class="ewRow">
 	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t03_siswa_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t03_siswa_list->BasicSearch->getType()) ?>">
+	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t04_rutin_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
+	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t04_rutin_list->BasicSearch->getType()) ?>">
 	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t03_siswa_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t04_rutin_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
 		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($t03_siswa_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($t03_siswa_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($t03_siswa_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($t03_siswa_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
+			<li<?php if ($t04_rutin_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
+			<li<?php if ($t04_rutin_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
+			<li<?php if ($t04_rutin_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
+			<li<?php if ($t04_rutin_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
 		</ul>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("QuickSearchBtn") ?></button>
 	</div>
@@ -2219,258 +2096,190 @@ $t03_siswa_list->RenderOtherOptions();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $t03_siswa_list->ShowPageHeader(); ?>
+<?php $t04_rutin_list->ShowPageHeader(); ?>
 <?php
-$t03_siswa_list->ShowMessage();
+$t04_rutin_list->ShowMessage();
 ?>
-<?php if ($t03_siswa_list->TotalRecs > 0 || $t03_siswa->CurrentAction <> "") { ?>
-<div class="panel panel-default ewGrid t03_siswa">
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin_list->TotalRecs > 0 || $t04_rutin->CurrentAction <> "") { ?>
+<div class="panel panel-default ewGrid t04_rutin">
+<?php if ($t04_rutin->Export == "") { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php if ($t03_siswa->CurrentAction <> "gridadd" && $t03_siswa->CurrentAction <> "gridedit") { ?>
+<?php if ($t04_rutin->CurrentAction <> "gridadd" && $t04_rutin->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t03_siswa_list->Pager)) $t03_siswa_list->Pager = new cPrevNextPager($t03_siswa_list->StartRec, $t03_siswa_list->DisplayRecs, $t03_siswa_list->TotalRecs) ?>
-<?php if ($t03_siswa_list->Pager->RecordCount > 0 && $t03_siswa_list->Pager->Visible) { ?>
+<?php if (!isset($t04_rutin_list->Pager)) $t04_rutin_list->Pager = new cPrevNextPager($t04_rutin_list->StartRec, $t04_rutin_list->DisplayRecs, $t04_rutin_list->TotalRecs) ?>
+<?php if ($t04_rutin_list->Pager->RecordCount > 0 && $t04_rutin_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t03_siswa_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t03_siswa_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t03_siswa_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rutin_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t03_siswa_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t03_siswa_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t03_siswa_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rutin_list->Pager->PageCount ?></span>
 </div>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t03_siswa_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t03_siswa_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t03_siswa_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t04_rutin_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t04_rutin_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t04_rutin_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
 </form>
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t03_siswa_list->OtherOptions as &$option)
+	foreach ($t04_rutin_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<form name="ft03_siswalist" id="ft03_siswalist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t03_siswa_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t03_siswa_list->Token ?>">
+<form name="ft04_rutinlist" id="ft04_rutinlist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t04_rutin_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_rutin_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t03_siswa">
-<div id="gmp_t03_siswa" class="<?php if (ew_IsResponsiveLayout()) { echo "table-responsive "; } ?>ewGridMiddlePanel">
-<?php if ($t03_siswa_list->TotalRecs > 0 || $t03_siswa->CurrentAction == "gridedit") { ?>
-<table id="tbl_t03_siswalist" class="table ewTable">
-<?php echo $t03_siswa->TableCustomInnerHtml ?>
+<input type="hidden" name="t" value="t04_rutin">
+<div id="gmp_t04_rutin" class="<?php if (ew_IsResponsiveLayout()) { echo "table-responsive "; } ?>ewGridMiddlePanel">
+<?php if ($t04_rutin_list->TotalRecs > 0 || $t04_rutin->CurrentAction == "gridedit") { ?>
+<table id="tbl_t04_rutinlist" class="table ewTable">
+<?php echo $t04_rutin->TableCustomInnerHtml ?>
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$t03_siswa_list->RowType = EW_ROWTYPE_HEADER;
+$t04_rutin_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$t03_siswa_list->RenderListOptions();
+$t04_rutin_list->RenderListOptions();
 
 // Render list options (header, left)
-$t03_siswa_list->ListOptions->Render("header", "left");
+$t04_rutin_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($t03_siswa->id->Visible) { // id ?>
-	<?php if ($t03_siswa->SortUrl($t03_siswa->id) == "") { ?>
-		<th data-name="id"><div id="elh_t03_siswa_id" class="t03_siswa_id"><div class="ewTableHeaderCaption"><?php echo $t03_siswa->id->FldCaption() ?></div></div></th>
+<?php if ($t04_rutin->Nama->Visible) { // Nama ?>
+	<?php if ($t04_rutin->SortUrl($t04_rutin->Nama) == "") { ?>
+		<th data-name="Nama"><div id="elh_t04_rutin_Nama" class="t04_rutin_Nama"><div class="ewTableHeaderCaption"><?php echo $t04_rutin->Nama->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_siswa->SortUrl($t03_siswa->id) ?>',2);"><div id="elh_t03_siswa_id" class="t03_siswa_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_siswa->id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_siswa->id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_siswa->id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($t03_siswa->tahunajaran_id->Visible) { // tahunajaran_id ?>
-	<?php if ($t03_siswa->SortUrl($t03_siswa->tahunajaran_id) == "") { ?>
-		<th data-name="tahunajaran_id"><div id="elh_t03_siswa_tahunajaran_id" class="t03_siswa_tahunajaran_id"><div class="ewTableHeaderCaption"><?php echo $t03_siswa->tahunajaran_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="tahunajaran_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_siswa->SortUrl($t03_siswa->tahunajaran_id) ?>',2);"><div id="elh_t03_siswa_tahunajaran_id" class="t03_siswa_tahunajaran_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_siswa->tahunajaran_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_siswa->tahunajaran_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_siswa->tahunajaran_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($t03_siswa->kelas_id->Visible) { // kelas_id ?>
-	<?php if ($t03_siswa->SortUrl($t03_siswa->kelas_id) == "") { ?>
-		<th data-name="kelas_id"><div id="elh_t03_siswa_kelas_id" class="t03_siswa_kelas_id"><div class="ewTableHeaderCaption"><?php echo $t03_siswa->kelas_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="kelas_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_siswa->SortUrl($t03_siswa->kelas_id) ?>',2);"><div id="elh_t03_siswa_kelas_id" class="t03_siswa_kelas_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_siswa->kelas_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_siswa->kelas_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_siswa->kelas_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($t03_siswa->Nomor_Induk->Visible) { // Nomor_Induk ?>
-	<?php if ($t03_siswa->SortUrl($t03_siswa->Nomor_Induk) == "") { ?>
-		<th data-name="Nomor_Induk"><div id="elh_t03_siswa_Nomor_Induk" class="t03_siswa_Nomor_Induk"><div class="ewTableHeaderCaption"><?php echo $t03_siswa->Nomor_Induk->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Nomor_Induk"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_siswa->SortUrl($t03_siswa->Nomor_Induk) ?>',2);"><div id="elh_t03_siswa_Nomor_Induk" class="t03_siswa_Nomor_Induk">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_siswa->Nomor_Induk->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t03_siswa->Nomor_Induk->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_siswa->Nomor_Induk->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($t03_siswa->Nama->Visible) { // Nama ?>
-	<?php if ($t03_siswa->SortUrl($t03_siswa->Nama) == "") { ?>
-		<th data-name="Nama"><div id="elh_t03_siswa_Nama" class="t03_siswa_Nama"><div class="ewTableHeaderCaption"><?php echo $t03_siswa->Nama->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Nama"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_siswa->SortUrl($t03_siswa->Nama) ?>',2);"><div id="elh_t03_siswa_Nama" class="t03_siswa_Nama">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_siswa->Nama->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t03_siswa->Nama->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_siswa->Nama->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Nama"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t04_rutin->SortUrl($t04_rutin->Nama) ?>',2);"><div id="elh_t04_rutin_Nama" class="t04_rutin_Nama">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t04_rutin->Nama->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t04_rutin->Nama->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t04_rutin->Nama->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
 <?php
 
 // Render list options (header, right)
-$t03_siswa_list->ListOptions->Render("header", "right");
+$t04_rutin_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($t03_siswa->ExportAll && $t03_siswa->Export <> "") {
-	$t03_siswa_list->StopRec = $t03_siswa_list->TotalRecs;
+if ($t04_rutin->ExportAll && $t04_rutin->Export <> "") {
+	$t04_rutin_list->StopRec = $t04_rutin_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($t03_siswa_list->TotalRecs > $t03_siswa_list->StartRec + $t03_siswa_list->DisplayRecs - 1)
-		$t03_siswa_list->StopRec = $t03_siswa_list->StartRec + $t03_siswa_list->DisplayRecs - 1;
+	if ($t04_rutin_list->TotalRecs > $t04_rutin_list->StartRec + $t04_rutin_list->DisplayRecs - 1)
+		$t04_rutin_list->StopRec = $t04_rutin_list->StartRec + $t04_rutin_list->DisplayRecs - 1;
 	else
-		$t03_siswa_list->StopRec = $t03_siswa_list->TotalRecs;
+		$t04_rutin_list->StopRec = $t04_rutin_list->TotalRecs;
 }
-$t03_siswa_list->RecCnt = $t03_siswa_list->StartRec - 1;
-if ($t03_siswa_list->Recordset && !$t03_siswa_list->Recordset->EOF) {
-	$t03_siswa_list->Recordset->MoveFirst();
-	$bSelectLimit = $t03_siswa_list->UseSelectLimit;
-	if (!$bSelectLimit && $t03_siswa_list->StartRec > 1)
-		$t03_siswa_list->Recordset->Move($t03_siswa_list->StartRec - 1);
-} elseif (!$t03_siswa->AllowAddDeleteRow && $t03_siswa_list->StopRec == 0) {
-	$t03_siswa_list->StopRec = $t03_siswa->GridAddRowCount;
+$t04_rutin_list->RecCnt = $t04_rutin_list->StartRec - 1;
+if ($t04_rutin_list->Recordset && !$t04_rutin_list->Recordset->EOF) {
+	$t04_rutin_list->Recordset->MoveFirst();
+	$bSelectLimit = $t04_rutin_list->UseSelectLimit;
+	if (!$bSelectLimit && $t04_rutin_list->StartRec > 1)
+		$t04_rutin_list->Recordset->Move($t04_rutin_list->StartRec - 1);
+} elseif (!$t04_rutin->AllowAddDeleteRow && $t04_rutin_list->StopRec == 0) {
+	$t04_rutin_list->StopRec = $t04_rutin->GridAddRowCount;
 }
 
 // Initialize aggregate
-$t03_siswa->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$t03_siswa->ResetAttrs();
-$t03_siswa_list->RenderRow();
-while ($t03_siswa_list->RecCnt < $t03_siswa_list->StopRec) {
-	$t03_siswa_list->RecCnt++;
-	if (intval($t03_siswa_list->RecCnt) >= intval($t03_siswa_list->StartRec)) {
-		$t03_siswa_list->RowCnt++;
+$t04_rutin->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$t04_rutin->ResetAttrs();
+$t04_rutin_list->RenderRow();
+while ($t04_rutin_list->RecCnt < $t04_rutin_list->StopRec) {
+	$t04_rutin_list->RecCnt++;
+	if (intval($t04_rutin_list->RecCnt) >= intval($t04_rutin_list->StartRec)) {
+		$t04_rutin_list->RowCnt++;
 
 		// Set up key count
-		$t03_siswa_list->KeyCount = $t03_siswa_list->RowIndex;
+		$t04_rutin_list->KeyCount = $t04_rutin_list->RowIndex;
 
 		// Init row class and style
-		$t03_siswa->ResetAttrs();
-		$t03_siswa->CssClass = "";
-		if ($t03_siswa->CurrentAction == "gridadd") {
+		$t04_rutin->ResetAttrs();
+		$t04_rutin->CssClass = "";
+		if ($t04_rutin->CurrentAction == "gridadd") {
 		} else {
-			$t03_siswa_list->LoadRowValues($t03_siswa_list->Recordset); // Load row values
+			$t04_rutin_list->LoadRowValues($t04_rutin_list->Recordset); // Load row values
 		}
-		$t03_siswa->RowType = EW_ROWTYPE_VIEW; // Render view
+		$t04_rutin->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$t03_siswa->RowAttrs = array_merge($t03_siswa->RowAttrs, array('data-rowindex'=>$t03_siswa_list->RowCnt, 'id'=>'r' . $t03_siswa_list->RowCnt . '_t03_siswa', 'data-rowtype'=>$t03_siswa->RowType));
+		$t04_rutin->RowAttrs = array_merge($t04_rutin->RowAttrs, array('data-rowindex'=>$t04_rutin_list->RowCnt, 'id'=>'r' . $t04_rutin_list->RowCnt . '_t04_rutin', 'data-rowtype'=>$t04_rutin->RowType));
 
 		// Render row
-		$t03_siswa_list->RenderRow();
+		$t04_rutin_list->RenderRow();
 
 		// Render list options
-		$t03_siswa_list->RenderListOptions();
+		$t04_rutin_list->RenderListOptions();
 ?>
-	<tr<?php echo $t03_siswa->RowAttributes() ?>>
+	<tr<?php echo $t04_rutin->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$t03_siswa_list->ListOptions->Render("body", "left", $t03_siswa_list->RowCnt);
+$t04_rutin_list->ListOptions->Render("body", "left", $t04_rutin_list->RowCnt);
 ?>
-	<?php if ($t03_siswa->id->Visible) { // id ?>
-		<td data-name="id"<?php echo $t03_siswa->id->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_list->RowCnt ?>_t03_siswa_id" class="t03_siswa_id">
-<span<?php echo $t03_siswa->id->ViewAttributes() ?>>
-<?php echo $t03_siswa->id->ListViewValue() ?></span>
+	<?php if ($t04_rutin->Nama->Visible) { // Nama ?>
+		<td data-name="Nama"<?php echo $t04_rutin->Nama->CellAttributes() ?>>
+<span id="el<?php echo $t04_rutin_list->RowCnt ?>_t04_rutin_Nama" class="t04_rutin_Nama">
+<span<?php echo $t04_rutin->Nama->ViewAttributes() ?>>
+<?php echo $t04_rutin->Nama->ListViewValue() ?></span>
 </span>
-<a id="<?php echo $t03_siswa_list->PageObjName . "_row_" . $t03_siswa_list->RowCnt ?>"></a></td>
-	<?php } ?>
-	<?php if ($t03_siswa->tahunajaran_id->Visible) { // tahunajaran_id ?>
-		<td data-name="tahunajaran_id"<?php echo $t03_siswa->tahunajaran_id->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_list->RowCnt ?>_t03_siswa_tahunajaran_id" class="t03_siswa_tahunajaran_id">
-<span<?php echo $t03_siswa->tahunajaran_id->ViewAttributes() ?>>
-<?php echo $t03_siswa->tahunajaran_id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($t03_siswa->kelas_id->Visible) { // kelas_id ?>
-		<td data-name="kelas_id"<?php echo $t03_siswa->kelas_id->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_list->RowCnt ?>_t03_siswa_kelas_id" class="t03_siswa_kelas_id">
-<span<?php echo $t03_siswa->kelas_id->ViewAttributes() ?>>
-<?php echo $t03_siswa->kelas_id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($t03_siswa->Nomor_Induk->Visible) { // Nomor_Induk ?>
-		<td data-name="Nomor_Induk"<?php echo $t03_siswa->Nomor_Induk->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_list->RowCnt ?>_t03_siswa_Nomor_Induk" class="t03_siswa_Nomor_Induk">
-<span<?php echo $t03_siswa->Nomor_Induk->ViewAttributes() ?>>
-<?php echo $t03_siswa->Nomor_Induk->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($t03_siswa->Nama->Visible) { // Nama ?>
-		<td data-name="Nama"<?php echo $t03_siswa->Nama->CellAttributes() ?>>
-<span id="el<?php echo $t03_siswa_list->RowCnt ?>_t03_siswa_Nama" class="t03_siswa_Nama">
-<span<?php echo $t03_siswa->Nama->ViewAttributes() ?>>
-<?php echo $t03_siswa->Nama->ListViewValue() ?></span>
-</span>
-</td>
+<a id="<?php echo $t04_rutin_list->PageObjName . "_row_" . $t04_rutin_list->RowCnt ?>"></a></td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$t03_siswa_list->ListOptions->Render("body", "right", $t03_siswa_list->RowCnt);
+$t04_rutin_list->ListOptions->Render("body", "right", $t04_rutin_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($t03_siswa->CurrentAction <> "gridadd")
-		$t03_siswa_list->Recordset->MoveNext();
+	if ($t04_rutin->CurrentAction <> "gridadd")
+		$t04_rutin_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($t03_siswa->CurrentAction == "") { ?>
+<?php if ($t04_rutin->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -2478,61 +2287,61 @@ $t03_siswa_list->ListOptions->Render("body", "right", $t03_siswa_list->RowCnt);
 <?php
 
 // Close recordset
-if ($t03_siswa_list->Recordset)
-	$t03_siswa_list->Recordset->Close();
+if ($t04_rutin_list->Recordset)
+	$t04_rutin_list->Recordset->Close();
 ?>
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin->Export == "") { ?>
 <div class="panel-footer ewGridLowerPanel">
-<?php if ($t03_siswa->CurrentAction <> "gridadd" && $t03_siswa->CurrentAction <> "gridedit") { ?>
+<?php if ($t04_rutin->CurrentAction <> "gridadd" && $t04_rutin->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t03_siswa_list->Pager)) $t03_siswa_list->Pager = new cPrevNextPager($t03_siswa_list->StartRec, $t03_siswa_list->DisplayRecs, $t03_siswa_list->TotalRecs) ?>
-<?php if ($t03_siswa_list->Pager->RecordCount > 0 && $t03_siswa_list->Pager->Visible) { ?>
+<?php if (!isset($t04_rutin_list->Pager)) $t04_rutin_list->Pager = new cPrevNextPager($t04_rutin_list->StartRec, $t04_rutin_list->DisplayRecs, $t04_rutin_list->TotalRecs) ?>
+<?php if ($t04_rutin_list->Pager->RecordCount > 0 && $t04_rutin_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t03_siswa_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t03_siswa_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t03_siswa_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rutin_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t03_siswa_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t03_siswa_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t03_siswa_list->PageUrl() ?>start=<?php echo $t03_siswa_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t04_rutin_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rutin_list->PageUrl() ?>start=<?php echo $t04_rutin_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t03_siswa_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rutin_list->Pager->PageCount ?></span>
 </div>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t03_siswa_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t03_siswa_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t03_siswa_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t04_rutin_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t04_rutin_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t04_rutin_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
 </form>
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t03_siswa_list->OtherOptions as &$option)
+	foreach ($t04_rutin_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -2541,10 +2350,10 @@ if ($t03_siswa_list->Recordset)
 <?php } ?>
 </div>
 <?php } ?>
-<?php if ($t03_siswa_list->TotalRecs == 0 && $t03_siswa->CurrentAction == "") { // Show other options ?>
+<?php if ($t04_rutin_list->TotalRecs == 0 && $t04_rutin->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t03_siswa_list->OtherOptions as &$option) {
+	foreach ($t04_rutin_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -2552,19 +2361,19 @@ if ($t03_siswa_list->Recordset)
 </div>
 <div class="clearfix"></div>
 <?php } ?>
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin->Export == "") { ?>
 <script type="text/javascript">
-ft03_siswalistsrch.FilterList = <?php echo $t03_siswa_list->GetFilterList() ?>;
-ft03_siswalistsrch.Init();
-ft03_siswalist.Init();
+ft04_rutinlistsrch.FilterList = <?php echo $t04_rutin_list->GetFilterList() ?>;
+ft04_rutinlistsrch.Init();
+ft04_rutinlist.Init();
 </script>
 <?php } ?>
 <?php
-$t03_siswa_list->ShowPageFooter();
+$t04_rutin_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t03_siswa->Export == "") { ?>
+<?php if ($t04_rutin->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -2574,5 +2383,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t03_siswa_list->Page_Terminate();
+$t04_rutin_list->Page_Terminate();
 ?>
