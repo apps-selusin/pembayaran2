@@ -5,7 +5,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg13.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
-<?php include_once "t00_tahunajaraninfo.php" ?>
+<?php include_once "t02_kelasinfo.php" ?>
+<?php include_once "t01_sekolahinfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
@@ -14,9 +15,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t00_tahunajaran_view = NULL; // Initialize page object first
+$t02_kelas_view = NULL; // Initialize page object first
 
-class ct00_tahunajaran_view extends ct00_tahunajaran {
+class ct02_kelas_view extends ct02_kelas {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +26,10 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 	var $ProjectID = "{8F2DFBC1-53BE-44C3-91F5-73D45F821091}";
 
 	// Table name
-	var $TableName = 't00_tahunajaran';
+	var $TableName = 't02_kelas';
 
 	// Page object name
-	var $PageObjName = 't00_tahunajaran_view';
+	var $PageObjName = 't02_kelas_view';
 
 	// Page name
 	function PageName() {
@@ -258,10 +259,10 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t00_tahunajaran)
-		if (!isset($GLOBALS["t00_tahunajaran"]) || get_class($GLOBALS["t00_tahunajaran"]) == "ct00_tahunajaran") {
-			$GLOBALS["t00_tahunajaran"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t00_tahunajaran"];
+		// Table object (t02_kelas)
+		if (!isset($GLOBALS["t02_kelas"]) || get_class($GLOBALS["t02_kelas"]) == "ct02_kelas") {
+			$GLOBALS["t02_kelas"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t02_kelas"];
 		}
 		$KeyUrl = "";
 		if (@$_GET["id"] <> "") {
@@ -276,6 +277,9 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv" . $KeyUrl;
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf" . $KeyUrl;
 
+		// Table object (t01_sekolah)
+		if (!isset($GLOBALS['t01_sekolah'])) $GLOBALS['t01_sekolah'] = new ct01_sekolah();
+
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
 
@@ -285,7 +289,7 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't00_tahunajaran', TRUE);
+			define("EW_TABLE_NAME", 't02_kelas', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -329,7 +333,7 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t00_tahunajaranlist.php"));
+				$this->Page_Terminate(ew_GetUrl("t02_kelaslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -383,10 +387,8 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->awal_bulan->SetVisibility();
-		$this->awal_tahun->SetVisibility();
-		$this->akhir_bulan->SetVisibility();
-		$this->akhir_tahun->SetVisibility();
+		$this->sekolah_id->SetVisibility();
+		$this->Nama->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -418,13 +420,13 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t00_tahunajaran;
+		global $EW_EXPORT, $t02_kelas;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t00_tahunajaran);
+				$doc = new $class($t02_kelas);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -485,6 +487,9 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		$bLoadCurrentRecord = FALSE;
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
+
+		// Set up master/detail parameters
+		$this->SetUpMasterParms();
 		if ($this->IsPageRequest()) { // Validate request
 			if (@$_GET["id"] <> "") {
 				$this->id->setQueryStringValue($_GET["id"]);
@@ -493,7 +498,7 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 				$this->id->setFormValue($_POST["id"]);
 				$this->RecKey["id"] = $this->id->FormValue;
 			} else {
-				$sReturnUrl = "t00_tahunajaranlist.php"; // Return to list
+				$sReturnUrl = "t02_kelaslist.php"; // Return to list
 			}
 
 			// Get action
@@ -503,7 +508,7 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 					if (!$this->LoadRow()) { // Load record based on key
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "t00_tahunajaranlist.php"; // No matching record, return to list
+						$sReturnUrl = "t02_kelaslist.php"; // No matching record, return to list
 					}
 			}
 
@@ -514,7 +519,7 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "t00_tahunajaranlist.php"; // Not page request, return to list
+			$sReturnUrl = "t02_kelaslist.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -674,10 +679,8 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		$this->Row_Selected($row);
 		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->id->setDbValue($rs->fields('id'));
-		$this->awal_bulan->setDbValue($rs->fields('awal_bulan'));
-		$this->awal_tahun->setDbValue($rs->fields('awal_tahun'));
-		$this->akhir_bulan->setDbValue($rs->fields('akhir_bulan'));
-		$this->akhir_tahun->setDbValue($rs->fields('akhir_tahun'));
+		$this->sekolah_id->setDbValue($rs->fields('sekolah_id'));
+		$this->Nama->setDbValue($rs->fields('Nama'));
 	}
 
 	// Load DbValue from recordset
@@ -685,10 +688,8 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->awal_bulan->DbValue = $row['awal_bulan'];
-		$this->awal_tahun->DbValue = $row['awal_tahun'];
-		$this->akhir_bulan->DbValue = $row['akhir_bulan'];
-		$this->akhir_tahun->DbValue = $row['akhir_tahun'];
+		$this->sekolah_id->DbValue = $row['sekolah_id'];
+		$this->Nama->DbValue = $row['Nama'];
 	}
 
 	// Render row values based on field settings
@@ -708,10 +709,8 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 
 		// Common render codes for all row types
 		// id
-		// awal_bulan
-		// awal_tahun
-		// akhir_bulan
-		// akhir_tahun
+		// sekolah_id
+		// Nama
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -719,49 +718,43 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// awal_bulan
-		if (strval($this->awal_bulan->CurrentValue) <> "") {
-			$this->awal_bulan->ViewValue = $this->awal_bulan->OptionCaption($this->awal_bulan->CurrentValue);
+		// sekolah_id
+		$this->sekolah_id->ViewValue = $this->sekolah_id->CurrentValue;
+		if (strval($this->sekolah_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->sekolah_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t01_sekolah`";
+		$sWhereWrk = "";
+		$this->sekolah_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->sekolah_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->sekolah_id->ViewValue = $this->sekolah_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->sekolah_id->ViewValue = $this->sekolah_id->CurrentValue;
+			}
 		} else {
-			$this->awal_bulan->ViewValue = NULL;
+			$this->sekolah_id->ViewValue = NULL;
 		}
-		$this->awal_bulan->ViewCustomAttributes = "";
+		$this->sekolah_id->ViewCustomAttributes = "";
 
-		// awal_tahun
-		$this->awal_tahun->ViewValue = $this->awal_tahun->CurrentValue;
-		$this->awal_tahun->ViewCustomAttributes = "";
+		// Nama
+		$this->Nama->ViewValue = $this->Nama->CurrentValue;
+		$this->Nama->ViewCustomAttributes = "";
 
-		// akhir_bulan
-		if (strval($this->akhir_bulan->CurrentValue) <> "") {
-			$this->akhir_bulan->ViewValue = $this->akhir_bulan->OptionCaption($this->akhir_bulan->CurrentValue);
-		} else {
-			$this->akhir_bulan->ViewValue = NULL;
-		}
-		$this->akhir_bulan->ViewCustomAttributes = "";
+			// sekolah_id
+			$this->sekolah_id->LinkCustomAttributes = "";
+			$this->sekolah_id->HrefValue = "";
+			$this->sekolah_id->TooltipValue = "";
 
-		// akhir_tahun
-		$this->akhir_tahun->ViewValue = $this->akhir_tahun->CurrentValue;
-		$this->akhir_tahun->ViewCustomAttributes = "";
-
-			// awal_bulan
-			$this->awal_bulan->LinkCustomAttributes = "";
-			$this->awal_bulan->HrefValue = "";
-			$this->awal_bulan->TooltipValue = "";
-
-			// awal_tahun
-			$this->awal_tahun->LinkCustomAttributes = "";
-			$this->awal_tahun->HrefValue = "";
-			$this->awal_tahun->TooltipValue = "";
-
-			// akhir_bulan
-			$this->akhir_bulan->LinkCustomAttributes = "";
-			$this->akhir_bulan->HrefValue = "";
-			$this->akhir_bulan->TooltipValue = "";
-
-			// akhir_tahun
-			$this->akhir_tahun->LinkCustomAttributes = "";
-			$this->akhir_tahun->HrefValue = "";
-			$this->akhir_tahun->TooltipValue = "";
+			// Nama
+			$this->Nama->LinkCustomAttributes = "";
+			$this->Nama->HrefValue = "";
+			$this->Nama->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -811,7 +804,7 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t00_tahunajaran\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t00_tahunajaran',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft00_tahunajaranview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t02_kelas\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t02_kelas',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft02_kelasview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -1016,12 +1009,73 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 		return $sQry;
 	}
 
+	// Set up master/detail based on QueryString
+	function SetUpMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t01_sekolah") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_id"] <> "") {
+					$GLOBALS["t01_sekolah"]->id->setQueryStringValue($_GET["fk_id"]);
+					$this->sekolah_id->setQueryStringValue($GLOBALS["t01_sekolah"]->id->QueryStringValue);
+					$this->sekolah_id->setSessionValue($this->sekolah_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t01_sekolah"]->id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "t01_sekolah") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_id"] <> "") {
+					$GLOBALS["t01_sekolah"]->id->setFormValue($_POST["fk_id"]);
+					$this->sekolah_id->setFormValue($GLOBALS["t01_sekolah"]->id->FormValue);
+					$this->sekolah_id->setSessionValue($this->sekolah_id->FormValue);
+					if (!is_numeric($GLOBALS["t01_sekolah"]->id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+			$this->setSessionWhere($this->GetDetailFilter());
+
+			// Reset start record counter (new master key)
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "t01_sekolah") {
+				if ($this->sekolah_id->CurrentValue == "") $this->sekolah_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
+	}
+
 	// Set up Breadcrumb
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t00_tahunajaranlist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t02_kelaslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1133,30 +1187,30 @@ class ct00_tahunajaran_view extends ct00_tahunajaran {
 <?php
 
 // Create page object
-if (!isset($t00_tahunajaran_view)) $t00_tahunajaran_view = new ct00_tahunajaran_view();
+if (!isset($t02_kelas_view)) $t02_kelas_view = new ct02_kelas_view();
 
 // Page init
-$t00_tahunajaran_view->Page_Init();
+$t02_kelas_view->Page_Init();
 
 // Page main
-$t00_tahunajaran_view->Page_Main();
+$t02_kelas_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t00_tahunajaran_view->Page_Render();
+$t02_kelas_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t00_tahunajaran->Export == "") { ?>
+<?php if ($t02_kelas->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = ft00_tahunajaranview = new ew_Form("ft00_tahunajaranview", "view");
+var CurrentForm = ft02_kelasview = new ew_Form("ft02_kelasview", "view");
 
 // Form_CustomValidate event
-ft00_tahunajaranview.Form_CustomValidate = 
+ft02_kelasview.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1165,16 +1219,13 @@ ft00_tahunajaranview.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-ft00_tahunajaranview.ValidateRequired = true;
+ft02_kelasview.ValidateRequired = true;
 <?php } else { ?>
-ft00_tahunajaranview.ValidateRequired = false; 
+ft02_kelasview.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-ft00_tahunajaranview.Lists["x_awal_bulan"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-ft00_tahunajaranview.Lists["x_awal_bulan"].Options = <?php echo json_encode($t00_tahunajaran->awal_bulan->Options()) ?>;
-ft00_tahunajaranview.Lists["x_akhir_bulan"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-ft00_tahunajaranview.Lists["x_akhir_bulan"].Options = <?php echo json_encode($t00_tahunajaran->akhir_bulan->Options()) ?>;
+ft02_kelasview.Lists["x_sekolah_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_sekolah"};
 
 // Form object for search
 </script>
@@ -1183,96 +1234,74 @@ ft00_tahunajaranview.Lists["x_akhir_bulan"].Options = <?php echo json_encode($t0
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t00_tahunajaran->Export == "") { ?>
+<?php if ($t02_kelas->Export == "") { ?>
 <div class="ewToolbar">
-<?php if (!$t00_tahunajaran_view->IsModal) { ?>
-<?php if ($t00_tahunajaran->Export == "") { ?>
+<?php if (!$t02_kelas_view->IsModal) { ?>
+<?php if ($t02_kelas->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php } ?>
-<?php $t00_tahunajaran_view->ExportOptions->Render("body") ?>
+<?php $t02_kelas_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($t00_tahunajaran_view->OtherOptions as &$option)
+	foreach ($t02_kelas_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
-<?php if (!$t00_tahunajaran_view->IsModal) { ?>
-<?php if ($t00_tahunajaran->Export == "") { ?>
+<?php if (!$t02_kelas_view->IsModal) { ?>
+<?php if ($t02_kelas->Export == "") { ?>
 <?php echo $Language->SelectionForm(); ?>
 <?php } ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $t00_tahunajaran_view->ShowPageHeader(); ?>
+<?php $t02_kelas_view->ShowPageHeader(); ?>
 <?php
-$t00_tahunajaran_view->ShowMessage();
+$t02_kelas_view->ShowMessage();
 ?>
-<form name="ft00_tahunajaranview" id="ft00_tahunajaranview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t00_tahunajaran_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t00_tahunajaran_view->Token ?>">
+<form name="ft02_kelasview" id="ft02_kelasview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t02_kelas_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t02_kelas_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t00_tahunajaran">
-<?php if ($t00_tahunajaran_view->IsModal) { ?>
+<input type="hidden" name="t" value="t02_kelas">
+<?php if ($t02_kelas_view->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <table class="table table-bordered table-striped ewViewTable">
-<?php if ($t00_tahunajaran->awal_bulan->Visible) { // awal_bulan ?>
-	<tr id="r_awal_bulan">
-		<td><span id="elh_t00_tahunajaran_awal_bulan"><?php echo $t00_tahunajaran->awal_bulan->FldCaption() ?></span></td>
-		<td data-name="awal_bulan"<?php echo $t00_tahunajaran->awal_bulan->CellAttributes() ?>>
-<span id="el_t00_tahunajaran_awal_bulan">
-<span<?php echo $t00_tahunajaran->awal_bulan->ViewAttributes() ?>>
-<?php echo $t00_tahunajaran->awal_bulan->ViewValue ?></span>
+<?php if ($t02_kelas->sekolah_id->Visible) { // sekolah_id ?>
+	<tr id="r_sekolah_id">
+		<td><span id="elh_t02_kelas_sekolah_id"><?php echo $t02_kelas->sekolah_id->FldCaption() ?></span></td>
+		<td data-name="sekolah_id"<?php echo $t02_kelas->sekolah_id->CellAttributes() ?>>
+<span id="el_t02_kelas_sekolah_id">
+<span<?php echo $t02_kelas->sekolah_id->ViewAttributes() ?>>
+<?php echo $t02_kelas->sekolah_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t00_tahunajaran->awal_tahun->Visible) { // awal_tahun ?>
-	<tr id="r_awal_tahun">
-		<td><span id="elh_t00_tahunajaran_awal_tahun"><?php echo $t00_tahunajaran->awal_tahun->FldCaption() ?></span></td>
-		<td data-name="awal_tahun"<?php echo $t00_tahunajaran->awal_tahun->CellAttributes() ?>>
-<span id="el_t00_tahunajaran_awal_tahun">
-<span<?php echo $t00_tahunajaran->awal_tahun->ViewAttributes() ?>>
-<?php echo $t00_tahunajaran->awal_tahun->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t00_tahunajaran->akhir_bulan->Visible) { // akhir_bulan ?>
-	<tr id="r_akhir_bulan">
-		<td><span id="elh_t00_tahunajaran_akhir_bulan"><?php echo $t00_tahunajaran->akhir_bulan->FldCaption() ?></span></td>
-		<td data-name="akhir_bulan"<?php echo $t00_tahunajaran->akhir_bulan->CellAttributes() ?>>
-<span id="el_t00_tahunajaran_akhir_bulan">
-<span<?php echo $t00_tahunajaran->akhir_bulan->ViewAttributes() ?>>
-<?php echo $t00_tahunajaran->akhir_bulan->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t00_tahunajaran->akhir_tahun->Visible) { // akhir_tahun ?>
-	<tr id="r_akhir_tahun">
-		<td><span id="elh_t00_tahunajaran_akhir_tahun"><?php echo $t00_tahunajaran->akhir_tahun->FldCaption() ?></span></td>
-		<td data-name="akhir_tahun"<?php echo $t00_tahunajaran->akhir_tahun->CellAttributes() ?>>
-<span id="el_t00_tahunajaran_akhir_tahun">
-<span<?php echo $t00_tahunajaran->akhir_tahun->ViewAttributes() ?>>
-<?php echo $t00_tahunajaran->akhir_tahun->ViewValue ?></span>
+<?php if ($t02_kelas->Nama->Visible) { // Nama ?>
+	<tr id="r_Nama">
+		<td><span id="elh_t02_kelas_Nama"><?php echo $t02_kelas->Nama->FldCaption() ?></span></td>
+		<td data-name="Nama"<?php echo $t02_kelas->Nama->CellAttributes() ?>>
+<span id="el_t02_kelas_Nama">
+<span<?php echo $t02_kelas->Nama->ViewAttributes() ?>>
+<?php echo $t02_kelas->Nama->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
 </form>
-<?php if ($t00_tahunajaran->Export == "") { ?>
+<?php if ($t02_kelas->Export == "") { ?>
 <script type="text/javascript">
-ft00_tahunajaranview.Init();
+ft02_kelasview.Init();
 </script>
 <?php } ?>
 <?php
-$t00_tahunajaran_view->ShowPageFooter();
+$t02_kelas_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t00_tahunajaran->Export == "") { ?>
+<?php if ($t02_kelas->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1282,5 +1311,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t00_tahunajaran_view->Page_Terminate();
+$t02_kelas_view->Page_Terminate();
 ?>

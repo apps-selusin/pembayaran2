@@ -270,6 +270,10 @@ class cdefault {
 		$this->Page_Terminate("cf01_home.php"); // Exit and go to default page
 		if ($Security->AllowList(CurrentProjectID() . 't00_tahunajaran'))
 			$this->Page_Terminate("t00_tahunajaranlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't01_sekolah'))
+			$this->Page_Terminate("t01_sekolahlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't02_kelas'))
+			$this->Page_Terminate("t02_kelaslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't96_employees'))
 			$this->Page_Terminate("t96_employeeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't97_userlevels'))
