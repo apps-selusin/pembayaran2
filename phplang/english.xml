@@ -616,6 +616,9 @@
     <menu id="25">
       <phrase id="menutext" value="Pembayaran Rutin" />
     </menu>
+    <menu id="26">
+      <phrase id="menutext" value="Pembayaran Rutin Siswa" />
+    </menu>
     <menu id="1">
       <phrase id="menutext" value="User" />
     </menu>
@@ -764,6 +767,27 @@
       </field>
       <field id="nilai">
         <phrase id="fldcaption" value="Nilai" />
+      </field>
+    </table>
+    <table id="t06_siswarutinbayar">
+      <phrase id="tblcaption" value="Pembayaran Rutin Siswa" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="siswarutin_id">
+        <phrase id="fldcaption" value="siswarutin id" />
+      </field>
+      <field id="bulan">
+        <phrase id="fldcaption" value="Bulan" />
+      </field>
+      <field id="tahun">
+        <phrase id="fldcaption" value="Tahun" />
+      </field>
+      <field id="bayar_tgl">
+        <phrase id="fldcaption" value="Bayar Tgl" />
+      </field>
+      <field id="bayar_jumlah">
+        <phrase id="fldcaption" value="Bayar Jumlah" />
       </field>
     </table>
     <table id="t96_employees">

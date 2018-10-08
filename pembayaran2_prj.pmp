@@ -224,13 +224,26 @@ function Row_Inserted($rsold, &$rsnew) {
 	$awal  = $r->fields["awal_bulan"].$r->fields["awal_tahun"]; // 72018
 	$akhir = $r->fields["akhir_bulan"].$r->fields["akhir_tahun"]; // 62019
 
-	$awal_bulan = $r->fields["awal_bulan"];
-	$awal_tahun = $r->fields["awal_tahun"];
-	$akhir_bulan = $r->fields["akhir_bulan"];
-	$akhir_tahun = $r->fields["akhir_tahun"];
+	$bulan = $r->fields["awal_bulan"] - 1;
+	$tahun = $r->fields["awal_tahun"];
 
 	while ($awal != $akhir) {
+		$bulan++;
+
+		if ($bulan == 13) {
+			$bulan = 1;
+			$tahun++;
+		}
+
+		$q = "insert into
+			t06_siswarutinbayar (siswarutin_id, bulan, tahun) values (
+			".$rsnew["id"].",
+			".$bulan.",
+			".$tahun."
+			)";
+		Conn()->Execute($q);
 		
+		$awal = $bulan.$tahun;
 	}
 
 

@@ -280,6 +280,8 @@ class cdefault {
 			$this->Page_Terminate("t04_rutinlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't05_siswarutin'))
 			$this->Page_Terminate("t05_siswarutinlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't06_siswarutinbayar'))
+			$this->Page_Terminate("t06_siswarutinbayarlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't96_employees'))
 			$this->Page_Terminate("t96_employeeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't97_userlevels'))
