@@ -975,18 +975,6 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 		$item->Visible = $Security->CanEdit();
 		$item->OnLeft = TRUE;
 
-		// "copy"
-		$item = &$this->ListOptions->Add("copy");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanAdd();
-		$item->OnLeft = TRUE;
-
-		// "delete"
-		$item = &$this->ListOptions->Add("delete");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanDelete();
-		$item->OnLeft = TRUE;
-
 		// "sequence"
 		$item = &$this->ListOptions->Add("sequence");
 		$item->CssStyle = "white-space: nowrap;";
@@ -1040,7 +1028,7 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 				$option->UseButtonGroup = TRUE; // Use button group for grid delete button
 				$option->UseImageAndText = TRUE; // Use image and text for grid delete button
 				$oListOpt = &$option->Items["griddelete"];
-				if (!$Security->CanDelete() && is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
+				if (is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
 					$oListOpt->Body = "&nbsp;";
 				} else {
 					$oListOpt->Body = "<a class=\"ewGridLink ewGridDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" onclick=\"return ew_DeleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->Phrase("DeleteLink") . "</a>";
@@ -1070,22 +1058,6 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 		} else {
 			$oListOpt->Body = "";
 		}
-
-		// "copy"
-		$oListOpt = &$this->ListOptions->Items["copy"];
-		$copycaption = ew_HtmlTitle($Language->Phrase("CopyLink"));
-		if ($Security->CanAdd()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewCopy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . ew_HtmlEncode($this->CopyUrl) . "\">" . $Language->Phrase("CopyLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
-		// "delete"
-		$oListOpt = &$this->ListOptions->Items["delete"];
-		if ($Security->CanDelete())
-			$oListOpt->Body = "<a class=\"ewRowLink ewDelete\"" . "" . " title=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("DeleteLink") . "</a>";
-		else
-			$oListOpt->Body = "";
 		} // End View mode
 		if ($this->CurrentMode == "edit" && is_numeric($this->RowIndex)) {
 			$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $KeyName . "\" id=\"" . $KeyName . "\" value=\"" . $this->id->CurrentValue . "\">";
@@ -1111,14 +1083,6 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 		$item = &$option->Add($option->GroupOptionName);
 		$item->Body = "";
 		$item->Visible = FALSE;
-
-		// Add
-		if ($this->CurrentMode == "view") { // Check view mode
-			$item = &$option->Add("add");
-			$addcaption = ew_HtmlTitle($Language->Phrase("AddLink"));
-			$item->Body = "<a class=\"ewAddEdit ewAdd\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
-			$item->Visible = ($this->AddUrl <> "" && $Security->CanAdd());
-		}
 	}
 
 	// Render other options
@@ -1132,7 +1096,7 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 				$option->UseImageAndText = TRUE;
 				$item = &$option->Add("addblankrow");
 				$item->Body = "<a class=\"ewAddEdit ewAddBlankRow\" title=\"" . ew_HtmlTitle($Language->Phrase("AddBlankRow")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("AddBlankRow")) . "\" href=\"javascript:void(0);\" onclick=\"ew_AddGridRow(this);\">" . $Language->Phrase("AddBlankRow") . "</a>";
-				$item->Visible = $Security->CanAdd();
+				$item->Visible = FALSE;
 				$this->ShowOtherOptions = $item->Visible;
 			}
 		}
@@ -1859,86 +1823,84 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
 			// tahunajaran_id
+			$this->tahunajaran_id->EditAttrs["class"] = "form-control";
 			$this->tahunajaran_id->EditCustomAttributes = "";
-			if (trim(strval($this->tahunajaran_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
+			if (strval($this->tahunajaran_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->tahunajaran_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v00_tahunajaran`";
+			$sSqlWrk = "SELECT `id`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v00_tahunajaran`";
 			$sWhereWrk = "";
 			$this->tahunajaran_id->LookupFilters = array("dx1" => '`tahun_pelajaran`');
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->DisplayValue($arwrk);
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('DispFld');
+					$this->tahunajaran_id->EditValue = $this->tahunajaran_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->tahunajaran_id->EditValue = $this->tahunajaran_id->CurrentValue;
+				}
 			} else {
-				$this->tahunajaran_id->ViewValue = $Language->Phrase("PleaseSelect");
+				$this->tahunajaran_id->EditValue = NULL;
 			}
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->tahunajaran_id->EditValue = $arwrk;
+			$this->tahunajaran_id->ViewCustomAttributes = "";
 
 			// sekolah_id
+			$this->sekolah_id->EditAttrs["class"] = "form-control";
 			$this->sekolah_id->EditCustomAttributes = "";
-			if (trim(strval($this->sekolah_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
+			if (strval($this->sekolah_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->sekolah_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t01_sekolah`";
+			$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t01_sekolah`";
 			$sWhereWrk = "";
 			$this->sekolah_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->sekolah_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-				$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
-				$this->sekolah_id->ViewValue = $this->sekolah_id->DisplayValue($arwrk);
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('DispFld');
+					$arwrk[2] = $rswrk->fields('Disp2Fld');
+					$this->sekolah_id->EditValue = $this->sekolah_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->sekolah_id->EditValue = $this->sekolah_id->CurrentValue;
+				}
 			} else {
-				$this->sekolah_id->ViewValue = $Language->Phrase("PleaseSelect");
+				$this->sekolah_id->EditValue = NULL;
 			}
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->sekolah_id->EditValue = $arwrk;
+			$this->sekolah_id->ViewCustomAttributes = "";
 
 			// kelas_id
+			$this->kelas_id->EditAttrs["class"] = "form-control";
 			$this->kelas_id->EditCustomAttributes = "";
-			if (trim(strval($this->kelas_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
+			if (strval($this->kelas_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->kelas_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, `sekolah_id` AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t02_kelas`";
+			$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_kelas`";
 			$sWhereWrk = "";
 			$this->kelas_id->LookupFilters = array("dx1" => '`Nama`');
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-				$this->kelas_id->ViewValue = $this->kelas_id->DisplayValue($arwrk);
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = $rswrk->fields('DispFld');
+					$this->kelas_id->EditValue = $this->kelas_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->kelas_id->EditValue = $this->kelas_id->CurrentValue;
+				}
 			} else {
-				$this->kelas_id->ViewValue = $Language->Phrase("PleaseSelect");
+				$this->kelas_id->EditValue = NULL;
 			}
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->kelas_id->EditValue = $arwrk;
+			$this->kelas_id->ViewCustomAttributes = "";
 
 			// siswa_id
+			$this->siswa_id->EditAttrs["class"] = "form-control";
 			$this->siswa_id->EditCustomAttributes = "";
-			if ($this->siswa_id->getSessionValue() <> "") {
-				$this->siswa_id->CurrentValue = $this->siswa_id->getSessionValue();
-				$this->siswa_id->OldValue = $this->siswa_id->CurrentValue;
 			if (strval($this->siswa_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 			$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_siswa`";
@@ -1952,46 +1914,19 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('DispFld');
 					$arwrk[2] = $rswrk->fields('Disp2Fld');
-					$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+					$this->siswa_id->EditValue = $this->siswa_id->DisplayValue($arwrk);
 					$rswrk->Close();
 				} else {
-					$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+					$this->siswa_id->EditValue = $this->siswa_id->CurrentValue;
 				}
 			} else {
-				$this->siswa_id->ViewValue = NULL;
+				$this->siswa_id->EditValue = NULL;
 			}
 			$this->siswa_id->ViewCustomAttributes = "";
-			} else {
-			if (trim(strval($this->siswa_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
-				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t03_siswa`";
-			$sWhereWrk = "";
-			$this->siswa_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-				$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
-				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
-			} else {
-				$this->siswa_id->ViewValue = $Language->Phrase("PleaseSelect");
-			}
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->siswa_id->EditValue = $arwrk;
-			}
 
 			// rutin_id
+			$this->rutin_id->EditAttrs["class"] = "form-control";
 			$this->rutin_id->EditCustomAttributes = "";
-			if ($this->rutin_id->getSessionValue() <> "") {
-				$this->rutin_id->CurrentValue = $this->rutin_id->getSessionValue();
-				$this->rutin_id->OldValue = $this->rutin_id->CurrentValue;
 			if (strval($this->rutin_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->rutin_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 			$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rutin`";
@@ -2004,49 +1939,35 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
 					$arwrk[1] = $rswrk->fields('DispFld');
-					$this->rutin_id->ViewValue = $this->rutin_id->DisplayValue($arwrk);
+					$this->rutin_id->EditValue = $this->rutin_id->DisplayValue($arwrk);
 					$rswrk->Close();
 				} else {
-					$this->rutin_id->ViewValue = $this->rutin_id->CurrentValue;
+					$this->rutin_id->EditValue = $this->rutin_id->CurrentValue;
 				}
 			} else {
-				$this->rutin_id->ViewValue = NULL;
+				$this->rutin_id->EditValue = NULL;
 			}
 			$this->rutin_id->ViewCustomAttributes = "";
-			} else {
-			if (trim(strval($this->rutin_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
-				$sFilterWrk = "`id`" . ew_SearchString("=", $this->rutin_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t04_rutin`";
-			$sWhereWrk = "";
-			$this->rutin_id->LookupFilters = array("dx1" => '`Nama`');
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->rutin_id, $sWhereWrk); // Call Lookup selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-				$this->rutin_id->ViewValue = $this->rutin_id->DisplayValue($arwrk);
-			} else {
-				$this->rutin_id->ViewValue = $Language->Phrase("PleaseSelect");
-			}
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->rutin_id->EditValue = $arwrk;
-			}
 
 			// Bulan
 			$this->Bulan->EditAttrs["class"] = "form-control";
 			$this->Bulan->EditCustomAttributes = "";
-			$this->Bulan->EditValue = $this->Bulan->Options(TRUE);
+			if (strval($this->Bulan->CurrentValue) <> "") {
+				$this->Bulan->EditValue = $this->Bulan->OptionCaption($this->Bulan->CurrentValue);
+			} else {
+				$this->Bulan->EditValue = NULL;
+			}
+			$this->Bulan->ViewCustomAttributes = "";
 
 			// Tahun
 			$this->Tahun->EditAttrs["class"] = "form-control";
 			$this->Tahun->EditCustomAttributes = "";
-			$this->Tahun->EditValue = $this->Tahun->Options(TRUE);
+			if (strval($this->Tahun->CurrentValue) <> "") {
+				$this->Tahun->EditValue = $this->Tahun->OptionCaption($this->Tahun->CurrentValue);
+			} else {
+				$this->Tahun->EditValue = NULL;
+			}
+			$this->Tahun->ViewCustomAttributes = "";
 
 			// Bayar_Tgl
 			$this->Bayar_Tgl->EditAttrs["class"] = "form-control";
@@ -2069,30 +1990,37 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
+			$this->tahunajaran_id->TooltipValue = "";
 
 			// sekolah_id
 			$this->sekolah_id->LinkCustomAttributes = "";
 			$this->sekolah_id->HrefValue = "";
+			$this->sekolah_id->TooltipValue = "";
 
 			// kelas_id
 			$this->kelas_id->LinkCustomAttributes = "";
 			$this->kelas_id->HrefValue = "";
+			$this->kelas_id->TooltipValue = "";
 
 			// siswa_id
 			$this->siswa_id->LinkCustomAttributes = "";
 			$this->siswa_id->HrefValue = "";
+			$this->siswa_id->TooltipValue = "";
 
 			// rutin_id
 			$this->rutin_id->LinkCustomAttributes = "";
 			$this->rutin_id->HrefValue = "";
+			$this->rutin_id->TooltipValue = "";
 
 			// Bulan
 			$this->Bulan->LinkCustomAttributes = "";
 			$this->Bulan->HrefValue = "";
+			$this->Bulan->TooltipValue = "";
 
 			// Tahun
 			$this->Tahun->LinkCustomAttributes = "";
 			$this->Tahun->HrefValue = "";
+			$this->Tahun->TooltipValue = "";
 
 			// Bayar_Tgl
 			$this->Bayar_Tgl->LinkCustomAttributes = "";
@@ -2264,27 +2192,6 @@ class ct06_siswarutinbayar_grid extends ct06_siswarutinbayar {
 			$rsold = &$rs->fields;
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
-
-			// tahunajaran_id
-			$this->tahunajaran_id->SetDbValueDef($rsnew, $this->tahunajaran_id->CurrentValue, 0, $this->tahunajaran_id->ReadOnly);
-
-			// sekolah_id
-			$this->sekolah_id->SetDbValueDef($rsnew, $this->sekolah_id->CurrentValue, 0, $this->sekolah_id->ReadOnly);
-
-			// kelas_id
-			$this->kelas_id->SetDbValueDef($rsnew, $this->kelas_id->CurrentValue, 0, $this->kelas_id->ReadOnly);
-
-			// siswa_id
-			$this->siswa_id->SetDbValueDef($rsnew, $this->siswa_id->CurrentValue, 0, $this->siswa_id->ReadOnly);
-
-			// rutin_id
-			$this->rutin_id->SetDbValueDef($rsnew, $this->rutin_id->CurrentValue, 0, $this->rutin_id->ReadOnly);
-
-			// Bulan
-			$this->Bulan->SetDbValueDef($rsnew, $this->Bulan->CurrentValue, 0, $this->Bulan->ReadOnly);
-
-			// Tahun
-			$this->Tahun->SetDbValueDef($rsnew, $this->Tahun->CurrentValue, 0, $this->Tahun->ReadOnly);
 
 			// Bayar_Tgl
 			$this->Bayar_Tgl->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->Bayar_Tgl->CurrentValue, 7), NULL, $this->Bayar_Tgl->ReadOnly);

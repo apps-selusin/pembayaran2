@@ -404,13 +404,10 @@ $t06_siswarutinbayar_grid->ListOptions->Render("body", "left", $t06_siswarutinba
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_tahunajaran_id" class="form-group t06_siswarutinbayar_tahunajaran_id">
-<span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id"><?php echo (strval($t06_siswarutinbayar->tahunajaran_id->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $t06_siswarutinbayar->tahunajaran_id->ViewValue); ?></span>
+<span<?php echo $t06_siswarutinbayar->tahunajaran_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->tahunajaran_id->EditValue ?></p></span>
 </span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t06_siswarutinbayar->tahunajaran_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_tahunajaran_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t06_siswarutinbayar->tahunajaran_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id" value="<?php echo $t06_siswarutinbayar->tahunajaran_id->CurrentValue ?>"<?php echo $t06_siswarutinbayar->tahunajaran_id->EditAttributes() ?>>
-<input type="hidden" name="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id" id="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id" value="<?php echo $t06_siswarutinbayar->tahunajaran_id->LookupFilterQuery() ?>">
-</span>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_tahunajaran_id" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_tahunajaran_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->tahunajaran_id->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_tahunajaran_id" class="t06_siswarutinbayar_tahunajaran_id">
@@ -450,14 +447,10 @@ $t06_siswarutinbayar_grid->ListOptions->Render("body", "left", $t06_siswarutinba
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_sekolah_id" class="form-group t06_siswarutinbayar_sekolah_id">
-<?php $t06_siswarutinbayar->sekolah_id->EditAttrs["onchange"] = "ew_UpdateOpt.call(this); " . @$t06_siswarutinbayar->sekolah_id->EditAttrs["onchange"]; ?>
-<span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id"><?php echo (strval($t06_siswarutinbayar->sekolah_id->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $t06_siswarutinbayar->sekolah_id->ViewValue); ?></span>
+<span<?php echo $t06_siswarutinbayar->sekolah_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->sekolah_id->EditValue ?></p></span>
 </span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t06_siswarutinbayar->sekolah_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_sekolah_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t06_siswarutinbayar->sekolah_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id" value="<?php echo $t06_siswarutinbayar->sekolah_id->CurrentValue ?>"<?php echo $t06_siswarutinbayar->sekolah_id->EditAttributes() ?>>
-<input type="hidden" name="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id" id="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id" value="<?php echo $t06_siswarutinbayar->sekolah_id->LookupFilterQuery() ?>">
-</span>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_sekolah_id" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_sekolah_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->sekolah_id->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_sekolah_id" class="t06_siswarutinbayar_sekolah_id">
@@ -489,13 +482,10 @@ $t06_siswarutinbayar_grid->ListOptions->Render("body", "left", $t06_siswarutinba
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_kelas_id" class="form-group t06_siswarutinbayar_kelas_id">
-<span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id"><?php echo (strval($t06_siswarutinbayar->kelas_id->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $t06_siswarutinbayar->kelas_id->ViewValue); ?></span>
+<span<?php echo $t06_siswarutinbayar->kelas_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->kelas_id->EditValue ?></p></span>
 </span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t06_siswarutinbayar->kelas_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_kelas_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t06_siswarutinbayar->kelas_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id" value="<?php echo $t06_siswarutinbayar->kelas_id->CurrentValue ?>"<?php echo $t06_siswarutinbayar->kelas_id->EditAttributes() ?>>
-<input type="hidden" name="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id" id="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id" value="<?php echo $t06_siswarutinbayar->kelas_id->LookupFilterQuery() ?>">
-</span>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_kelas_id" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_kelas_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->kelas_id->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_kelas_id" class="t06_siswarutinbayar_kelas_id">
@@ -534,22 +524,11 @@ $t06_siswarutinbayar_grid->ListOptions->Render("body", "left", $t06_siswarutinba
 <input type="hidden" data-table="t06_siswarutinbayar" data-field="x_siswa_id" name="o<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" id="o<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->siswa_id->OldValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($t06_siswarutinbayar->siswa_id->getSessionValue() <> "") { ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_siswa_id" class="form-group t06_siswarutinbayar_siswa_id">
 <span<?php echo $t06_siswarutinbayar->siswa_id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $t06_siswarutinbayar->siswa_id->ViewValue ?></p></span>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->siswa_id->EditValue ?></p></span>
 </span>
-<input type="hidden" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->siswa_id->CurrentValue) ?>">
-<?php } else { ?>
-<span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_siswa_id" class="form-group t06_siswarutinbayar_siswa_id">
-<span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id"><?php echo (strval($t06_siswarutinbayar->siswa_id->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $t06_siswarutinbayar->siswa_id->ViewValue); ?></span>
-</span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t06_siswarutinbayar->siswa_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_siswa_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t06_siswarutinbayar->siswa_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" value="<?php echo $t06_siswarutinbayar->siswa_id->CurrentValue ?>"<?php echo $t06_siswarutinbayar->siswa_id->EditAttributes() ?>>
-<input type="hidden" name="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" id="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" value="<?php echo $t06_siswarutinbayar->siswa_id->LookupFilterQuery() ?>">
-</span>
-<?php } ?>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_siswa_id" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_siswa_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->siswa_id->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_siswa_id" class="t06_siswarutinbayar_siswa_id">
@@ -588,22 +567,11 @@ $t06_siswarutinbayar_grid->ListOptions->Render("body", "left", $t06_siswarutinba
 <input type="hidden" data-table="t06_siswarutinbayar" data-field="x_rutin_id" name="o<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" id="o<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->rutin_id->OldValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($t06_siswarutinbayar->rutin_id->getSessionValue() <> "") { ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_rutin_id" class="form-group t06_siswarutinbayar_rutin_id">
 <span<?php echo $t06_siswarutinbayar->rutin_id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $t06_siswarutinbayar->rutin_id->ViewValue ?></p></span>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->rutin_id->EditValue ?></p></span>
 </span>
-<input type="hidden" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->rutin_id->CurrentValue) ?>">
-<?php } else { ?>
-<span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_rutin_id" class="form-group t06_siswarutinbayar_rutin_id">
-<span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id"><?php echo (strval($t06_siswarutinbayar->rutin_id->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $t06_siswarutinbayar->rutin_id->ViewValue); ?></span>
-</span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t06_siswarutinbayar->rutin_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_rutin_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t06_siswarutinbayar->rutin_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" value="<?php echo $t06_siswarutinbayar->rutin_id->CurrentValue ?>"<?php echo $t06_siswarutinbayar->rutin_id->EditAttributes() ?>>
-<input type="hidden" name="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" id="s_x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" value="<?php echo $t06_siswarutinbayar->rutin_id->LookupFilterQuery() ?>">
-</span>
-<?php } ?>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_rutin_id" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_rutin_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->rutin_id->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_rutin_id" class="t06_siswarutinbayar_rutin_id">
@@ -632,10 +600,10 @@ $t06_siswarutinbayar_grid->ListOptions->Render("body", "left", $t06_siswarutinba
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_Bulan" class="form-group t06_siswarutinbayar_Bulan">
-<select data-table="t06_siswarutinbayar" data-field="x_Bulan" data-value-separator="<?php echo $t06_siswarutinbayar->Bulan->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bulan" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bulan"<?php echo $t06_siswarutinbayar->Bulan->EditAttributes() ?>>
-<?php echo $t06_siswarutinbayar->Bulan->SelectOptionListHtml("x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bulan") ?>
-</select>
+<span<?php echo $t06_siswarutinbayar->Bulan->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->Bulan->EditValue ?></p></span>
 </span>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_Bulan" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bulan" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bulan" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->Bulan->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_Bulan" class="t06_siswarutinbayar_Bulan">
@@ -664,10 +632,10 @@ $t06_siswarutinbayar_grid->ListOptions->Render("body", "left", $t06_siswarutinba
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_Tahun" class="form-group t06_siswarutinbayar_Tahun">
-<select data-table="t06_siswarutinbayar" data-field="x_Tahun" data-value-separator="<?php echo $t06_siswarutinbayar->Tahun->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Tahun" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Tahun"<?php echo $t06_siswarutinbayar->Tahun->EditAttributes() ?>>
-<?php echo $t06_siswarutinbayar->Tahun->SelectOptionListHtml("x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Tahun") ?>
-</select>
+<span<?php echo $t06_siswarutinbayar->Tahun->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->Tahun->EditValue ?></p></span>
 </span>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_Tahun" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Tahun" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Tahun" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->Tahun->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_Tahun" class="t06_siswarutinbayar_Tahun">
