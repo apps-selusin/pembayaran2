@@ -134,6 +134,10 @@ class ct03_siswa extends cTable {
 			$sDetailUrl = $GLOBALS["t05_siswarutin"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
 			$sDetailUrl .= "&fk_id=" . urlencode($this->id->CurrentValue);
 		}
+		if ($this->getCurrentDetailTable() == "t06_siswarutinbayar") {
+			$sDetailUrl = $GLOBALS["t06_siswarutinbayar"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
+			$sDetailUrl .= "&fk_id=" . urlencode($this->id->CurrentValue);
+		}
 		if ($sDetailUrl == "") {
 			$sDetailUrl = "t03_siswalist.php";
 		}
@@ -397,6 +401,26 @@ class ct03_siswa extends cTable {
 	// Update
 	function Update(&$rs, $where = "", $rsold = NULL, $curfilter = TRUE) {
 		$conn = &$this->Connection();
+
+		// Cascade Update detail table 't06_siswarutinbayar'
+		$bCascadeUpdate = FALSE;
+		$rscascade = array();
+		if (!is_null($rsold) && (isset($rs['id']) && $rsold['id'] <> $rs['id'])) { // Update detail field 'siswa_id'
+			$bCascadeUpdate = TRUE;
+			$rscascade['siswa_id'] = $rs['id']; 
+		}
+		if ($bCascadeUpdate) {
+			if (!isset($GLOBALS["t06_siswarutinbayar"])) $GLOBALS["t06_siswarutinbayar"] = new ct06_siswarutinbayar();
+			$rswrk = $GLOBALS["t06_siswarutinbayar"]->LoadRs("`siswa_id` = " . ew_QuotedValue($rsold['id'], EW_DATATYPE_NUMBER, 'DB')); 
+			while ($rswrk && !$rswrk->EOF) {
+				$rskey = array();
+				$fldname = 'id';
+				$rskey[$fldname] = $rswrk->fields[$fldname];
+				$bUpdate = $GLOBALS["t06_siswarutinbayar"]->Update($rscascade, $rskey, $rswrk->fields);
+				if (!$bUpdate) return FALSE;
+				$rswrk->MoveNext();
+			}
+		}
 		$bUpdate = $conn->Execute($this->UpdateSQL($rs, $where, $curfilter));
 		if ($bUpdate && $this->AuditTrailOnEdit) {
 			$rsaudit = $rs;
@@ -434,6 +458,14 @@ class ct03_siswa extends cTable {
 		$rscascade = $GLOBALS["t05_siswarutin"]->LoadRs("`siswa_id` = " . ew_QuotedValue($rs['id'], EW_DATATYPE_NUMBER, "DB")); 
 		while ($rscascade && !$rscascade->EOF) {
 			$GLOBALS["t05_siswarutin"]->Delete($rscascade->fields);
+			$rscascade->MoveNext();
+		}
+
+		// Cascade delete detail table 't06_siswarutinbayar'
+		if (!isset($GLOBALS["t06_siswarutinbayar"])) $GLOBALS["t06_siswarutinbayar"] = new ct06_siswarutinbayar();
+		$rscascade = $GLOBALS["t06_siswarutinbayar"]->LoadRs("`siswa_id` = " . ew_QuotedValue($rs['id'], EW_DATATYPE_NUMBER, "DB")); 
+		while ($rscascade && !$rscascade->EOF) {
+			$GLOBALS["t06_siswarutinbayar"]->Delete($rscascade->fields);
 			$rscascade->MoveNext();
 		}
 		$bDelete = $conn->Execute($this->DeleteSQL($rs, $where, $curfilter));

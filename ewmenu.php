@@ -5,8 +5,8 @@
 // Generate all menu items
 $RootMenu->IsRoot = TRUE;
 $RootMenu->AddMenuItem(5, "mi_cf01_home_php", $Language->MenuPhrase("5", "MenuText"), "cf01_home.php", -1, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}cf01_home.php'), FALSE, TRUE);
-$RootMenu->AddMenuItem(27, "mi_v02_rutin", $Language->MenuPhrase("27", "MenuText"), "v02_rutinlist.php", -1, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}v02_rutin'), FALSE, FALSE);
-$RootMenu->AddMenuItem(28, "mi_v02_rutin2", $Language->MenuPhrase("28", "MenuText"), "v02_rutin2list.php", -1, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}v02_rutin2'), FALSE, FALSE);
+$RootMenu->AddMenuItem(33, "mci_Pembayaran", $Language->MenuPhrase("33", "MenuText"), "", -1, "", IsLoggedIn(), FALSE, TRUE);
+$RootMenu->AddMenuItem(26, "mi_t06_siswarutinbayar", $Language->MenuPhrase("26", "MenuText"), "t06_siswarutinbayarlist.php?cmd=resetall", 33, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}t06_siswarutinbayar'), FALSE, FALSE);
 $RootMenu->AddMenuItem(6, "mci_Setup", $Language->MenuPhrase("6", "MenuText"), "", -1, "", IsLoggedIn(), FALSE, TRUE);
 $RootMenu->AddMenuItem(7, "mi_t00_tahunajaran", $Language->MenuPhrase("7", "MenuText"), "t00_tahunajaranlist.php", 6, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}t00_tahunajaran'), FALSE, FALSE);
 $RootMenu->AddMenuItem(8, "mi_t01_sekolah", $Language->MenuPhrase("8", "MenuText"), "t01_sekolahlist.php", 6, "", AllowListMenu('{8F2DFBC1-53BE-44C3-91F5-73D45F821091}t01_sekolah'), FALSE, FALSE);

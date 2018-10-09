@@ -441,13 +441,13 @@ class ct05_siswarutin extends cTable {
 		// Cascade Update detail table 't06_siswarutinbayar'
 		$bCascadeUpdate = FALSE;
 		$rscascade = array();
-		if (!is_null($rsold) && (isset($rs['id']) && $rsold['id'] <> $rs['id'])) { // Update detail field 'siswarutin_id'
+		if (!is_null($rsold) && (isset($rs['id']) && $rsold['id'] <> $rs['id'])) { // Update detail field 'rutin_id'
 			$bCascadeUpdate = TRUE;
-			$rscascade['siswarutin_id'] = $rs['id']; 
+			$rscascade['rutin_id'] = $rs['id']; 
 		}
 		if ($bCascadeUpdate) {
 			if (!isset($GLOBALS["t06_siswarutinbayar"])) $GLOBALS["t06_siswarutinbayar"] = new ct06_siswarutinbayar();
-			$rswrk = $GLOBALS["t06_siswarutinbayar"]->LoadRs("`siswarutin_id` = " . ew_QuotedValue($rsold['id'], EW_DATATYPE_NUMBER, 'DB')); 
+			$rswrk = $GLOBALS["t06_siswarutinbayar"]->LoadRs("`rutin_id` = " . ew_QuotedValue($rsold['id'], EW_DATATYPE_NUMBER, 'DB')); 
 			while ($rswrk && !$rswrk->EOF) {
 				$rskey = array();
 				$fldname = 'id';
@@ -491,7 +491,7 @@ class ct05_siswarutin extends cTable {
 
 		// Cascade delete detail table 't06_siswarutinbayar'
 		if (!isset($GLOBALS["t06_siswarutinbayar"])) $GLOBALS["t06_siswarutinbayar"] = new ct06_siswarutinbayar();
-		$rscascade = $GLOBALS["t06_siswarutinbayar"]->LoadRs("`siswarutin_id` = " . ew_QuotedValue($rs['id'], EW_DATATYPE_NUMBER, "DB")); 
+		$rscascade = $GLOBALS["t06_siswarutinbayar"]->LoadRs("`rutin_id` = " . ew_QuotedValue($rs['id'], EW_DATATYPE_NUMBER, "DB")); 
 		while ($rscascade && !$rscascade->EOF) {
 			$GLOBALS["t06_siswarutinbayar"]->Delete($rscascade->fields);
 			$rscascade->MoveNext();
@@ -1102,12 +1102,20 @@ class ct05_siswarutin extends cTable {
 
 		$siswa_id = $rsnew["siswa_id"];
 
+		// ambil data tahunajaran_id
+		$q = "select tahunajaran_id, kelas_id from t03_siswa where id = ".$siswa_id."";
+		$r = ew_ExecuteRow($q);
+		$tahunajaran_id = $r["tahunajaran_id"];
+		$kelas_id = $r["kelas_id"];
+
+		// ambil data sekolah_id
+		$q = "select sekolah_id from t02_kelas where id = ".$kelas_id."";
+		$sekolah_id = ew_ExecuteScalar($q);
+
 		// ambil data tahun ajaran dan diloop selama satu periode tahun ajaran
 		// mulai awal tahun ajaran hingga akhir tahun ajaran
 
-		$q = "select tahunajaran_id from t03_siswa where id = ".$siswa_id."";
-		$r = Conn()->Execute($q);
-		$q = "select * from t00_tahunajaran where id = ".$r->fields["tahunajaran_id"]."";
+		$q = "select * from t00_tahunajaran where id = ".$tahunajaran_id."";
 		$r = Conn()->Execute($q);
 		$awal  = $r->fields["awal_bulan"].$r->fields["awal_tahun"]; // 72018
 		$akhir = $r->fields["akhir_bulan"].$r->fields["akhir_tahun"]; // 62019
@@ -1120,7 +1128,19 @@ class ct05_siswarutin extends cTable {
 				$tahun++;
 			}
 			$q = "insert into
-				t06_siswarutinbayar (siswarutin_id, bulan, tahun) values (
+				t06_siswarutinbayar (
+					tahunajaran_id,
+					sekolah_id,
+					kelas_id,
+					siswa_id,
+					rutin_id,
+					bulan,
+					tahun
+				) values (
+				".$tahunajaran_id.",
+				".$sekolah_id.",
+				".$kelas_id.",
+				".$siswa_id.",
 				".$rsnew["id"].",
 				".$bulan.",
 				".$tahun."

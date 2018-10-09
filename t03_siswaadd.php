@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "t03_siswainfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "t05_siswarutingridcls.php" ?>
+<?php include_once "t06_siswarutinbayargridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -311,6 +312,14 @@ class ct03_siswa_add extends ct03_siswa {
 			if (@$_POST["grid"] == "ft05_siswarutingrid") {
 				if (!isset($GLOBALS["t05_siswarutin_grid"])) $GLOBALS["t05_siswarutin_grid"] = new ct05_siswarutin_grid;
 				$GLOBALS["t05_siswarutin_grid"]->Page_Init();
+				$this->Page_Terminate();
+				exit();
+			}
+
+			// Process auto fill for detail table 't06_siswarutinbayar'
+			if (@$_POST["grid"] == "ft06_siswarutinbayargrid") {
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid;
+				$GLOBALS["t06_siswarutinbayar_grid"]->Page_Init();
 				$this->Page_Terminate();
 				exit();
 			}
@@ -824,6 +833,10 @@ class ct03_siswa_add extends ct03_siswa {
 			if (!isset($GLOBALS["t05_siswarutin_grid"])) $GLOBALS["t05_siswarutin_grid"] = new ct05_siswarutin_grid(); // get detail page object
 			$GLOBALS["t05_siswarutin_grid"]->ValidateGridForm();
 		}
+		if (in_array("t06_siswarutinbayar", $DetailTblVar) && $GLOBALS["t06_siswarutinbayar"]->DetailAdd) {
+			if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid(); // get detail page object
+			$GLOBALS["t06_siswarutinbayar_grid"]->ValidateGridForm();
+		}
 
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
@@ -898,6 +911,15 @@ class ct03_siswa_add extends ct03_siswa {
 				if (!$AddRow)
 					$GLOBALS["t05_siswarutin"]->siswa_id->setSessionValue(""); // Clear master key if insert failed
 			}
+			if (in_array("t06_siswarutinbayar", $DetailTblVar) && $GLOBALS["t06_siswarutinbayar"]->DetailAdd) {
+				$GLOBALS["t06_siswarutinbayar"]->siswa_id->setSessionValue($this->id->CurrentValue); // Set master key
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid(); // Get detail page object
+				$Security->LoadCurrentUserLevel($this->ProjectID . "t06_siswarutinbayar"); // Load user level of detail table
+				$AddRow = $GLOBALS["t06_siswarutinbayar_grid"]->GridInsert();
+				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+				if (!$AddRow)
+					$GLOBALS["t06_siswarutinbayar"]->siswa_id->setSessionValue(""); // Clear master key if insert failed
+			}
 		}
 
 		// Commit/Rollback transaction
@@ -945,6 +967,24 @@ class ct03_siswa_add extends ct03_siswa {
 					$GLOBALS["t05_siswarutin_grid"]->siswa_id->FldIsDetailKey = TRUE;
 					$GLOBALS["t05_siswarutin_grid"]->siswa_id->CurrentValue = $this->id->CurrentValue;
 					$GLOBALS["t05_siswarutin_grid"]->siswa_id->setSessionValue($GLOBALS["t05_siswarutin_grid"]->siswa_id->CurrentValue);
+				}
+			}
+			if (in_array("t06_siswarutinbayar", $DetailTblVar)) {
+				if (!isset($GLOBALS["t06_siswarutinbayar_grid"]))
+					$GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid;
+				if ($GLOBALS["t06_siswarutinbayar_grid"]->DetailAdd) {
+					if ($this->CopyRecord)
+						$GLOBALS["t06_siswarutinbayar_grid"]->CurrentMode = "copy";
+					else
+						$GLOBALS["t06_siswarutinbayar_grid"]->CurrentMode = "add";
+					$GLOBALS["t06_siswarutinbayar_grid"]->CurrentAction = "gridadd";
+
+					// Save current master table to detail table
+					$GLOBALS["t06_siswarutinbayar_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t06_siswarutinbayar_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswa_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswa_id->CurrentValue = $this->id->CurrentValue;
+					$GLOBALS["t06_siswarutinbayar_grid"]->siswa_id->setSessionValue($GLOBALS["t06_siswarutinbayar_grid"]->siswa_id->CurrentValue);
 				}
 			}
 		}
@@ -1241,6 +1281,14 @@ $t03_siswa_add->ShowMessage();
 <h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t05_siswarutin", "TblCaption") ?></h4>
 <?php } ?>
 <?php include_once "t05_siswarutingrid.php" ?>
+<?php } ?>
+<?php
+	if (in_array("t06_siswarutinbayar", explode(",", $t03_siswa->getCurrentDetailTable())) && $t06_siswarutinbayar->DetailAdd) {
+?>
+<?php if ($t03_siswa->getCurrentDetailTable() <> "") { ?>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t06_siswarutinbayar", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "t06_siswarutinbayargrid.php" ?>
 <?php } ?>
 <?php if (!$t03_siswa_add->IsModal) { ?>
 <div class="form-group">

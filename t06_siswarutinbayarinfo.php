@@ -14,7 +14,11 @@ class ct06_siswarutinbayar extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
-	var $siswarutin_id;
+	var $tahunajaran_id;
+	var $sekolah_id;
+	var $kelas_id;
+	var $siswa_id;
+	var $rutin_id;
 	var $Bulan;
 	var $Tahun;
 	var $Bayar_Tgl;
@@ -56,28 +60,68 @@ class ct06_siswarutinbayar extends cTable {
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
-		// siswarutin_id
-		$this->siswarutin_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_siswarutin_id', 'siswarutin_id', '`siswarutin_id`', '`siswarutin_id`', 3, -1, FALSE, '`siswarutin_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->siswarutin_id->Sortable = TRUE; // Allow sort
-		$this->siswarutin_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['siswarutin_id'] = &$this->siswarutin_id;
+		// tahunajaran_id
+		$this->tahunajaran_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_tahunajaran_id', 'tahunajaran_id', '`tahunajaran_id`', '`tahunajaran_id`', 3, -1, FALSE, '`tahunajaran_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->tahunajaran_id->Sortable = TRUE; // Allow sort
+		$this->tahunajaran_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->tahunajaran_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->tahunajaran_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['tahunajaran_id'] = &$this->tahunajaran_id;
+
+		// sekolah_id
+		$this->sekolah_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_sekolah_id', 'sekolah_id', '`sekolah_id`', '`sekolah_id`', 3, -1, FALSE, '`sekolah_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->sekolah_id->Sortable = TRUE; // Allow sort
+		$this->sekolah_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->sekolah_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->sekolah_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['sekolah_id'] = &$this->sekolah_id;
+
+		// kelas_id
+		$this->kelas_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_kelas_id', 'kelas_id', '`kelas_id`', '`kelas_id`', 3, -1, FALSE, '`kelas_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->kelas_id->Sortable = TRUE; // Allow sort
+		$this->kelas_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->kelas_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->kelas_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['kelas_id'] = &$this->kelas_id;
+
+		// siswa_id
+		$this->siswa_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_siswa_id', 'siswa_id', '`siswa_id`', '`siswa_id`', 3, -1, FALSE, '`siswa_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->siswa_id->Sortable = TRUE; // Allow sort
+		$this->siswa_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->siswa_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->siswa_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['siswa_id'] = &$this->siswa_id;
+
+		// rutin_id
+		$this->rutin_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_rutin_id', 'rutin_id', '`rutin_id`', '`rutin_id`', 3, -1, FALSE, '`rutin_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->rutin_id->Sortable = TRUE; // Allow sort
+		$this->rutin_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->rutin_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->rutin_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['rutin_id'] = &$this->rutin_id;
 
 		// Bulan
-		$this->Bulan = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_Bulan', 'Bulan', '`Bulan`', '`Bulan`', 16, -1, FALSE, '`Bulan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Bulan = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_Bulan', 'Bulan', '`Bulan`', '`Bulan`', 16, -1, FALSE, '`Bulan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->Bulan->Sortable = TRUE; // Allow sort
+		$this->Bulan->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->Bulan->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->Bulan->OptionCount = 12;
 		$this->Bulan->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['Bulan'] = &$this->Bulan;
 
 		// Tahun
-		$this->Tahun = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_Tahun', 'Tahun', '`Tahun`', '`Tahun`', 2, -1, FALSE, '`Tahun`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Tahun = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_Tahun', 'Tahun', '`Tahun`', '`Tahun`', 2, -1, FALSE, '`Tahun`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->Tahun->Sortable = TRUE; // Allow sort
+		$this->Tahun->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->Tahun->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->Tahun->OptionCount = 10;
 		$this->Tahun->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['Tahun'] = &$this->Tahun;
 
 		// Bayar_Tgl
-		$this->Bayar_Tgl = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_Bayar_Tgl', 'Bayar_Tgl', '`Bayar_Tgl`', ew_CastDateFieldForLike('`Bayar_Tgl`', 0, "DB"), 133, 0, FALSE, '`Bayar_Tgl`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Bayar_Tgl = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_Bayar_Tgl', 'Bayar_Tgl', '`Bayar_Tgl`', ew_CastDateFieldForLike('`Bayar_Tgl`', 7, "DB"), 133, 7, FALSE, '`Bayar_Tgl`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Bayar_Tgl->Sortable = TRUE; // Allow sort
-		$this->Bayar_Tgl->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->Bayar_Tgl->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_SEPARATOR"], $Language->Phrase("IncorrectDateDMY"));
 		$this->fields['Bayar_Tgl'] = &$this->Bayar_Tgl;
 
 		// Bayar_Jumlah
@@ -136,8 +180,14 @@ class ct06_siswarutinbayar extends cTable {
 		// Master filter
 		$sMasterFilter = "";
 		if ($this->getCurrentMasterTable() == "t05_siswarutin") {
-			if ($this->siswarutin_id->getSessionValue() <> "")
-				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->siswarutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			if ($this->rutin_id->getSessionValue() <> "")
+				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->rutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
+		if ($this->getCurrentMasterTable() == "t03_siswa") {
+			if ($this->siswa_id->getSessionValue() <> "")
+				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->siswa_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
 			else
 				return "";
 		}
@@ -150,8 +200,14 @@ class ct06_siswarutinbayar extends cTable {
 		// Detail filter
 		$sDetailFilter = "";
 		if ($this->getCurrentMasterTable() == "t05_siswarutin") {
-			if ($this->siswarutin_id->getSessionValue() <> "")
-				$sDetailFilter .= "`siswarutin_id`=" . ew_QuotedValue($this->siswarutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			if ($this->rutin_id->getSessionValue() <> "")
+				$sDetailFilter .= "`rutin_id`=" . ew_QuotedValue($this->rutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
+		if ($this->getCurrentMasterTable() == "t03_siswa") {
+			if ($this->siswa_id->getSessionValue() <> "")
+				$sDetailFilter .= "`siswa_id`=" . ew_QuotedValue($this->siswa_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
 			else
 				return "";
 		}
@@ -165,7 +221,17 @@ class ct06_siswarutinbayar extends cTable {
 
 	// Detail filter
 	function SqlDetailFilter_t05_siswarutin() {
-		return "`siswarutin_id`=@siswarutin_id@";
+		return "`rutin_id`=@rutin_id@";
+	}
+
+	// Master filter
+	function SqlMasterFilter_t03_siswa() {
+		return "`id`=@id@";
+	}
+
+	// Detail filter
+	function SqlDetailFilter_t03_siswa() {
+		return "`siswa_id`=@siswa_id@";
 	}
 
 	// Table level SQL
@@ -550,7 +616,11 @@ class ct06_siswarutinbayar extends cTable {
 	function AddMasterUrl($url) {
 		if ($this->getCurrentMasterTable() == "t05_siswarutin" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
 			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
-			$url .= "&fk_id=" . urlencode($this->siswarutin_id->CurrentValue);
+			$url .= "&fk_id=" . urlencode($this->rutin_id->CurrentValue);
+		}
+		if ($this->getCurrentMasterTable() == "t03_siswa" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
+			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
+			$url .= "&fk_id=" . urlencode($this->siswa_id->CurrentValue);
 		}
 		return $url;
 	}
@@ -649,7 +719,11 @@ class ct06_siswarutinbayar extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
-		$this->siswarutin_id->setDbValue($rs->fields('siswarutin_id'));
+		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
+		$this->sekolah_id->setDbValue($rs->fields('sekolah_id'));
+		$this->kelas_id->setDbValue($rs->fields('kelas_id'));
+		$this->siswa_id->setDbValue($rs->fields('siswa_id'));
+		$this->rutin_id->setDbValue($rs->fields('rutin_id'));
 		$this->Bulan->setDbValue($rs->fields('Bulan'));
 		$this->Tahun->setDbValue($rs->fields('Tahun'));
 		$this->Bayar_Tgl->setDbValue($rs->fields('Bayar_Tgl'));
@@ -665,7 +739,11 @@ class ct06_siswarutinbayar extends cTable {
 
    // Common render codes
 		// id
-		// siswarutin_id
+		// tahunajaran_id
+		// sekolah_id
+		// kelas_id
+		// siswa_id
+		// rutin_id
 		// Bulan
 		// Tahun
 		// Bayar_Tgl
@@ -675,25 +753,148 @@ class ct06_siswarutinbayar extends cTable {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// siswarutin_id
-		$this->siswarutin_id->ViewValue = $this->siswarutin_id->CurrentValue;
-		$this->siswarutin_id->ViewCustomAttributes = "";
+		// tahunajaran_id
+		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->tahunajaran_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v00_tahunajaran`";
+		$sWhereWrk = "";
+		$this->tahunajaran_id->LookupFilters = array("dx1" => '`tahun_pelajaran`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->CurrentValue;
+			}
+		} else {
+			$this->tahunajaran_id->ViewValue = NULL;
+		}
+		$this->tahunajaran_id->ViewCustomAttributes = "";
+
+		// sekolah_id
+		if (strval($this->sekolah_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->sekolah_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t01_sekolah`";
+		$sWhereWrk = "";
+		$this->sekolah_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->sekolah_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->sekolah_id->ViewValue = $this->sekolah_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->sekolah_id->ViewValue = $this->sekolah_id->CurrentValue;
+			}
+		} else {
+			$this->sekolah_id->ViewValue = NULL;
+		}
+		$this->sekolah_id->ViewCustomAttributes = "";
+
+		// kelas_id
+		if (strval($this->kelas_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->kelas_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_kelas`";
+		$sWhereWrk = "";
+		$this->kelas_id->LookupFilters = array("dx1" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->kelas_id->ViewValue = $this->kelas_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->kelas_id->ViewValue = $this->kelas_id->CurrentValue;
+			}
+		} else {
+			$this->kelas_id->ViewValue = NULL;
+		}
+		$this->kelas_id->ViewCustomAttributes = "";
+
+		// siswa_id
+		if (strval($this->siswa_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_siswa`";
+		$sWhereWrk = "";
+		$this->siswa_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+			}
+		} else {
+			$this->siswa_id->ViewValue = NULL;
+		}
+		$this->siswa_id->ViewCustomAttributes = "";
+
+		// rutin_id
+		if (strval($this->rutin_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->rutin_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rutin`";
+		$sWhereWrk = "";
+		$this->rutin_id->LookupFilters = array("dx1" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->rutin_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->rutin_id->ViewValue = $this->rutin_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->rutin_id->ViewValue = $this->rutin_id->CurrentValue;
+			}
+		} else {
+			$this->rutin_id->ViewValue = NULL;
+		}
+		$this->rutin_id->ViewCustomAttributes = "";
 
 		// Bulan
-		$this->Bulan->ViewValue = $this->Bulan->CurrentValue;
+		if (strval($this->Bulan->CurrentValue) <> "") {
+			$this->Bulan->ViewValue = $this->Bulan->OptionCaption($this->Bulan->CurrentValue);
+		} else {
+			$this->Bulan->ViewValue = NULL;
+		}
 		$this->Bulan->ViewCustomAttributes = "";
 
 		// Tahun
-		$this->Tahun->ViewValue = $this->Tahun->CurrentValue;
+		if (strval($this->Tahun->CurrentValue) <> "") {
+			$this->Tahun->ViewValue = $this->Tahun->OptionCaption($this->Tahun->CurrentValue);
+		} else {
+			$this->Tahun->ViewValue = NULL;
+		}
 		$this->Tahun->ViewCustomAttributes = "";
 
 		// Bayar_Tgl
 		$this->Bayar_Tgl->ViewValue = $this->Bayar_Tgl->CurrentValue;
-		$this->Bayar_Tgl->ViewValue = ew_FormatDateTime($this->Bayar_Tgl->ViewValue, 0);
+		$this->Bayar_Tgl->ViewValue = ew_FormatDateTime($this->Bayar_Tgl->ViewValue, 7);
 		$this->Bayar_Tgl->ViewCustomAttributes = "";
 
 		// Bayar_Jumlah
 		$this->Bayar_Jumlah->ViewValue = $this->Bayar_Jumlah->CurrentValue;
+		$this->Bayar_Jumlah->ViewValue = ew_FormatNumber($this->Bayar_Jumlah->ViewValue, 2, -2, -2, -2);
+		$this->Bayar_Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Bayar_Jumlah->ViewCustomAttributes = "";
 
 		// id
@@ -701,10 +902,30 @@ class ct06_siswarutinbayar extends cTable {
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
 
-		// siswarutin_id
-		$this->siswarutin_id->LinkCustomAttributes = "";
-		$this->siswarutin_id->HrefValue = "";
-		$this->siswarutin_id->TooltipValue = "";
+		// tahunajaran_id
+		$this->tahunajaran_id->LinkCustomAttributes = "";
+		$this->tahunajaran_id->HrefValue = "";
+		$this->tahunajaran_id->TooltipValue = "";
+
+		// sekolah_id
+		$this->sekolah_id->LinkCustomAttributes = "";
+		$this->sekolah_id->HrefValue = "";
+		$this->sekolah_id->TooltipValue = "";
+
+		// kelas_id
+		$this->kelas_id->LinkCustomAttributes = "";
+		$this->kelas_id->HrefValue = "";
+		$this->kelas_id->TooltipValue = "";
+
+		// siswa_id
+		$this->siswa_id->LinkCustomAttributes = "";
+		$this->siswa_id->HrefValue = "";
+		$this->siswa_id->TooltipValue = "";
+
+		// rutin_id
+		$this->rutin_id->LinkCustomAttributes = "";
+		$this->rutin_id->HrefValue = "";
+		$this->rutin_id->TooltipValue = "";
 
 		// Bulan
 		$this->Bulan->LinkCustomAttributes = "";
@@ -743,34 +964,91 @@ class ct06_siswarutinbayar extends cTable {
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// siswarutin_id
-		$this->siswarutin_id->EditAttrs["class"] = "form-control";
-		$this->siswarutin_id->EditCustomAttributes = "";
-		if ($this->siswarutin_id->getSessionValue() <> "") {
-			$this->siswarutin_id->CurrentValue = $this->siswarutin_id->getSessionValue();
-		$this->siswarutin_id->ViewValue = $this->siswarutin_id->CurrentValue;
-		$this->siswarutin_id->ViewCustomAttributes = "";
+		// tahunajaran_id
+		$this->tahunajaran_id->EditAttrs["class"] = "form-control";
+		$this->tahunajaran_id->EditCustomAttributes = "";
+
+		// sekolah_id
+		$this->sekolah_id->EditAttrs["class"] = "form-control";
+		$this->sekolah_id->EditCustomAttributes = "";
+
+		// kelas_id
+		$this->kelas_id->EditAttrs["class"] = "form-control";
+		$this->kelas_id->EditCustomAttributes = "";
+
+		// siswa_id
+		$this->siswa_id->EditAttrs["class"] = "form-control";
+		$this->siswa_id->EditCustomAttributes = "";
+		if ($this->siswa_id->getSessionValue() <> "") {
+			$this->siswa_id->CurrentValue = $this->siswa_id->getSessionValue();
+		if (strval($this->siswa_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_siswa`";
+		$sWhereWrk = "";
+		$this->siswa_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+			}
 		} else {
-		$this->siswarutin_id->EditValue = $this->siswarutin_id->CurrentValue;
-		$this->siswarutin_id->PlaceHolder = ew_RemoveHtml($this->siswarutin_id->FldCaption());
+			$this->siswa_id->ViewValue = NULL;
+		}
+		$this->siswa_id->ViewCustomAttributes = "";
+		} else {
+		}
+
+		// rutin_id
+		$this->rutin_id->EditAttrs["class"] = "form-control";
+		$this->rutin_id->EditCustomAttributes = "";
+		if ($this->rutin_id->getSessionValue() <> "") {
+			$this->rutin_id->CurrentValue = $this->rutin_id->getSessionValue();
+		if (strval($this->rutin_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->rutin_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rutin`";
+		$sWhereWrk = "";
+		$this->rutin_id->LookupFilters = array("dx1" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->rutin_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->rutin_id->ViewValue = $this->rutin_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->rutin_id->ViewValue = $this->rutin_id->CurrentValue;
+			}
+		} else {
+			$this->rutin_id->ViewValue = NULL;
+		}
+		$this->rutin_id->ViewCustomAttributes = "";
+		} else {
 		}
 
 		// Bulan
 		$this->Bulan->EditAttrs["class"] = "form-control";
 		$this->Bulan->EditCustomAttributes = "";
-		$this->Bulan->EditValue = $this->Bulan->CurrentValue;
-		$this->Bulan->PlaceHolder = ew_RemoveHtml($this->Bulan->FldCaption());
+		$this->Bulan->EditValue = $this->Bulan->Options(TRUE);
 
 		// Tahun
 		$this->Tahun->EditAttrs["class"] = "form-control";
 		$this->Tahun->EditCustomAttributes = "";
-		$this->Tahun->EditValue = $this->Tahun->CurrentValue;
-		$this->Tahun->PlaceHolder = ew_RemoveHtml($this->Tahun->FldCaption());
+		$this->Tahun->EditValue = $this->Tahun->Options(TRUE);
 
 		// Bayar_Tgl
 		$this->Bayar_Tgl->EditAttrs["class"] = "form-control";
 		$this->Bayar_Tgl->EditCustomAttributes = "";
-		$this->Bayar_Tgl->EditValue = ew_FormatDateTime($this->Bayar_Tgl->CurrentValue, 8);
+		$this->Bayar_Tgl->EditValue = ew_FormatDateTime($this->Bayar_Tgl->CurrentValue, 7);
 		$this->Bayar_Tgl->PlaceHolder = ew_RemoveHtml($this->Bayar_Tgl->FldCaption());
 
 		// Bayar_Jumlah
@@ -778,7 +1056,7 @@ class ct06_siswarutinbayar extends cTable {
 		$this->Bayar_Jumlah->EditCustomAttributes = "";
 		$this->Bayar_Jumlah->EditValue = $this->Bayar_Jumlah->CurrentValue;
 		$this->Bayar_Jumlah->PlaceHolder = ew_RemoveHtml($this->Bayar_Jumlah->FldCaption());
-		if (strval($this->Bayar_Jumlah->EditValue) <> "" && is_numeric($this->Bayar_Jumlah->EditValue)) $this->Bayar_Jumlah->EditValue = ew_FormatNumber($this->Bayar_Jumlah->EditValue, -2, -1, -2, 0);
+		if (strval($this->Bayar_Jumlah->EditValue) <> "" && is_numeric($this->Bayar_Jumlah->EditValue)) $this->Bayar_Jumlah->EditValue = ew_FormatNumber($this->Bayar_Jumlah->EditValue, -2, -2, -2, -2);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -808,14 +1086,22 @@ class ct06_siswarutinbayar extends cTable {
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->siswarutin_id->Exportable) $Doc->ExportCaption($this->siswarutin_id);
+					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
+					if ($this->sekolah_id->Exportable) $Doc->ExportCaption($this->sekolah_id);
+					if ($this->kelas_id->Exportable) $Doc->ExportCaption($this->kelas_id);
+					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
+					if ($this->rutin_id->Exportable) $Doc->ExportCaption($this->rutin_id);
 					if ($this->Bulan->Exportable) $Doc->ExportCaption($this->Bulan);
 					if ($this->Tahun->Exportable) $Doc->ExportCaption($this->Tahun);
 					if ($this->Bayar_Tgl->Exportable) $Doc->ExportCaption($this->Bayar_Tgl);
 					if ($this->Bayar_Jumlah->Exportable) $Doc->ExportCaption($this->Bayar_Jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->siswarutin_id->Exportable) $Doc->ExportCaption($this->siswarutin_id);
+					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
+					if ($this->sekolah_id->Exportable) $Doc->ExportCaption($this->sekolah_id);
+					if ($this->kelas_id->Exportable) $Doc->ExportCaption($this->kelas_id);
+					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
+					if ($this->rutin_id->Exportable) $Doc->ExportCaption($this->rutin_id);
 					if ($this->Bulan->Exportable) $Doc->ExportCaption($this->Bulan);
 					if ($this->Tahun->Exportable) $Doc->ExportCaption($this->Tahun);
 					if ($this->Bayar_Tgl->Exportable) $Doc->ExportCaption($this->Bayar_Tgl);
@@ -852,14 +1138,22 @@ class ct06_siswarutinbayar extends cTable {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->siswarutin_id->Exportable) $Doc->ExportField($this->siswarutin_id);
+						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
+						if ($this->sekolah_id->Exportable) $Doc->ExportField($this->sekolah_id);
+						if ($this->kelas_id->Exportable) $Doc->ExportField($this->kelas_id);
+						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
+						if ($this->rutin_id->Exportable) $Doc->ExportField($this->rutin_id);
 						if ($this->Bulan->Exportable) $Doc->ExportField($this->Bulan);
 						if ($this->Tahun->Exportable) $Doc->ExportField($this->Tahun);
 						if ($this->Bayar_Tgl->Exportable) $Doc->ExportField($this->Bayar_Tgl);
 						if ($this->Bayar_Jumlah->Exportable) $Doc->ExportField($this->Bayar_Jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->siswarutin_id->Exportable) $Doc->ExportField($this->siswarutin_id);
+						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
+						if ($this->sekolah_id->Exportable) $Doc->ExportField($this->sekolah_id);
+						if ($this->kelas_id->Exportable) $Doc->ExportField($this->kelas_id);
+						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
+						if ($this->rutin_id->Exportable) $Doc->ExportField($this->rutin_id);
 						if ($this->Bulan->Exportable) $Doc->ExportField($this->Bulan);
 						if ($this->Tahun->Exportable) $Doc->ExportField($this->Tahun);
 						if ($this->Bayar_Tgl->Exportable) $Doc->ExportField($this->Bayar_Tgl);

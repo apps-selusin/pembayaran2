@@ -860,13 +860,13 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 		if ($AddRow) {
 			$DetailTblVar = explode(",", $this->getCurrentDetailTable());
 			if (in_array("t06_siswarutinbayar", $DetailTblVar) && $GLOBALS["t06_siswarutinbayar"]->DetailAdd) {
-				$GLOBALS["t06_siswarutinbayar"]->siswarutin_id->setSessionValue($this->id->CurrentValue); // Set master key
+				$GLOBALS["t06_siswarutinbayar"]->rutin_id->setSessionValue($this->id->CurrentValue); // Set master key
 				if (!isset($GLOBALS["t06_siswarutinbayar_grid"])) $GLOBALS["t06_siswarutinbayar_grid"] = new ct06_siswarutinbayar_grid(); // Get detail page object
 				$Security->LoadCurrentUserLevel($this->ProjectID . "t06_siswarutinbayar"); // Load user level of detail table
 				$AddRow = $GLOBALS["t06_siswarutinbayar_grid"]->GridInsert();
 				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
 				if (!$AddRow)
-					$GLOBALS["t06_siswarutinbayar"]->siswarutin_id->setSessionValue(""); // Clear master key if insert failed
+					$GLOBALS["t06_siswarutinbayar"]->rutin_id->setSessionValue(""); // Clear master key if insert failed
 			}
 		}
 
@@ -972,9 +972,9 @@ class ct05_siswarutin_add extends ct05_siswarutin {
 					// Save current master table to detail table
 					$GLOBALS["t06_siswarutinbayar_grid"]->setCurrentMasterTable($this->TableVar);
 					$GLOBALS["t06_siswarutinbayar_grid"]->setStartRecordNumber(1);
-					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->FldIsDetailKey = TRUE;
-					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue = $this->id->CurrentValue;
-					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->setSessionValue($GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue);
+					$GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->CurrentValue = $this->id->CurrentValue;
+					$GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->setSessionValue($GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->CurrentValue);
 				}
 			}
 		}

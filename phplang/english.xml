@@ -586,11 +586,11 @@
     <menu id="5">
       <phrase id="menutext" value="Home" />
     </menu>
-    <menu id="27">
-      <phrase id="menutext" value="Pembayaran Rutin" />
+    <menu id="33">
+      <phrase id="menutext" value="Pembayaran" />
     </menu>
-    <menu id="28">
-      <phrase id="menutext" value="Pembayaran Rutin 2" />
+    <menu id="26">
+      <phrase id="menutext" value="Rutin" />
     </menu>
     <menu id="6">
       <phrase id="menutext" value="Setup" />
@@ -620,10 +620,7 @@
       <phrase id="menutext" value="Siswa" />
     </menu>
     <menu id="25">
-      <phrase id="menutext" value="Pembayaran Rutin" />
-    </menu>
-    <menu id="26">
-      <phrase id="menutext" value="Pembayaran Rutin Siswa" />
+      <phrase id="menutext" value="Jenis Pembayaran Rutin" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="User" />
@@ -761,7 +758,7 @@
       </field>
     </table>
     <table id="t05_siswarutin">
-      <phrase id="tblcaption" value="Pembayaran Rutin" />
+      <phrase id="tblcaption" value="Jenis Pembayaran Rutin" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -776,18 +773,74 @@
       </field>
     </table>
     <table id="t06_siswarutinbayar">
-      <phrase id="tblcaption" value="Pembayaran Rutin Siswa" />
+      <phrase id="tblcaption" value="Rincian Pembayaran Rutin" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
-      <field id="siswarutin_id">
-        <phrase id="fldcaption" value="siswarutin id" />
+      <field id="tahunajaran_id">
+        <phrase id="fldcaption" value="Tahun Ajaran" />
+      </field>
+      <field id="sekolah_id">
+        <phrase id="fldcaption" value="Sekolah" />
+      </field>
+      <field id="kelas_id">
+        <phrase id="fldcaption" value="Kelas" />
+      </field>
+      <field id="siswa_id">
+        <phrase id="fldcaption" value="Nama Siswa" />
+      </field>
+      <field id="rutin_id">
+        <phrase id="fldcaption" value="Jenis Pembayaran Rutin" />
       </field>
       <field id="bulan">
         <phrase id="fldcaption" value="Bulan" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Januari" />
+        <phrase id="fldtagvalue2" value="2" />
+        <phrase id="fldtagcaption2" value="Februari" />
+        <phrase id="fldtagvalue3" value="3" />
+        <phrase id="fldtagcaption3" value="Maret" />
+        <phrase id="fldtagvalue4" value="4" />
+        <phrase id="fldtagcaption4" value="April" />
+        <phrase id="fldtagvalue5" value="5" />
+        <phrase id="fldtagcaption5" value="Mei" />
+        <phrase id="fldtagvalue6" value="6" />
+        <phrase id="fldtagcaption6" value="Juni" />
+        <phrase id="fldtagvalue7" value="7" />
+        <phrase id="fldtagcaption7" value="Juli" />
+        <phrase id="fldtagvalue8" value="8" />
+        <phrase id="fldtagcaption8" value="Agustus" />
+        <phrase id="fldtagvalue9" value="9" />
+        <phrase id="fldtagcaption9" value="September" />
+        <phrase id="fldtagvalue10" value="10" />
+        <phrase id="fldtagcaption10" value="Oktober" />
+        <phrase id="fldtagvalue11" value="11" />
+        <phrase id="fldtagcaption11" value="November" />
+        <phrase id="fldtagvalue12" value="12" />
+        <phrase id="fldtagcaption12" value="Desember" />
       </field>
       <field id="tahun">
         <phrase id="fldcaption" value="Tahun" />
+        <phrase id="fldtagvalue1" value="2018" />
+        <phrase id="fldtagcaption1" value="2018" />
+        <phrase id="fldtagvalue2" value="2019" />
+        <phrase id="fldtagcaption2" value="2019" />
+        <phrase id="fldtagvalue3" value="2020" />
+        <phrase id="fldtagcaption3" value="2020" />
+        <phrase id="fldtagvalue4" value="2021" />
+        <phrase id="fldtagcaption4" value="2021" />
+        <phrase id="fldtagvalue5" value="2022" />
+        <phrase id="fldtagcaption5" value="2022" />
+        <phrase id="fldtagvalue6" value="2023" />
+        <phrase id="fldtagcaption6" value="2023" />
+        <phrase id="fldtagvalue7" value="2024" />
+        <phrase id="fldtagcaption7" value="2024" />
+        <phrase id="fldtagvalue8" value="2025" />
+        <phrase id="fldtagcaption8" value="2025" />
+        <phrase id="fldtagvalue9" value="2026" />
+        <phrase id="fldtagcaption9" value="2026" />
+        <phrase id="fldtagvalue10" value="2027" />
+        <phrase id="fldtagcaption10" value="2027" />
       </field>
       <field id="bayar_tgl">
         <phrase id="fldcaption" value="Bayar Tgl" />
@@ -963,108 +1016,6 @@
       </field>
       <field id="kelas_nama">
         <phrase id="fldcaption" value="kelas nama" />
-      </field>
-    </table>
-    <table id="v02_rutin">
-      <phrase id="tblcaption" value="Pembayaran Rutin" />
-      <field id="tahunajaran_id">
-        <phrase id="fldcaption" value="tahunajaran id" />
-      </field>
-      <field id="awal_bulan">
-        <phrase id="fldcaption" value="awal bulan" />
-      </field>
-      <field id="awal_tahun">
-        <phrase id="fldcaption" value="awal tahun" />
-      </field>
-      <field id="akhir_bulan">
-        <phrase id="fldcaption" value="akhir bulan" />
-      </field>
-      <field id="akhir_tahun">
-        <phrase id="fldcaption" value="akhir tahun" />
-      </field>
-      <field id="sekolah_id">
-        <phrase id="fldcaption" value="sekolah id" />
-      </field>
-      <field id="sekolah">
-        <phrase id="fldcaption" value="Sekolah" />
-      </field>
-      <field id="kelas_id">
-        <phrase id="fldcaption" value="kelas id" />
-      </field>
-      <field id="kelas">
-        <phrase id="fldcaption" value="Kelas" />
-      </field>
-      <field id="siswa_id">
-        <phrase id="fldcaption" value="siswa id" />
-      </field>
-      <field id="nomor_induk">
-        <phrase id="fldcaption" value="Nomor Induk" />
-      </field>
-      <field id="nama">
-        <phrase id="fldcaption" value="Nama" />
-      </field>
-      <field id="rutin_id">
-        <phrase id="fldcaption" value="rutin id" />
-      </field>
-      <field id="pembayaran_rutin">
-        <phrase id="fldcaption" value="Pembayaran Rutin" />
-      </field>
-      <field id="nilai">
-        <phrase id="fldcaption" value="nilai" />
-      </field>
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="siswarutin_id">
-        <phrase id="fldcaption" value="siswarutin id" />
-      </field>
-      <field id="bulan">
-        <phrase id="fldcaption" value="Bulan" />
-      </field>
-      <field id="tahun">
-        <phrase id="fldcaption" value="Tahun" />
-      </field>
-      <field id="bayar_tgl">
-        <phrase id="fldcaption" value="Bayar Tgl" />
-      </field>
-      <field id="bayar_jumlah">
-        <phrase id="fldcaption" value="Bayar Jumlah" />
-      </field>
-    </table>
-    <table id="v02_rutin2">
-      <phrase id="tblcaption" value="Pembayaran Rutin 2" />
-      <field id="tahunajaran_id">
-        <phrase id="fldcaption" value="tahunajaran id" />
-      </field>
-      <field id="sekolah_id">
-        <phrase id="fldcaption" value="sekolah id" />
-      </field>
-      <field id="kelas_id">
-        <phrase id="fldcaption" value="kelas id" />
-      </field>
-      <field id="siswa_id">
-        <phrase id="fldcaption" value="siswa id" />
-      </field>
-      <field id="rutin_id">
-        <phrase id="fldcaption" value="rutin id" />
-      </field>
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="siswarutin_id">
-        <phrase id="fldcaption" value="siswarutin id" />
-      </field>
-      <field id="bulan">
-        <phrase id="fldcaption" value="Bulan" />
-      </field>
-      <field id="tahun">
-        <phrase id="fldcaption" value="Tahun" />
-      </field>
-      <field id="bayar_tgl">
-        <phrase id="fldcaption" value="Bayar Tgl" />
-      </field>
-      <field id="bayar_jumlah">
-        <phrase id="fldcaption" value="Bayar Jumlah" />
       </field>
     </table>
   </project>

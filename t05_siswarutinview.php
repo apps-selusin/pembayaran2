@@ -1230,9 +1230,9 @@ class ct05_siswarutin_view extends ct05_siswarutin {
 					// Save current master table to detail table
 					$GLOBALS["t06_siswarutinbayar_grid"]->setCurrentMasterTable($this->TableVar);
 					$GLOBALS["t06_siswarutinbayar_grid"]->setStartRecordNumber(1);
-					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->FldIsDetailKey = TRUE;
-					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue = $this->id->CurrentValue;
-					$GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->setSessionValue($GLOBALS["t06_siswarutinbayar_grid"]->siswarutin_id->CurrentValue);
+					$GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->FldIsDetailKey = TRUE;
+					$GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->CurrentValue = $this->id->CurrentValue;
+					$GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->setSessionValue($GLOBALS["t06_siswarutinbayar_grid"]->rutin_id->CurrentValue);
 				}
 			}
 		}
