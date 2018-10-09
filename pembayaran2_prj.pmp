@@ -337,6 +337,66 @@ function Row_Inserted($rsold, &$rsnew) {
 	}
 }
 ]]></CustomScript>
+  <CustomScript ScriptType="Server" ScriptCodeType="Table" ScriptName="Row_Inserted" ScriptCtrlID="" ScriptL1Key="cf01_home.php" ScriptL2Key=""><![CDATA[// Row Inserted event
+function Row_Inserted($rsold, &$rsnew) {
+	//echo "Row Inserted"
+
+	// ambil data siswa_id
+	$siswa_id = $rsnew["siswa_id"];
+
+	// ambil data tahunajaran_id
+	$q = "select tahunajaran_id, kelas_id from t03_siswa where id = ".$siswa_id."";
+	$r = ew_ExecuteRow($q);
+	$tahunajaran_id = $r["tahunajaran_id"];
+	$kelas_id = $r["kelas_id"];
+
+	// ambil data sekolah_id
+	$q = "select sekolah_id from t02_kelas where id = ".$kelas_id."";
+	$sekolah_id = ew_ExecuteScalar($q);
+
+	// ambil data tahun ajaran dan diloop selama satu periode tahun ajaran
+	// mulai awal tahun ajaran hingga akhir tahun ajaran
+	$q = "select * from t00_tahunajaran where id = ".$tahunajaran_id."";
+	$r = Conn()->Execute($q);
+	
+	$awal  = $r->fields["awal_bulan"].$r->fields["awal_tahun"]; // 72018
+	$akhir = $r->fields["akhir_bulan"].$r->fields["akhir_tahun"]; // 62019
+
+	$bulan = $r->fields["awal_bulan"] - 1;
+	$tahun = $r->fields["awal_tahun"];
+
+	while ($awal != $akhir) {
+		$bulan++;
+
+		if ($bulan == 13) {
+			$bulan = 1;
+			$tahun++;
+		}
+
+		$q = "insert into
+			t06_siswarutinbayar (
+				tahunajaran_id,
+				sekolah_id,
+				kelas_id,
+				siswa_id,
+				rutin_id,
+				bulan,
+				tahun
+			) values (
+			".$tahunajaran_id.",
+			".$sekolah_id.",
+			".$kelas_id.",
+			".$siswa_id.",
+			".$rsnew["id"].",
+			".$bulan.",
+			".$tahun."
+			)";
+		Conn()->Execute($q);
+		
+		$awal = $bulan.$tahun;
+	}
+}
+]]></CustomScript>
   <Menu MenuID="5" MenuText="Home" MenuParentID="-1" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="8" MenuSecurity="" MenuUrl="cf01_home.php" MenuCustomUrl="0" MenuLevel="0" MenuShow="1" MenuDisplayOrder="100" />
   <Menu MenuID="33" MenuText="Pembayaran" MenuParentID="-1" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="0" MenuSecurity="" MenuUrl="" MenuCustomUrl="1" MenuLevel="0" MenuShow="1" MenuDisplayOrder="200" />
   <Menu MenuID="26" MenuText="Rutin" MenuParentID="33" MenuGroup="0" MenuSource="" MenuExtUrl="" MenuAnonymous="0" MenuSecurity="" MenuUrl="t06_siswarutinbayar" MenuCustomUrl="0" MenuLevel="1" MenuShow="1" MenuDisplayOrder="100" />
