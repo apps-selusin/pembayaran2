@@ -1151,9 +1151,6 @@ class ct06_siswarutinbayar extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
-					if ($this->sekolah_id->Exportable) $Doc->ExportCaption($this->sekolah_id);
-					if ($this->kelas_id->Exportable) $Doc->ExportCaption($this->kelas_id);
 					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
 					if ($this->rutin_id->Exportable) $Doc->ExportCaption($this->rutin_id);
 					if ($this->Bulan->Exportable) $Doc->ExportCaption($this->Bulan);
@@ -1202,9 +1199,6 @@ class ct06_siswarutinbayar extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
-						if ($this->sekolah_id->Exportable) $Doc->ExportField($this->sekolah_id);
-						if ($this->kelas_id->Exportable) $Doc->ExportField($this->kelas_id);
 						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
 						if ($this->rutin_id->Exportable) $Doc->ExportField($this->rutin_id);
 						if ($this->Bulan->Exportable) $Doc->ExportField($this->Bulan);

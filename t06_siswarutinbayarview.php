@@ -391,9 +391,6 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->tahunajaran_id->SetVisibility();
-		$this->sekolah_id->SetVisibility();
-		$this->kelas_id->SetVisibility();
 		$this->siswa_id->SetVisibility();
 		$this->rutin_id->SetVisibility();
 		$this->Bulan->SetVisibility();
@@ -901,21 +898,6 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 		$this->Bayar_Jumlah->ViewValue = ew_FormatNumber($this->Bayar_Jumlah->ViewValue, 2, -2, -2, -2);
 		$this->Bayar_Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Bayar_Jumlah->ViewCustomAttributes = "";
-
-			// tahunajaran_id
-			$this->tahunajaran_id->LinkCustomAttributes = "";
-			$this->tahunajaran_id->HrefValue = "";
-			$this->tahunajaran_id->TooltipValue = "";
-
-			// sekolah_id
-			$this->sekolah_id->LinkCustomAttributes = "";
-			$this->sekolah_id->HrefValue = "";
-			$this->sekolah_id->TooltipValue = "";
-
-			// kelas_id
-			$this->kelas_id->LinkCustomAttributes = "";
-			$this->kelas_id->HrefValue = "";
-			$this->kelas_id->TooltipValue = "";
 
 			// siswa_id
 			$this->siswa_id->LinkCustomAttributes = "";
@@ -1441,9 +1423,6 @@ ft06_siswarutinbayarview.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-ft06_siswarutinbayarview.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_tahun_pelajaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v00_tahunajaran"};
-ft06_siswarutinbayarview.Lists["x_sekolah_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nomor_Induk","x_Nama","",""],"ParentFields":[],"ChildFields":["x_kelas_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_sekolah"};
-ft06_siswarutinbayarview.Lists["x_kelas_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_kelas"};
 ft06_siswarutinbayarview.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nomor_Induk","x_Nama","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t03_siswa"};
 ft06_siswarutinbayarview.Lists["x_rutin_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_rutin"};
 ft06_siswarutinbayarview.Lists["x_Bulan"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
@@ -1538,39 +1517,6 @@ $t06_siswarutinbayar_view->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <table class="table table-bordered table-striped ewViewTable">
-<?php if ($t06_siswarutinbayar->tahunajaran_id->Visible) { // tahunajaran_id ?>
-	<tr id="r_tahunajaran_id">
-		<td><span id="elh_t06_siswarutinbayar_tahunajaran_id"><?php echo $t06_siswarutinbayar->tahunajaran_id->FldCaption() ?></span></td>
-		<td data-name="tahunajaran_id"<?php echo $t06_siswarutinbayar->tahunajaran_id->CellAttributes() ?>>
-<span id="el_t06_siswarutinbayar_tahunajaran_id">
-<span<?php echo $t06_siswarutinbayar->tahunajaran_id->ViewAttributes() ?>>
-<?php echo $t06_siswarutinbayar->tahunajaran_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t06_siswarutinbayar->sekolah_id->Visible) { // sekolah_id ?>
-	<tr id="r_sekolah_id">
-		<td><span id="elh_t06_siswarutinbayar_sekolah_id"><?php echo $t06_siswarutinbayar->sekolah_id->FldCaption() ?></span></td>
-		<td data-name="sekolah_id"<?php echo $t06_siswarutinbayar->sekolah_id->CellAttributes() ?>>
-<span id="el_t06_siswarutinbayar_sekolah_id">
-<span<?php echo $t06_siswarutinbayar->sekolah_id->ViewAttributes() ?>>
-<?php echo $t06_siswarutinbayar->sekolah_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t06_siswarutinbayar->kelas_id->Visible) { // kelas_id ?>
-	<tr id="r_kelas_id">
-		<td><span id="elh_t06_siswarutinbayar_kelas_id"><?php echo $t06_siswarutinbayar->kelas_id->FldCaption() ?></span></td>
-		<td data-name="kelas_id"<?php echo $t06_siswarutinbayar->kelas_id->CellAttributes() ?>>
-<span id="el_t06_siswarutinbayar_kelas_id">
-<span<?php echo $t06_siswarutinbayar->kelas_id->ViewAttributes() ?>>
-<?php echo $t06_siswarutinbayar->kelas_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 <?php if ($t06_siswarutinbayar->siswa_id->Visible) { // siswa_id ?>
 	<tr id="r_siswa_id">
 		<td><span id="elh_t06_siswarutinbayar_siswa_id"><?php echo $t06_siswarutinbayar->siswa_id->FldCaption() ?></span></td>
