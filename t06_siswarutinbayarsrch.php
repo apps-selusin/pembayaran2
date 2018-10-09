@@ -293,8 +293,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->id->SetVisibility();
-		$this->id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->tahunajaran_id->SetVisibility();
 		$this->sekolah_id->SetVisibility();
 		$this->kelas_id->SetVisibility();
@@ -302,8 +300,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		$this->rutin_id->SetVisibility();
 		$this->Bulan->SetVisibility();
 		$this->Tahun->SetVisibility();
-		$this->Bayar_Tgl->SetVisibility();
-		$this->Bayar_Jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -427,7 +423,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 	// Build advanced search
 	function BuildAdvancedSearch() {
 		$sSrchUrl = "";
-		$this->BuildSearchUrl($sSrchUrl, $this->id); // id
 		$this->BuildSearchUrl($sSrchUrl, $this->tahunajaran_id); // tahunajaran_id
 		$this->BuildSearchUrl($sSrchUrl, $this->sekolah_id); // sekolah_id
 		$this->BuildSearchUrl($sSrchUrl, $this->kelas_id); // kelas_id
@@ -435,8 +430,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		$this->BuildSearchUrl($sSrchUrl, $this->rutin_id); // rutin_id
 		$this->BuildSearchUrl($sSrchUrl, $this->Bulan); // Bulan
 		$this->BuildSearchUrl($sSrchUrl, $this->Tahun); // Tahun
-		$this->BuildSearchUrl($sSrchUrl, $this->Bayar_Tgl); // Bayar_Tgl
-		$this->BuildSearchUrl($sSrchUrl, $this->Bayar_Jumlah); // Bayar_Jumlah
 		if ($sSrchUrl <> "") $sSrchUrl .= "&";
 		$sSrchUrl .= "cmd=search";
 		return $sSrchUrl;
@@ -502,12 +495,8 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		global $objForm;
 
 		// Load search values
-		// id
-
-		$this->id->AdvancedSearch->SearchValue = ew_StripSlashes($objForm->GetValue("x_id"));
-		$this->id->AdvancedSearch->SearchOperator = $objForm->GetValue("z_id");
-
 		// tahunajaran_id
+
 		$this->tahunajaran_id->AdvancedSearch->SearchValue = ew_StripSlashes($objForm->GetValue("x_tahunajaran_id"));
 		$this->tahunajaran_id->AdvancedSearch->SearchOperator = $objForm->GetValue("z_tahunajaran_id");
 
@@ -534,14 +523,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		// Tahun
 		$this->Tahun->AdvancedSearch->SearchValue = ew_StripSlashes($objForm->GetValue("x_Tahun"));
 		$this->Tahun->AdvancedSearch->SearchOperator = $objForm->GetValue("z_Tahun");
-
-		// Bayar_Tgl
-		$this->Bayar_Tgl->AdvancedSearch->SearchValue = ew_StripSlashes($objForm->GetValue("x_Bayar_Tgl"));
-		$this->Bayar_Tgl->AdvancedSearch->SearchOperator = $objForm->GetValue("z_Bayar_Tgl");
-
-		// Bayar_Jumlah
-		$this->Bayar_Jumlah->AdvancedSearch->SearchValue = ew_StripSlashes($objForm->GetValue("x_Bayar_Jumlah"));
-		$this->Bayar_Jumlah->AdvancedSearch->SearchOperator = $objForm->GetValue("z_Bayar_Jumlah");
 	}
 
 	// Render row values based on field settings
@@ -549,12 +530,8 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		global $Security, $Language, $gsLanguage;
 
 		// Initialize URLs
-		// Convert decimal values if posted back
-
-		if ($this->Bayar_Jumlah->FormValue == $this->Bayar_Jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->Bayar_Jumlah->CurrentValue)))
-			$this->Bayar_Jumlah->CurrentValue = ew_StrToFloat($this->Bayar_Jumlah->CurrentValue);
-
 		// Call Row_Rendering event
+
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
@@ -719,11 +696,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		$this->Bayar_Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Bayar_Jumlah->ViewCustomAttributes = "";
 
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
-
 			// tahunajaran_id
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
@@ -758,23 +730,7 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 			$this->Tahun->LinkCustomAttributes = "";
 			$this->Tahun->HrefValue = "";
 			$this->Tahun->TooltipValue = "";
-
-			// Bayar_Tgl
-			$this->Bayar_Tgl->LinkCustomAttributes = "";
-			$this->Bayar_Tgl->HrefValue = "";
-			$this->Bayar_Tgl->TooltipValue = "";
-
-			// Bayar_Jumlah
-			$this->Bayar_Jumlah->LinkCustomAttributes = "";
-			$this->Bayar_Jumlah->HrefValue = "";
-			$this->Bayar_Jumlah->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_SEARCH) { // Search row
-
-			// id
-			$this->id->EditAttrs["class"] = "form-control";
-			$this->id->EditCustomAttributes = "";
-			$this->id->EditValue = ew_HtmlEncode($this->id->AdvancedSearch->SearchValue);
-			$this->id->PlaceHolder = ew_RemoveHtml($this->id->FldCaption());
 
 			// tahunajaran_id
 			$this->tahunajaran_id->EditCustomAttributes = "";
@@ -912,18 +868,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 			$this->Tahun->EditAttrs["class"] = "form-control";
 			$this->Tahun->EditCustomAttributes = "";
 			$this->Tahun->EditValue = $this->Tahun->Options(TRUE);
-
-			// Bayar_Tgl
-			$this->Bayar_Tgl->EditAttrs["class"] = "form-control";
-			$this->Bayar_Tgl->EditCustomAttributes = "";
-			$this->Bayar_Tgl->EditValue = ew_HtmlEncode(ew_FormatDateTime(ew_UnFormatDateTime($this->Bayar_Tgl->AdvancedSearch->SearchValue, 7), 7));
-			$this->Bayar_Tgl->PlaceHolder = ew_RemoveHtml($this->Bayar_Tgl->FldCaption());
-
-			// Bayar_Jumlah
-			$this->Bayar_Jumlah->EditAttrs["class"] = "form-control";
-			$this->Bayar_Jumlah->EditCustomAttributes = "";
-			$this->Bayar_Jumlah->EditValue = ew_HtmlEncode($this->Bayar_Jumlah->AdvancedSearch->SearchValue);
-			$this->Bayar_Jumlah->PlaceHolder = ew_RemoveHtml($this->Bayar_Jumlah->FldCaption());
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
 			$this->RowType == EW_ROWTYPE_EDIT ||
@@ -946,15 +890,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return TRUE;
-		if (!ew_CheckInteger($this->id->AdvancedSearch->SearchValue)) {
-			ew_AddMessage($gsSearchError, $this->id->FldErrMsg());
-		}
-		if (!ew_CheckEuroDate($this->Bayar_Tgl->AdvancedSearch->SearchValue)) {
-			ew_AddMessage($gsSearchError, $this->Bayar_Tgl->FldErrMsg());
-		}
-		if (!ew_CheckNumber($this->Bayar_Jumlah->AdvancedSearch->SearchValue)) {
-			ew_AddMessage($gsSearchError, $this->Bayar_Jumlah->FldErrMsg());
-		}
 
 		// Return validate result
 		$ValidateSearch = ($gsSearchError == "");
@@ -970,7 +905,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 
 	// Load advanced search
 	function LoadAdvancedSearch() {
-		$this->id->AdvancedSearch->Load();
 		$this->tahunajaran_id->AdvancedSearch->Load();
 		$this->sekolah_id->AdvancedSearch->Load();
 		$this->kelas_id->AdvancedSearch->Load();
@@ -978,8 +912,6 @@ class ct06_siswarutinbayar_search extends ct06_siswarutinbayar {
 		$this->rutin_id->AdvancedSearch->Load();
 		$this->Bulan->AdvancedSearch->Load();
 		$this->Tahun->AdvancedSearch->Load();
-		$this->Bayar_Tgl->AdvancedSearch->Load();
-		$this->Bayar_Jumlah->AdvancedSearch->Load();
 	}
 
 	// Set up Breadcrumb
@@ -1199,15 +1131,6 @@ ft06_siswarutinbayarsearch.Validate = function(fobj) {
 		return true; // Ignore validation
 	fobj = fobj || this.Form;
 	var infix = "";
-	elm = this.GetElements("x" + infix + "_id");
-	if (elm && !ew_CheckInteger(elm.value))
-		return this.OnError(elm, "<?php echo ew_JsEncode2($t06_siswarutinbayar->id->FldErrMsg()) ?>");
-	elm = this.GetElements("x" + infix + "_Bayar_Tgl");
-	if (elm && !ew_CheckEuroDate(elm.value))
-		return this.OnError(elm, "<?php echo ew_JsEncode2($t06_siswarutinbayar->Bayar_Tgl->FldErrMsg()) ?>");
-	elm = this.GetElements("x" + infix + "_Bayar_Jumlah");
-	if (elm && !ew_CheckNumber(elm.value))
-		return this.OnError(elm, "<?php echo ew_JsEncode2($t06_siswarutinbayar->Bayar_Jumlah->FldErrMsg()) ?>");
 
 	// Fire Form_CustomValidate event
 	if (!this.Form_CustomValidate(fobj))
@@ -1240,18 +1163,6 @@ $t06_siswarutinbayar_search->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <div>
-<?php if ($t06_siswarutinbayar->id->Visible) { // id ?>
-	<div id="r_id" class="form-group">
-		<label for="x_id" class="<?php echo $t06_siswarutinbayar_search->SearchLabelClass ?>"><span id="elh_t06_siswarutinbayar_id"><?php echo $t06_siswarutinbayar->id->FldCaption() ?></span>	
-		<p class="form-control-static ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_id" id="z_id" value="="></p>
-		</label>
-		<div class="<?php echo $t06_siswarutinbayar_search->SearchRightColumnClass ?>"><div<?php echo $t06_siswarutinbayar->id->CellAttributes() ?>>
-			<span id="el_t06_siswarutinbayar_id">
-<input type="text" data-table="t06_siswarutinbayar" data-field="x_id" name="x_id" id="x_id" placeholder="<?php echo ew_HtmlEncode($t06_siswarutinbayar->id->getPlaceHolder()) ?>" value="<?php echo $t06_siswarutinbayar->id->EditValue ?>"<?php echo $t06_siswarutinbayar->id->EditAttributes() ?>>
-</span>
-		</div></div>
-	</div>
-<?php } ?>
 <?php if ($t06_siswarutinbayar->tahunajaran_id->Visible) { // tahunajaran_id ?>
 	<div id="r_tahunajaran_id" class="form-group">
 		<label for="x_tahunajaran_id" class="<?php echo $t06_siswarutinbayar_search->SearchLabelClass ?>"><span id="elh_t06_siswarutinbayar_tahunajaran_id"><?php echo $t06_siswarutinbayar->tahunajaran_id->FldCaption() ?></span>	
@@ -1362,35 +1273,6 @@ $t06_siswarutinbayar_search->ShowMessage();
 <select data-table="t06_siswarutinbayar" data-field="x_Tahun" data-value-separator="<?php echo $t06_siswarutinbayar->Tahun->DisplayValueSeparatorAttribute() ?>" id="x_Tahun" name="x_Tahun"<?php echo $t06_siswarutinbayar->Tahun->EditAttributes() ?>>
 <?php echo $t06_siswarutinbayar->Tahun->SelectOptionListHtml("x_Tahun") ?>
 </select>
-</span>
-		</div></div>
-	</div>
-<?php } ?>
-<?php if ($t06_siswarutinbayar->Bayar_Tgl->Visible) { // Bayar_Tgl ?>
-	<div id="r_Bayar_Tgl" class="form-group">
-		<label for="x_Bayar_Tgl" class="<?php echo $t06_siswarutinbayar_search->SearchLabelClass ?>"><span id="elh_t06_siswarutinbayar_Bayar_Tgl"><?php echo $t06_siswarutinbayar->Bayar_Tgl->FldCaption() ?></span>	
-		<p class="form-control-static ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_Bayar_Tgl" id="z_Bayar_Tgl" value="="></p>
-		</label>
-		<div class="<?php echo $t06_siswarutinbayar_search->SearchRightColumnClass ?>"><div<?php echo $t06_siswarutinbayar->Bayar_Tgl->CellAttributes() ?>>
-			<span id="el_t06_siswarutinbayar_Bayar_Tgl">
-<input type="text" data-table="t06_siswarutinbayar" data-field="x_Bayar_Tgl" data-format="7" name="x_Bayar_Tgl" id="x_Bayar_Tgl" placeholder="<?php echo ew_HtmlEncode($t06_siswarutinbayar->Bayar_Tgl->getPlaceHolder()) ?>" value="<?php echo $t06_siswarutinbayar->Bayar_Tgl->EditValue ?>"<?php echo $t06_siswarutinbayar->Bayar_Tgl->EditAttributes() ?>>
-<?php if (!$t06_siswarutinbayar->Bayar_Tgl->ReadOnly && !$t06_siswarutinbayar->Bayar_Tgl->Disabled && !isset($t06_siswarutinbayar->Bayar_Tgl->EditAttrs["readonly"]) && !isset($t06_siswarutinbayar->Bayar_Tgl->EditAttrs["disabled"])) { ?>
-<script type="text/javascript">
-ew_CreateCalendar("ft06_siswarutinbayarsearch", "x_Bayar_Tgl", 7);
-</script>
-<?php } ?>
-</span>
-		</div></div>
-	</div>
-<?php } ?>
-<?php if ($t06_siswarutinbayar->Bayar_Jumlah->Visible) { // Bayar_Jumlah ?>
-	<div id="r_Bayar_Jumlah" class="form-group">
-		<label for="x_Bayar_Jumlah" class="<?php echo $t06_siswarutinbayar_search->SearchLabelClass ?>"><span id="elh_t06_siswarutinbayar_Bayar_Jumlah"><?php echo $t06_siswarutinbayar->Bayar_Jumlah->FldCaption() ?></span>	
-		<p class="form-control-static ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_Bayar_Jumlah" id="z_Bayar_Jumlah" value="="></p>
-		</label>
-		<div class="<?php echo $t06_siswarutinbayar_search->SearchRightColumnClass ?>"><div<?php echo $t06_siswarutinbayar->Bayar_Jumlah->CellAttributes() ?>>
-			<span id="el_t06_siswarutinbayar_Bayar_Jumlah">
-<input type="text" data-table="t06_siswarutinbayar" data-field="x_Bayar_Jumlah" name="x_Bayar_Jumlah" id="x_Bayar_Jumlah" size="30" placeholder="<?php echo ew_HtmlEncode($t06_siswarutinbayar->Bayar_Jumlah->getPlaceHolder()) ?>" value="<?php echo $t06_siswarutinbayar->Bayar_Jumlah->EditValue ?>"<?php echo $t06_siswarutinbayar->Bayar_Jumlah->EditAttributes() ?>>
 </span>
 		</div></div>
 	</div>

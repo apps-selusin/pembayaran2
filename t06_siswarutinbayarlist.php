@@ -1121,7 +1121,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 
 		// Initialize
 		$sFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJSON(), ","); // Field id
 		$sFilterList = ew_Concat($sFilterList, $this->tahunajaran_id->AdvancedSearch->ToJSON(), ","); // Field tahunajaran_id
 		$sFilterList = ew_Concat($sFilterList, $this->sekolah_id->AdvancedSearch->ToJSON(), ","); // Field sekolah_id
 		$sFilterList = ew_Concat($sFilterList, $this->kelas_id->AdvancedSearch->ToJSON(), ","); // Field kelas_id
@@ -1129,8 +1128,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$sFilterList = ew_Concat($sFilterList, $this->rutin_id->AdvancedSearch->ToJSON(), ","); // Field rutin_id
 		$sFilterList = ew_Concat($sFilterList, $this->Bulan->AdvancedSearch->ToJSON(), ","); // Field Bulan
 		$sFilterList = ew_Concat($sFilterList, $this->Tahun->AdvancedSearch->ToJSON(), ","); // Field Tahun
-		$sFilterList = ew_Concat($sFilterList, $this->Bayar_Tgl->AdvancedSearch->ToJSON(), ","); // Field Bayar_Tgl
-		$sFilterList = ew_Concat($sFilterList, $this->Bayar_Jumlah->AdvancedSearch->ToJSON(), ","); // Field Bayar_Jumlah
 		$sFilterList = preg_replace('/,$/', "", $sFilterList);
 
 		// Return filter list in json
@@ -1170,14 +1167,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 			return FALSE;
 		$filter = json_decode(ew_StripSlashes(@$_POST["filter"]), TRUE);
 		$this->Command = "search";
-
-		// Field id
-		$this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-		$this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-		$this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-		$this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-		$this->id->AdvancedSearch->Save();
 
 		// Field tahunajaran_id
 		$this->tahunajaran_id->AdvancedSearch->SearchValue = @$filter["x_tahunajaran_id"];
@@ -1234,22 +1223,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->Tahun->AdvancedSearch->SearchValue2 = @$filter["y_Tahun"];
 		$this->Tahun->AdvancedSearch->SearchOperator2 = @$filter["w_Tahun"];
 		$this->Tahun->AdvancedSearch->Save();
-
-		// Field Bayar_Tgl
-		$this->Bayar_Tgl->AdvancedSearch->SearchValue = @$filter["x_Bayar_Tgl"];
-		$this->Bayar_Tgl->AdvancedSearch->SearchOperator = @$filter["z_Bayar_Tgl"];
-		$this->Bayar_Tgl->AdvancedSearch->SearchCondition = @$filter["v_Bayar_Tgl"];
-		$this->Bayar_Tgl->AdvancedSearch->SearchValue2 = @$filter["y_Bayar_Tgl"];
-		$this->Bayar_Tgl->AdvancedSearch->SearchOperator2 = @$filter["w_Bayar_Tgl"];
-		$this->Bayar_Tgl->AdvancedSearch->Save();
-
-		// Field Bayar_Jumlah
-		$this->Bayar_Jumlah->AdvancedSearch->SearchValue = @$filter["x_Bayar_Jumlah"];
-		$this->Bayar_Jumlah->AdvancedSearch->SearchOperator = @$filter["z_Bayar_Jumlah"];
-		$this->Bayar_Jumlah->AdvancedSearch->SearchCondition = @$filter["v_Bayar_Jumlah"];
-		$this->Bayar_Jumlah->AdvancedSearch->SearchValue2 = @$filter["y_Bayar_Jumlah"];
-		$this->Bayar_Jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_Bayar_Jumlah"];
-		$this->Bayar_Jumlah->AdvancedSearch->Save();
 	}
 
 	// Advanced search WHERE clause based on QueryString
@@ -1257,7 +1230,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		global $Security;
 		$sWhere = "";
 		if (!$Security->CanSearch()) return "";
-		$this->BuildSearchSql($sWhere, $this->id, $Default, FALSE); // id
 		$this->BuildSearchSql($sWhere, $this->tahunajaran_id, $Default, FALSE); // tahunajaran_id
 		$this->BuildSearchSql($sWhere, $this->sekolah_id, $Default, FALSE); // sekolah_id
 		$this->BuildSearchSql($sWhere, $this->kelas_id, $Default, FALSE); // kelas_id
@@ -1265,15 +1237,12 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->BuildSearchSql($sWhere, $this->rutin_id, $Default, FALSE); // rutin_id
 		$this->BuildSearchSql($sWhere, $this->Bulan, $Default, FALSE); // Bulan
 		$this->BuildSearchSql($sWhere, $this->Tahun, $Default, FALSE); // Tahun
-		$this->BuildSearchSql($sWhere, $this->Bayar_Tgl, $Default, FALSE); // Bayar_Tgl
-		$this->BuildSearchSql($sWhere, $this->Bayar_Jumlah, $Default, FALSE); // Bayar_Jumlah
 
 		// Set up search parm
 		if (!$Default && $sWhere <> "") {
 			$this->Command = "search";
 		}
 		if (!$Default && $this->Command == "search") {
-			$this->id->AdvancedSearch->Save(); // id
 			$this->tahunajaran_id->AdvancedSearch->Save(); // tahunajaran_id
 			$this->sekolah_id->AdvancedSearch->Save(); // sekolah_id
 			$this->kelas_id->AdvancedSearch->Save(); // kelas_id
@@ -1281,8 +1250,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 			$this->rutin_id->AdvancedSearch->Save(); // rutin_id
 			$this->Bulan->AdvancedSearch->Save(); // Bulan
 			$this->Tahun->AdvancedSearch->Save(); // Tahun
-			$this->Bayar_Tgl->AdvancedSearch->Save(); // Bayar_Tgl
-			$this->Bayar_Jumlah->AdvancedSearch->Save(); // Bayar_Jumlah
 		}
 		return $sWhere;
 	}
@@ -1337,8 +1304,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 
 	// Check if search parm exists
 	function CheckSearchParms() {
-		if ($this->id->AdvancedSearch->IssetSession())
-			return TRUE;
 		if ($this->tahunajaran_id->AdvancedSearch->IssetSession())
 			return TRUE;
 		if ($this->sekolah_id->AdvancedSearch->IssetSession())
@@ -1352,10 +1317,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		if ($this->Bulan->AdvancedSearch->IssetSession())
 			return TRUE;
 		if ($this->Tahun->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->Bayar_Tgl->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->Bayar_Jumlah->AdvancedSearch->IssetSession())
 			return TRUE;
 		return FALSE;
 	}
@@ -1378,7 +1339,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 
 	// Clear all advanced search parameters
 	function ResetAdvancedSearchParms() {
-		$this->id->AdvancedSearch->UnsetSession();
 		$this->tahunajaran_id->AdvancedSearch->UnsetSession();
 		$this->sekolah_id->AdvancedSearch->UnsetSession();
 		$this->kelas_id->AdvancedSearch->UnsetSession();
@@ -1386,8 +1346,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->rutin_id->AdvancedSearch->UnsetSession();
 		$this->Bulan->AdvancedSearch->UnsetSession();
 		$this->Tahun->AdvancedSearch->UnsetSession();
-		$this->Bayar_Tgl->AdvancedSearch->UnsetSession();
-		$this->Bayar_Jumlah->AdvancedSearch->UnsetSession();
 	}
 
 	// Restore all search parameters
@@ -1395,7 +1353,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->RestoreSearch = TRUE;
 
 		// Restore advanced search values
-		$this->id->AdvancedSearch->Load();
 		$this->tahunajaran_id->AdvancedSearch->Load();
 		$this->sekolah_id->AdvancedSearch->Load();
 		$this->kelas_id->AdvancedSearch->Load();
@@ -1403,8 +1360,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->rutin_id->AdvancedSearch->Load();
 		$this->Bulan->AdvancedSearch->Load();
 		$this->Tahun->AdvancedSearch->Load();
-		$this->Bayar_Tgl->AdvancedSearch->Load();
-		$this->Bayar_Jumlah->AdvancedSearch->Load();
 	}
 
 	// Set up sort parameters
@@ -1963,13 +1918,8 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		global $objForm;
 
 		// Load search values
-		// id
-
-		$this->id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_id"]);
-		if ($this->id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->id->AdvancedSearch->SearchOperator = @$_GET["z_id"];
-
 		// tahunajaran_id
+
 		$this->tahunajaran_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_tahunajaran_id"]);
 		if ($this->tahunajaran_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->tahunajaran_id->AdvancedSearch->SearchOperator = @$_GET["z_tahunajaran_id"];
@@ -2003,16 +1953,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->Tahun->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Tahun"]);
 		if ($this->Tahun->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->Tahun->AdvancedSearch->SearchOperator = @$_GET["z_Tahun"];
-
-		// Bayar_Tgl
-		$this->Bayar_Tgl->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Bayar_Tgl"]);
-		if ($this->Bayar_Tgl->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->Bayar_Tgl->AdvancedSearch->SearchOperator = @$_GET["z_Bayar_Tgl"];
-
-		// Bayar_Jumlah
-		$this->Bayar_Jumlah->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Bayar_Jumlah"]);
-		if ($this->Bayar_Jumlah->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->Bayar_Jumlah->AdvancedSearch->SearchOperator = @$_GET["z_Bayar_Jumlah"];
 	}
 
 	// Load form values
@@ -3378,7 +3318,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 
 	// Load advanced search
 	function LoadAdvancedSearch() {
-		$this->id->AdvancedSearch->Load();
 		$this->tahunajaran_id->AdvancedSearch->Load();
 		$this->sekolah_id->AdvancedSearch->Load();
 		$this->kelas_id->AdvancedSearch->Load();
@@ -3386,8 +3325,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->rutin_id->AdvancedSearch->Load();
 		$this->Bulan->AdvancedSearch->Load();
 		$this->Tahun->AdvancedSearch->Load();
-		$this->Bayar_Tgl->AdvancedSearch->Load();
-		$this->Bayar_Jumlah->AdvancedSearch->Load();
 	}
 
 	// Set up export options
@@ -3677,7 +3614,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$sQry = "export=html";
 
 		// Build QueryString for search
-		$this->AddSearchQueryString($sQry, $this->id); // id
 		$this->AddSearchQueryString($sQry, $this->tahunajaran_id); // tahunajaran_id
 		$this->AddSearchQueryString($sQry, $this->sekolah_id); // sekolah_id
 		$this->AddSearchQueryString($sQry, $this->kelas_id); // kelas_id
@@ -3685,8 +3621,6 @@ class ct06_siswarutinbayar_list extends ct06_siswarutinbayar {
 		$this->AddSearchQueryString($sQry, $this->rutin_id); // rutin_id
 		$this->AddSearchQueryString($sQry, $this->Bulan); // Bulan
 		$this->AddSearchQueryString($sQry, $this->Tahun); // Tahun
-		$this->AddSearchQueryString($sQry, $this->Bayar_Tgl); // Bayar_Tgl
-		$this->AddSearchQueryString($sQry, $this->Bayar_Jumlah); // Bayar_Jumlah
 
 		// Build QueryString for pager
 		$sQry .= "&" . EW_TABLE_REC_PER_PAGE . "=" . urlencode($this->getRecordsPerPage()) . "&" . EW_TABLE_START_REC . "=" . urlencode($this->getStartRecordNumber());
