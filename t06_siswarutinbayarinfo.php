@@ -56,13 +56,13 @@ class ct06_siswarutinbayar extends cTable {
 
 		// id
 		$this->id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->id->Sortable = TRUE; // Allow sort
+		$this->id->Sortable = FALSE; // Allow sort
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
 		// tahunajaran_id
 		$this->tahunajaran_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_tahunajaran_id', 'tahunajaran_id', '`tahunajaran_id`', '`tahunajaran_id`', 3, -1, FALSE, '`tahunajaran_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->tahunajaran_id->Sortable = TRUE; // Allow sort
+		$this->tahunajaran_id->Sortable = FALSE; // Allow sort
 		$this->tahunajaran_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
 		$this->tahunajaran_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->tahunajaran_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
@@ -70,7 +70,7 @@ class ct06_siswarutinbayar extends cTable {
 
 		// sekolah_id
 		$this->sekolah_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_sekolah_id', 'sekolah_id', '`sekolah_id`', '`sekolah_id`', 3, -1, FALSE, '`sekolah_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->sekolah_id->Sortable = TRUE; // Allow sort
+		$this->sekolah_id->Sortable = FALSE; // Allow sort
 		$this->sekolah_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
 		$this->sekolah_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->sekolah_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
@@ -78,7 +78,7 @@ class ct06_siswarutinbayar extends cTable {
 
 		// kelas_id
 		$this->kelas_id = new cField('t06_siswarutinbayar', 't06_siswarutinbayar', 'x_kelas_id', 'kelas_id', '`kelas_id`', '`kelas_id`', 3, -1, FALSE, '`kelas_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->kelas_id->Sortable = TRUE; // Allow sort
+		$this->kelas_id->Sortable = FALSE; // Allow sort
 		$this->kelas_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
 		$this->kelas_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->kelas_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
@@ -1121,8 +1121,9 @@ class ct06_siswarutinbayar extends cTable {
 		$this->Bayar_Jumlah->EditAttrs["class"] = "form-control";
 		$this->Bayar_Jumlah->EditCustomAttributes = "";
 		$this->Bayar_Jumlah->EditValue = $this->Bayar_Jumlah->CurrentValue;
-		$this->Bayar_Jumlah->PlaceHolder = ew_RemoveHtml($this->Bayar_Jumlah->FldCaption());
-		if (strval($this->Bayar_Jumlah->EditValue) <> "" && is_numeric($this->Bayar_Jumlah->EditValue)) $this->Bayar_Jumlah->EditValue = ew_FormatNumber($this->Bayar_Jumlah->EditValue, -2, -2, -2, -2);
+		$this->Bayar_Jumlah->EditValue = ew_FormatNumber($this->Bayar_Jumlah->EditValue, 2, -2, -2, -2);
+		$this->Bayar_Jumlah->CellCssStyle .= "text-align: right;";
+		$this->Bayar_Jumlah->ViewCustomAttributes = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1151,17 +1152,12 @@ class ct06_siswarutinbayar extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
 					if ($this->rutin_id->Exportable) $Doc->ExportCaption($this->rutin_id);
 					if ($this->Bulan->Exportable) $Doc->ExportCaption($this->Bulan);
 					if ($this->Tahun->Exportable) $Doc->ExportCaption($this->Tahun);
 					if ($this->Bayar_Tgl->Exportable) $Doc->ExportCaption($this->Bayar_Tgl);
 					if ($this->Bayar_Jumlah->Exportable) $Doc->ExportCaption($this->Bayar_Jumlah);
 				} else {
-					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
-					if ($this->sekolah_id->Exportable) $Doc->ExportCaption($this->sekolah_id);
-					if ($this->kelas_id->Exportable) $Doc->ExportCaption($this->kelas_id);
 					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
 					if ($this->rutin_id->Exportable) $Doc->ExportCaption($this->rutin_id);
 					if ($this->Bulan->Exportable) $Doc->ExportCaption($this->Bulan);
@@ -1199,17 +1195,12 @@ class ct06_siswarutinbayar extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
 						if ($this->rutin_id->Exportable) $Doc->ExportField($this->rutin_id);
 						if ($this->Bulan->Exportable) $Doc->ExportField($this->Bulan);
 						if ($this->Tahun->Exportable) $Doc->ExportField($this->Tahun);
 						if ($this->Bayar_Tgl->Exportable) $Doc->ExportField($this->Bayar_Tgl);
 						if ($this->Bayar_Jumlah->Exportable) $Doc->ExportField($this->Bayar_Jumlah);
 					} else {
-						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
-						if ($this->sekolah_id->Exportable) $Doc->ExportField($this->sekolah_id);
-						if ($this->kelas_id->Exportable) $Doc->ExportField($this->kelas_id);
 						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
 						if ($this->rutin_id->Exportable) $Doc->ExportField($this->rutin_id);
 						if ($this->Bulan->Exportable) $Doc->ExportField($this->Bulan);

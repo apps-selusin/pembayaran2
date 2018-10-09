@@ -527,7 +527,7 @@ class ct05_siswarutin_list extends ct05_siswarutin {
 	var $ListActions; // List actions
 	var $SelectedCount = 0;
 	var $SelectedIndex = 0;
-	var $DisplayRecs = 20;
+	var $DisplayRecs = 100;
 	var $StartRec;
 	var $StopRec;
 	var $TotalRecs = 0;
@@ -618,7 +618,7 @@ class ct05_siswarutin_list extends ct05_siswarutin {
 		if ($this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 20; // Load default
+			$this->DisplayRecs = 100; // Load default
 		}
 
 		// Load Sorting Order

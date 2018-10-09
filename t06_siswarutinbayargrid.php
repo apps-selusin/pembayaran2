@@ -56,9 +56,6 @@ ft06_siswarutinbayargrid.Validate = function() {
 			elm = this.GetElements("x" + infix + "_Bayar_Tgl");
 			if (elm && !ew_CheckEuroDate(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($t06_siswarutinbayar->Bayar_Tgl->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_Bayar_Jumlah");
-			if (elm && !ew_CheckNumber(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t06_siswarutinbayar->Bayar_Jumlah->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -552,8 +549,10 @@ ew_CreateCalendar("ft06_siswarutinbayargrid", "x<?php echo $t06_siswarutinbayar_
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_Bayar_Jumlah" class="form-group t06_siswarutinbayar_Bayar_Jumlah">
-<input type="text" data-table="t06_siswarutinbayar" data-field="x_Bayar_Jumlah" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bayar_Jumlah" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bayar_Jumlah" size="30" placeholder="<?php echo ew_HtmlEncode($t06_siswarutinbayar->Bayar_Jumlah->getPlaceHolder()) ?>" value="<?php echo $t06_siswarutinbayar->Bayar_Jumlah->EditValue ?>"<?php echo $t06_siswarutinbayar->Bayar_Jumlah->EditAttributes() ?>>
+<span<?php echo $t06_siswarutinbayar->Bayar_Jumlah->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $t06_siswarutinbayar->Bayar_Jumlah->EditValue ?></p></span>
 </span>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_Bayar_Jumlah" name="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bayar_Jumlah" id="x<?php echo $t06_siswarutinbayar_grid->RowIndex ?>_Bayar_Jumlah" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->Bayar_Jumlah->CurrentValue) ?>">
 <?php } ?>
 <?php if ($t06_siswarutinbayar->RowType == EW_ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t06_siswarutinbayar_grid->RowCnt ?>_t06_siswarutinbayar_Bayar_Jumlah" class="t06_siswarutinbayar_Bayar_Jumlah">

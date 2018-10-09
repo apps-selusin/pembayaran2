@@ -1135,7 +1135,8 @@ class ct05_siswarutin extends cTable {
 					siswa_id,
 					rutin_id,
 					bulan,
-					tahun
+					tahun,
+					bayar_jumlah
 				) values (
 				".$tahunajaran_id.",
 				".$sekolah_id.",
@@ -1143,7 +1144,8 @@ class ct05_siswarutin extends cTable {
 				".$siswa_id.",
 				".$rsnew["id"].",
 				".$bulan.",
-				".$tahun."
+				".$tahun.",
+				".$rsnew["Nilai"]."
 				)";
 			Conn()->Execute($q);
 			$awal = $bulan.$tahun;

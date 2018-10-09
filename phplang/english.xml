@@ -787,7 +787,7 @@
         <phrase id="fldcaption" value="Kelas" />
       </field>
       <field id="siswa_id">
-        <phrase id="fldcaption" value="Nama Siswa" />
+        <phrase id="fldcaption" value="Nomor Induk / Nama Siswa" />
       </field>
       <field id="rutin_id">
         <phrase id="fldcaption" value="Jenis Pembayaran Rutin" />
