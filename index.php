@@ -292,6 +292,8 @@ class cdefault {
 			$this->Page_Terminate("t99_audittraillist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'v02_rutin'))
 			$this->Page_Terminate("v02_rutinlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'v02_rutin2'))
+			$this->Page_Terminate("v02_rutin2list.php");
 		if ($Security->IsLoggedIn()) {
 			$this->setFailureMessage(ew_DeniedMsg() . "<br><br><a href=\"logout.php\">" . $Language->Phrase("BackToLogin") . "</a>");
 		} else {

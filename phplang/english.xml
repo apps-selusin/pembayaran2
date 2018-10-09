@@ -589,6 +589,9 @@
     <menu id="27">
       <phrase id="menutext" value="Pembayaran Rutin" />
     </menu>
+    <menu id="28">
+      <phrase id="menutext" value="Pembayaran Rutin 2" />
+    </menu>
     <menu id="6">
       <phrase id="menutext" value="Setup" />
     </menu>
@@ -1008,6 +1011,42 @@
       </field>
       <field id="nilai">
         <phrase id="fldcaption" value="nilai" />
+      </field>
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="siswarutin_id">
+        <phrase id="fldcaption" value="siswarutin id" />
+      </field>
+      <field id="bulan">
+        <phrase id="fldcaption" value="Bulan" />
+      </field>
+      <field id="tahun">
+        <phrase id="fldcaption" value="Tahun" />
+      </field>
+      <field id="bayar_tgl">
+        <phrase id="fldcaption" value="Bayar Tgl" />
+      </field>
+      <field id="bayar_jumlah">
+        <phrase id="fldcaption" value="Bayar Jumlah" />
+      </field>
+    </table>
+    <table id="v02_rutin2">
+      <phrase id="tblcaption" value="Pembayaran Rutin 2" />
+      <field id="tahunajaran_id">
+        <phrase id="fldcaption" value="tahunajaran id" />
+      </field>
+      <field id="sekolah_id">
+        <phrase id="fldcaption" value="sekolah id" />
+      </field>
+      <field id="kelas_id">
+        <phrase id="fldcaption" value="kelas id" />
+      </field>
+      <field id="siswa_id">
+        <phrase id="fldcaption" value="siswa id" />
+      </field>
+      <field id="rutin_id">
+        <phrase id="fldcaption" value="rutin id" />
       </field>
       <field id="id">
         <phrase id="fldcaption" value="id" />

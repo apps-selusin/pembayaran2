@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg13.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
-<?php include_once "v02_rutininfo.php" ?>
+<?php include_once "v02_rutin2info.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$v02_rutin_list = NULL; // Initialize page object first
+$v02_rutin2_list = NULL; // Initialize page object first
 
-class cv02_rutin_list extends cv02_rutin {
+class cv02_rutin2_list extends cv02_rutin2 {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +25,13 @@ class cv02_rutin_list extends cv02_rutin {
 	var $ProjectID = "{8F2DFBC1-53BE-44C3-91F5-73D45F821091}";
 
 	// Table name
-	var $TableName = 'v02_rutin';
+	var $TableName = 'v02_rutin2';
 
 	// Page object name
-	var $PageObjName = 'v02_rutin_list';
+	var $PageObjName = 'v02_rutin2_list';
 
 	// Grid form hidden field names
-	var $FormName = 'fv02_rutinlist';
+	var $FormName = 'fv02_rutin2list';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -266,10 +266,10 @@ class cv02_rutin_list extends cv02_rutin {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (v02_rutin)
-		if (!isset($GLOBALS["v02_rutin"]) || get_class($GLOBALS["v02_rutin"]) == "cv02_rutin") {
-			$GLOBALS["v02_rutin"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["v02_rutin"];
+		// Table object (v02_rutin2)
+		if (!isset($GLOBALS["v02_rutin2"]) || get_class($GLOBALS["v02_rutin2"]) == "cv02_rutin2") {
+			$GLOBALS["v02_rutin2"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["v02_rutin2"];
 		}
 
 		// Initialize URLs
@@ -280,12 +280,12 @@ class cv02_rutin_list extends cv02_rutin {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "v02_rutinadd.php";
+		$this->AddUrl = "v02_rutin2add.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "v02_rutindelete.php";
-		$this->MultiUpdateUrl = "v02_rutinupdate.php";
+		$this->MultiDeleteUrl = "v02_rutin2delete.php";
+		$this->MultiUpdateUrl = "v02_rutin2update.php";
 
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
@@ -296,7 +296,7 @@ class cv02_rutin_list extends cv02_rutin {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'v02_rutin', TRUE);
+			define("EW_TABLE_NAME", 'v02_rutin2', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -333,7 +333,7 @@ class cv02_rutin_list extends cv02_rutin {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption fv02_rutinlistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption fv02_rutin2listsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -411,20 +411,10 @@ class cv02_rutin_list extends cv02_rutin {
 		// Setup export options
 		$this->SetupExportOptions();
 		$this->tahunajaran_id->SetVisibility();
-		$this->awal_bulan->SetVisibility();
-		$this->awal_tahun->SetVisibility();
-		$this->akhir_bulan->SetVisibility();
-		$this->akhir_tahun->SetVisibility();
 		$this->sekolah_id->SetVisibility();
-		$this->Sekolah->SetVisibility();
 		$this->kelas_id->SetVisibility();
-		$this->Kelas->SetVisibility();
 		$this->siswa_id->SetVisibility();
-		$this->Nomor_Induk->SetVisibility();
-		$this->Nama->SetVisibility();
 		$this->rutin_id->SetVisibility();
-		$this->Pembayaran_Rutin->SetVisibility();
-		$this->nilai->SetVisibility();
 		$this->id->SetVisibility();
 		$this->id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->siswarutin_id->SetVisibility();
@@ -492,13 +482,13 @@ class cv02_rutin_list extends cv02_rutin {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $v02_rutin;
+		global $EW_EXPORT, $v02_rutin2;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($v02_rutin);
+				$doc = new $class($v02_rutin2);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -756,7 +746,7 @@ class cv02_rutin_list extends cv02_rutin {
 
 		// Load server side filters
 		if (EW_SEARCH_FILTER_OPTION == "Server") {
-			$sSavedFilterList = isset($UserProfile) ? $UserProfile->GetSearchFilters(CurrentUserName(), "fv02_rutinlistsrch") : "";
+			$sSavedFilterList = isset($UserProfile) ? $UserProfile->GetSearchFilters(CurrentUserName(), "fv02_rutin2listsrch") : "";
 		} else {
 			$sSavedFilterList = "";
 		}
@@ -764,20 +754,10 @@ class cv02_rutin_list extends cv02_rutin {
 		// Initialize
 		$sFilterList = "";
 		$sFilterList = ew_Concat($sFilterList, $this->tahunajaran_id->AdvancedSearch->ToJSON(), ","); // Field tahunajaran_id
-		$sFilterList = ew_Concat($sFilterList, $this->awal_bulan->AdvancedSearch->ToJSON(), ","); // Field awal_bulan
-		$sFilterList = ew_Concat($sFilterList, $this->awal_tahun->AdvancedSearch->ToJSON(), ","); // Field awal_tahun
-		$sFilterList = ew_Concat($sFilterList, $this->akhir_bulan->AdvancedSearch->ToJSON(), ","); // Field akhir_bulan
-		$sFilterList = ew_Concat($sFilterList, $this->akhir_tahun->AdvancedSearch->ToJSON(), ","); // Field akhir_tahun
 		$sFilterList = ew_Concat($sFilterList, $this->sekolah_id->AdvancedSearch->ToJSON(), ","); // Field sekolah_id
-		$sFilterList = ew_Concat($sFilterList, $this->Sekolah->AdvancedSearch->ToJSON(), ","); // Field Sekolah
 		$sFilterList = ew_Concat($sFilterList, $this->kelas_id->AdvancedSearch->ToJSON(), ","); // Field kelas_id
-		$sFilterList = ew_Concat($sFilterList, $this->Kelas->AdvancedSearch->ToJSON(), ","); // Field Kelas
 		$sFilterList = ew_Concat($sFilterList, $this->siswa_id->AdvancedSearch->ToJSON(), ","); // Field siswa_id
-		$sFilterList = ew_Concat($sFilterList, $this->Nomor_Induk->AdvancedSearch->ToJSON(), ","); // Field Nomor_Induk
-		$sFilterList = ew_Concat($sFilterList, $this->Nama->AdvancedSearch->ToJSON(), ","); // Field Nama
 		$sFilterList = ew_Concat($sFilterList, $this->rutin_id->AdvancedSearch->ToJSON(), ","); // Field rutin_id
-		$sFilterList = ew_Concat($sFilterList, $this->Pembayaran_Rutin->AdvancedSearch->ToJSON(), ","); // Field Pembayaran_Rutin
-		$sFilterList = ew_Concat($sFilterList, $this->nilai->AdvancedSearch->ToJSON(), ","); // Field nilai
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJSON(), ","); // Field id
 		$sFilterList = ew_Concat($sFilterList, $this->siswarutin_id->AdvancedSearch->ToJSON(), ","); // Field siswarutin_id
 		$sFilterList = ew_Concat($sFilterList, $this->Bulan->AdvancedSearch->ToJSON(), ","); // Field Bulan
@@ -802,7 +782,7 @@ class cv02_rutin_list extends cv02_rutin {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = ew_StripSlashes(@$_POST["filters"]);
-			$UserProfile->SetSearchFilters(CurrentUserName(), "fv02_rutinlistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "fv02_rutin2listsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -832,38 +812,6 @@ class cv02_rutin_list extends cv02_rutin {
 		$this->tahunajaran_id->AdvancedSearch->SearchOperator2 = @$filter["w_tahunajaran_id"];
 		$this->tahunajaran_id->AdvancedSearch->Save();
 
-		// Field awal_bulan
-		$this->awal_bulan->AdvancedSearch->SearchValue = @$filter["x_awal_bulan"];
-		$this->awal_bulan->AdvancedSearch->SearchOperator = @$filter["z_awal_bulan"];
-		$this->awal_bulan->AdvancedSearch->SearchCondition = @$filter["v_awal_bulan"];
-		$this->awal_bulan->AdvancedSearch->SearchValue2 = @$filter["y_awal_bulan"];
-		$this->awal_bulan->AdvancedSearch->SearchOperator2 = @$filter["w_awal_bulan"];
-		$this->awal_bulan->AdvancedSearch->Save();
-
-		// Field awal_tahun
-		$this->awal_tahun->AdvancedSearch->SearchValue = @$filter["x_awal_tahun"];
-		$this->awal_tahun->AdvancedSearch->SearchOperator = @$filter["z_awal_tahun"];
-		$this->awal_tahun->AdvancedSearch->SearchCondition = @$filter["v_awal_tahun"];
-		$this->awal_tahun->AdvancedSearch->SearchValue2 = @$filter["y_awal_tahun"];
-		$this->awal_tahun->AdvancedSearch->SearchOperator2 = @$filter["w_awal_tahun"];
-		$this->awal_tahun->AdvancedSearch->Save();
-
-		// Field akhir_bulan
-		$this->akhir_bulan->AdvancedSearch->SearchValue = @$filter["x_akhir_bulan"];
-		$this->akhir_bulan->AdvancedSearch->SearchOperator = @$filter["z_akhir_bulan"];
-		$this->akhir_bulan->AdvancedSearch->SearchCondition = @$filter["v_akhir_bulan"];
-		$this->akhir_bulan->AdvancedSearch->SearchValue2 = @$filter["y_akhir_bulan"];
-		$this->akhir_bulan->AdvancedSearch->SearchOperator2 = @$filter["w_akhir_bulan"];
-		$this->akhir_bulan->AdvancedSearch->Save();
-
-		// Field akhir_tahun
-		$this->akhir_tahun->AdvancedSearch->SearchValue = @$filter["x_akhir_tahun"];
-		$this->akhir_tahun->AdvancedSearch->SearchOperator = @$filter["z_akhir_tahun"];
-		$this->akhir_tahun->AdvancedSearch->SearchCondition = @$filter["v_akhir_tahun"];
-		$this->akhir_tahun->AdvancedSearch->SearchValue2 = @$filter["y_akhir_tahun"];
-		$this->akhir_tahun->AdvancedSearch->SearchOperator2 = @$filter["w_akhir_tahun"];
-		$this->akhir_tahun->AdvancedSearch->Save();
-
 		// Field sekolah_id
 		$this->sekolah_id->AdvancedSearch->SearchValue = @$filter["x_sekolah_id"];
 		$this->sekolah_id->AdvancedSearch->SearchOperator = @$filter["z_sekolah_id"];
@@ -871,14 +819,6 @@ class cv02_rutin_list extends cv02_rutin {
 		$this->sekolah_id->AdvancedSearch->SearchValue2 = @$filter["y_sekolah_id"];
 		$this->sekolah_id->AdvancedSearch->SearchOperator2 = @$filter["w_sekolah_id"];
 		$this->sekolah_id->AdvancedSearch->Save();
-
-		// Field Sekolah
-		$this->Sekolah->AdvancedSearch->SearchValue = @$filter["x_Sekolah"];
-		$this->Sekolah->AdvancedSearch->SearchOperator = @$filter["z_Sekolah"];
-		$this->Sekolah->AdvancedSearch->SearchCondition = @$filter["v_Sekolah"];
-		$this->Sekolah->AdvancedSearch->SearchValue2 = @$filter["y_Sekolah"];
-		$this->Sekolah->AdvancedSearch->SearchOperator2 = @$filter["w_Sekolah"];
-		$this->Sekolah->AdvancedSearch->Save();
 
 		// Field kelas_id
 		$this->kelas_id->AdvancedSearch->SearchValue = @$filter["x_kelas_id"];
@@ -888,14 +828,6 @@ class cv02_rutin_list extends cv02_rutin {
 		$this->kelas_id->AdvancedSearch->SearchOperator2 = @$filter["w_kelas_id"];
 		$this->kelas_id->AdvancedSearch->Save();
 
-		// Field Kelas
-		$this->Kelas->AdvancedSearch->SearchValue = @$filter["x_Kelas"];
-		$this->Kelas->AdvancedSearch->SearchOperator = @$filter["z_Kelas"];
-		$this->Kelas->AdvancedSearch->SearchCondition = @$filter["v_Kelas"];
-		$this->Kelas->AdvancedSearch->SearchValue2 = @$filter["y_Kelas"];
-		$this->Kelas->AdvancedSearch->SearchOperator2 = @$filter["w_Kelas"];
-		$this->Kelas->AdvancedSearch->Save();
-
 		// Field siswa_id
 		$this->siswa_id->AdvancedSearch->SearchValue = @$filter["x_siswa_id"];
 		$this->siswa_id->AdvancedSearch->SearchOperator = @$filter["z_siswa_id"];
@@ -904,22 +836,6 @@ class cv02_rutin_list extends cv02_rutin {
 		$this->siswa_id->AdvancedSearch->SearchOperator2 = @$filter["w_siswa_id"];
 		$this->siswa_id->AdvancedSearch->Save();
 
-		// Field Nomor_Induk
-		$this->Nomor_Induk->AdvancedSearch->SearchValue = @$filter["x_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchOperator = @$filter["z_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchCondition = @$filter["v_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchValue2 = @$filter["y_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->SearchOperator2 = @$filter["w_Nomor_Induk"];
-		$this->Nomor_Induk->AdvancedSearch->Save();
-
-		// Field Nama
-		$this->Nama->AdvancedSearch->SearchValue = @$filter["x_Nama"];
-		$this->Nama->AdvancedSearch->SearchOperator = @$filter["z_Nama"];
-		$this->Nama->AdvancedSearch->SearchCondition = @$filter["v_Nama"];
-		$this->Nama->AdvancedSearch->SearchValue2 = @$filter["y_Nama"];
-		$this->Nama->AdvancedSearch->SearchOperator2 = @$filter["w_Nama"];
-		$this->Nama->AdvancedSearch->Save();
-
 		// Field rutin_id
 		$this->rutin_id->AdvancedSearch->SearchValue = @$filter["x_rutin_id"];
 		$this->rutin_id->AdvancedSearch->SearchOperator = @$filter["z_rutin_id"];
@@ -927,22 +843,6 @@ class cv02_rutin_list extends cv02_rutin {
 		$this->rutin_id->AdvancedSearch->SearchValue2 = @$filter["y_rutin_id"];
 		$this->rutin_id->AdvancedSearch->SearchOperator2 = @$filter["w_rutin_id"];
 		$this->rutin_id->AdvancedSearch->Save();
-
-		// Field Pembayaran_Rutin
-		$this->Pembayaran_Rutin->AdvancedSearch->SearchValue = @$filter["x_Pembayaran_Rutin"];
-		$this->Pembayaran_Rutin->AdvancedSearch->SearchOperator = @$filter["z_Pembayaran_Rutin"];
-		$this->Pembayaran_Rutin->AdvancedSearch->SearchCondition = @$filter["v_Pembayaran_Rutin"];
-		$this->Pembayaran_Rutin->AdvancedSearch->SearchValue2 = @$filter["y_Pembayaran_Rutin"];
-		$this->Pembayaran_Rutin->AdvancedSearch->SearchOperator2 = @$filter["w_Pembayaran_Rutin"];
-		$this->Pembayaran_Rutin->AdvancedSearch->Save();
-
-		// Field nilai
-		$this->nilai->AdvancedSearch->SearchValue = @$filter["x_nilai"];
-		$this->nilai->AdvancedSearch->SearchOperator = @$filter["z_nilai"];
-		$this->nilai->AdvancedSearch->SearchCondition = @$filter["v_nilai"];
-		$this->nilai->AdvancedSearch->SearchValue2 = @$filter["y_nilai"];
-		$this->nilai->AdvancedSearch->SearchOperator2 = @$filter["w_nilai"];
-		$this->nilai->AdvancedSearch->Save();
 
 		// Field id
 		$this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
@@ -999,20 +899,10 @@ class cv02_rutin_list extends cv02_rutin {
 		$sWhere = "";
 		if (!$Security->CanSearch()) return "";
 		$this->BuildSearchSql($sWhere, $this->tahunajaran_id, $Default, FALSE); // tahunajaran_id
-		$this->BuildSearchSql($sWhere, $this->awal_bulan, $Default, FALSE); // awal_bulan
-		$this->BuildSearchSql($sWhere, $this->awal_tahun, $Default, FALSE); // awal_tahun
-		$this->BuildSearchSql($sWhere, $this->akhir_bulan, $Default, FALSE); // akhir_bulan
-		$this->BuildSearchSql($sWhere, $this->akhir_tahun, $Default, FALSE); // akhir_tahun
 		$this->BuildSearchSql($sWhere, $this->sekolah_id, $Default, FALSE); // sekolah_id
-		$this->BuildSearchSql($sWhere, $this->Sekolah, $Default, FALSE); // Sekolah
 		$this->BuildSearchSql($sWhere, $this->kelas_id, $Default, FALSE); // kelas_id
-		$this->BuildSearchSql($sWhere, $this->Kelas, $Default, FALSE); // Kelas
 		$this->BuildSearchSql($sWhere, $this->siswa_id, $Default, FALSE); // siswa_id
-		$this->BuildSearchSql($sWhere, $this->Nomor_Induk, $Default, FALSE); // Nomor_Induk
-		$this->BuildSearchSql($sWhere, $this->Nama, $Default, FALSE); // Nama
 		$this->BuildSearchSql($sWhere, $this->rutin_id, $Default, FALSE); // rutin_id
-		$this->BuildSearchSql($sWhere, $this->Pembayaran_Rutin, $Default, FALSE); // Pembayaran_Rutin
-		$this->BuildSearchSql($sWhere, $this->nilai, $Default, FALSE); // nilai
 		$this->BuildSearchSql($sWhere, $this->id, $Default, FALSE); // id
 		$this->BuildSearchSql($sWhere, $this->siswarutin_id, $Default, FALSE); // siswarutin_id
 		$this->BuildSearchSql($sWhere, $this->Bulan, $Default, FALSE); // Bulan
@@ -1026,20 +916,10 @@ class cv02_rutin_list extends cv02_rutin {
 		}
 		if (!$Default && $this->Command == "search") {
 			$this->tahunajaran_id->AdvancedSearch->Save(); // tahunajaran_id
-			$this->awal_bulan->AdvancedSearch->Save(); // awal_bulan
-			$this->awal_tahun->AdvancedSearch->Save(); // awal_tahun
-			$this->akhir_bulan->AdvancedSearch->Save(); // akhir_bulan
-			$this->akhir_tahun->AdvancedSearch->Save(); // akhir_tahun
 			$this->sekolah_id->AdvancedSearch->Save(); // sekolah_id
-			$this->Sekolah->AdvancedSearch->Save(); // Sekolah
 			$this->kelas_id->AdvancedSearch->Save(); // kelas_id
-			$this->Kelas->AdvancedSearch->Save(); // Kelas
 			$this->siswa_id->AdvancedSearch->Save(); // siswa_id
-			$this->Nomor_Induk->AdvancedSearch->Save(); // Nomor_Induk
-			$this->Nama->AdvancedSearch->Save(); // Nama
 			$this->rutin_id->AdvancedSearch->Save(); // rutin_id
-			$this->Pembayaran_Rutin->AdvancedSearch->Save(); // Pembayaran_Rutin
-			$this->nilai->AdvancedSearch->Save(); // nilai
 			$this->id->AdvancedSearch->Save(); // id
 			$this->siswarutin_id->AdvancedSearch->Save(); // siswarutin_id
 			$this->Bulan->AdvancedSearch->Save(); // Bulan
@@ -1102,33 +982,13 @@ class cv02_rutin_list extends cv02_rutin {
 	function CheckSearchParms() {
 		if ($this->tahunajaran_id->AdvancedSearch->IssetSession())
 			return TRUE;
-		if ($this->awal_bulan->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->awal_tahun->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->akhir_bulan->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->akhir_tahun->AdvancedSearch->IssetSession())
-			return TRUE;
 		if ($this->sekolah_id->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->Sekolah->AdvancedSearch->IssetSession())
 			return TRUE;
 		if ($this->kelas_id->AdvancedSearch->IssetSession())
 			return TRUE;
-		if ($this->Kelas->AdvancedSearch->IssetSession())
-			return TRUE;
 		if ($this->siswa_id->AdvancedSearch->IssetSession())
 			return TRUE;
-		if ($this->Nomor_Induk->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->Nama->AdvancedSearch->IssetSession())
-			return TRUE;
 		if ($this->rutin_id->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->Pembayaran_Rutin->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->nilai->AdvancedSearch->IssetSession())
 			return TRUE;
 		if ($this->id->AdvancedSearch->IssetSession())
 			return TRUE;
@@ -1164,20 +1024,10 @@ class cv02_rutin_list extends cv02_rutin {
 	// Clear all advanced search parameters
 	function ResetAdvancedSearchParms() {
 		$this->tahunajaran_id->AdvancedSearch->UnsetSession();
-		$this->awal_bulan->AdvancedSearch->UnsetSession();
-		$this->awal_tahun->AdvancedSearch->UnsetSession();
-		$this->akhir_bulan->AdvancedSearch->UnsetSession();
-		$this->akhir_tahun->AdvancedSearch->UnsetSession();
 		$this->sekolah_id->AdvancedSearch->UnsetSession();
-		$this->Sekolah->AdvancedSearch->UnsetSession();
 		$this->kelas_id->AdvancedSearch->UnsetSession();
-		$this->Kelas->AdvancedSearch->UnsetSession();
 		$this->siswa_id->AdvancedSearch->UnsetSession();
-		$this->Nomor_Induk->AdvancedSearch->UnsetSession();
-		$this->Nama->AdvancedSearch->UnsetSession();
 		$this->rutin_id->AdvancedSearch->UnsetSession();
-		$this->Pembayaran_Rutin->AdvancedSearch->UnsetSession();
-		$this->nilai->AdvancedSearch->UnsetSession();
 		$this->id->AdvancedSearch->UnsetSession();
 		$this->siswarutin_id->AdvancedSearch->UnsetSession();
 		$this->Bulan->AdvancedSearch->UnsetSession();
@@ -1192,20 +1042,10 @@ class cv02_rutin_list extends cv02_rutin {
 
 		// Restore advanced search values
 		$this->tahunajaran_id->AdvancedSearch->Load();
-		$this->awal_bulan->AdvancedSearch->Load();
-		$this->awal_tahun->AdvancedSearch->Load();
-		$this->akhir_bulan->AdvancedSearch->Load();
-		$this->akhir_tahun->AdvancedSearch->Load();
 		$this->sekolah_id->AdvancedSearch->Load();
-		$this->Sekolah->AdvancedSearch->Load();
 		$this->kelas_id->AdvancedSearch->Load();
-		$this->Kelas->AdvancedSearch->Load();
 		$this->siswa_id->AdvancedSearch->Load();
-		$this->Nomor_Induk->AdvancedSearch->Load();
-		$this->Nama->AdvancedSearch->Load();
 		$this->rutin_id->AdvancedSearch->Load();
-		$this->Pembayaran_Rutin->AdvancedSearch->Load();
-		$this->nilai->AdvancedSearch->Load();
 		$this->id->AdvancedSearch->Load();
 		$this->siswarutin_id->AdvancedSearch->Load();
 		$this->Bulan->AdvancedSearch->Load();
@@ -1225,20 +1065,10 @@ class cv02_rutin_list extends cv02_rutin {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
 			$this->UpdateSort($this->tahunajaran_id, $bCtrl); // tahunajaran_id
-			$this->UpdateSort($this->awal_bulan, $bCtrl); // awal_bulan
-			$this->UpdateSort($this->awal_tahun, $bCtrl); // awal_tahun
-			$this->UpdateSort($this->akhir_bulan, $bCtrl); // akhir_bulan
-			$this->UpdateSort($this->akhir_tahun, $bCtrl); // akhir_tahun
 			$this->UpdateSort($this->sekolah_id, $bCtrl); // sekolah_id
-			$this->UpdateSort($this->Sekolah, $bCtrl); // Sekolah
 			$this->UpdateSort($this->kelas_id, $bCtrl); // kelas_id
-			$this->UpdateSort($this->Kelas, $bCtrl); // Kelas
 			$this->UpdateSort($this->siswa_id, $bCtrl); // siswa_id
-			$this->UpdateSort($this->Nomor_Induk, $bCtrl); // Nomor_Induk
-			$this->UpdateSort($this->Nama, $bCtrl); // Nama
 			$this->UpdateSort($this->rutin_id, $bCtrl); // rutin_id
-			$this->UpdateSort($this->Pembayaran_Rutin, $bCtrl); // Pembayaran_Rutin
-			$this->UpdateSort($this->nilai, $bCtrl); // nilai
 			$this->UpdateSort($this->id, $bCtrl); // id
 			$this->UpdateSort($this->siswarutin_id, $bCtrl); // siswarutin_id
 			$this->UpdateSort($this->Bulan, $bCtrl); // Bulan
@@ -1278,20 +1108,10 @@ class cv02_rutin_list extends cv02_rutin {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
 				$this->tahunajaran_id->setSort("");
-				$this->awal_bulan->setSort("");
-				$this->awal_tahun->setSort("");
-				$this->akhir_bulan->setSort("");
-				$this->akhir_tahun->setSort("");
 				$this->sekolah_id->setSort("");
-				$this->Sekolah->setSort("");
 				$this->kelas_id->setSort("");
-				$this->Kelas->setSort("");
 				$this->siswa_id->setSort("");
-				$this->Nomor_Induk->setSort("");
-				$this->Nama->setSort("");
 				$this->rutin_id->setSort("");
-				$this->Pembayaran_Rutin->setSort("");
-				$this->nilai->setSort("");
 				$this->id->setSort("");
 				$this->siswarutin_id->setSort("");
 				$this->Bulan->setSort("");
@@ -1426,10 +1246,10 @@ class cv02_rutin_list extends cv02_rutin {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fv02_rutinlistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fv02_rutin2listsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fv02_rutinlistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fv02_rutin2listsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1453,7 +1273,7 @@ class cv02_rutin_list extends cv02_rutin {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.fv02_rutinlist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.fv02_rutin2list}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1557,7 +1377,7 @@ class cv02_rutin_list extends cv02_rutin {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fv02_rutinlistsrch\">" . $Language->Phrase("SearchBtn") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fv02_rutin2listsrch\">" . $Language->Phrase("SearchBtn") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1567,7 +1387,7 @@ class cv02_rutin_list extends cv02_rutin {
 
 		// Advanced search button
 		$item = &$this->SearchOptions->Add("advancedsearch");
-		$item->Body = "<a class=\"btn btn-default ewAdvancedSearch\" title=\"" . $Language->Phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->Phrase("AdvancedSearch") . "\" href=\"v02_rutinsrch.php\">" . $Language->Phrase("AdvancedSearchBtn") . "</a>";
+		$item->Body = "<a class=\"btn btn-default ewAdvancedSearch\" title=\"" . $Language->Phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->Phrase("AdvancedSearch") . "\" href=\"v02_rutin2srch.php\">" . $Language->Phrase("AdvancedSearchBtn") . "</a>";
 		$item->Visible = TRUE;
 
 		// Button group for search
@@ -1646,75 +1466,25 @@ class cv02_rutin_list extends cv02_rutin {
 		if ($this->tahunajaran_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->tahunajaran_id->AdvancedSearch->SearchOperator = @$_GET["z_tahunajaran_id"];
 
-		// awal_bulan
-		$this->awal_bulan->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_awal_bulan"]);
-		if ($this->awal_bulan->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->awal_bulan->AdvancedSearch->SearchOperator = @$_GET["z_awal_bulan"];
-
-		// awal_tahun
-		$this->awal_tahun->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_awal_tahun"]);
-		if ($this->awal_tahun->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->awal_tahun->AdvancedSearch->SearchOperator = @$_GET["z_awal_tahun"];
-
-		// akhir_bulan
-		$this->akhir_bulan->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_akhir_bulan"]);
-		if ($this->akhir_bulan->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->akhir_bulan->AdvancedSearch->SearchOperator = @$_GET["z_akhir_bulan"];
-
-		// akhir_tahun
-		$this->akhir_tahun->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_akhir_tahun"]);
-		if ($this->akhir_tahun->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->akhir_tahun->AdvancedSearch->SearchOperator = @$_GET["z_akhir_tahun"];
-
 		// sekolah_id
 		$this->sekolah_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_sekolah_id"]);
 		if ($this->sekolah_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->sekolah_id->AdvancedSearch->SearchOperator = @$_GET["z_sekolah_id"];
-
-		// Sekolah
-		$this->Sekolah->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Sekolah"]);
-		if ($this->Sekolah->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->Sekolah->AdvancedSearch->SearchOperator = @$_GET["z_Sekolah"];
 
 		// kelas_id
 		$this->kelas_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_kelas_id"]);
 		if ($this->kelas_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->kelas_id->AdvancedSearch->SearchOperator = @$_GET["z_kelas_id"];
 
-		// Kelas
-		$this->Kelas->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Kelas"]);
-		if ($this->Kelas->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->Kelas->AdvancedSearch->SearchOperator = @$_GET["z_Kelas"];
-
 		// siswa_id
 		$this->siswa_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_siswa_id"]);
 		if ($this->siswa_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->siswa_id->AdvancedSearch->SearchOperator = @$_GET["z_siswa_id"];
 
-		// Nomor_Induk
-		$this->Nomor_Induk->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Nomor_Induk"]);
-		if ($this->Nomor_Induk->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->Nomor_Induk->AdvancedSearch->SearchOperator = @$_GET["z_Nomor_Induk"];
-
-		// Nama
-		$this->Nama->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Nama"]);
-		if ($this->Nama->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->Nama->AdvancedSearch->SearchOperator = @$_GET["z_Nama"];
-
 		// rutin_id
 		$this->rutin_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_rutin_id"]);
 		if ($this->rutin_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->rutin_id->AdvancedSearch->SearchOperator = @$_GET["z_rutin_id"];
-
-		// Pembayaran_Rutin
-		$this->Pembayaran_Rutin->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Pembayaran_Rutin"]);
-		if ($this->Pembayaran_Rutin->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->Pembayaran_Rutin->AdvancedSearch->SearchOperator = @$_GET["z_Pembayaran_Rutin"];
-
-		// nilai
-		$this->nilai->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_nilai"]);
-		if ($this->nilai->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->nilai->AdvancedSearch->SearchOperator = @$_GET["z_nilai"];
 
 		// id
 		$this->id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_id"]);
@@ -1803,20 +1573,10 @@ class cv02_rutin_list extends cv02_rutin {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
-		$this->awal_bulan->setDbValue($rs->fields('awal_bulan'));
-		$this->awal_tahun->setDbValue($rs->fields('awal_tahun'));
-		$this->akhir_bulan->setDbValue($rs->fields('akhir_bulan'));
-		$this->akhir_tahun->setDbValue($rs->fields('akhir_tahun'));
 		$this->sekolah_id->setDbValue($rs->fields('sekolah_id'));
-		$this->Sekolah->setDbValue($rs->fields('Sekolah'));
 		$this->kelas_id->setDbValue($rs->fields('kelas_id'));
-		$this->Kelas->setDbValue($rs->fields('Kelas'));
 		$this->siswa_id->setDbValue($rs->fields('siswa_id'));
-		$this->Nomor_Induk->setDbValue($rs->fields('Nomor_Induk'));
-		$this->Nama->setDbValue($rs->fields('Nama'));
 		$this->rutin_id->setDbValue($rs->fields('rutin_id'));
-		$this->Pembayaran_Rutin->setDbValue($rs->fields('Pembayaran_Rutin'));
-		$this->nilai->setDbValue($rs->fields('nilai'));
 		$this->id->setDbValue($rs->fields('id'));
 		$this->siswarutin_id->setDbValue($rs->fields('siswarutin_id'));
 		$this->Bulan->setDbValue($rs->fields('Bulan'));
@@ -1830,20 +1590,10 @@ class cv02_rutin_list extends cv02_rutin {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->tahunajaran_id->DbValue = $row['tahunajaran_id'];
-		$this->awal_bulan->DbValue = $row['awal_bulan'];
-		$this->awal_tahun->DbValue = $row['awal_tahun'];
-		$this->akhir_bulan->DbValue = $row['akhir_bulan'];
-		$this->akhir_tahun->DbValue = $row['akhir_tahun'];
 		$this->sekolah_id->DbValue = $row['sekolah_id'];
-		$this->Sekolah->DbValue = $row['Sekolah'];
 		$this->kelas_id->DbValue = $row['kelas_id'];
-		$this->Kelas->DbValue = $row['Kelas'];
 		$this->siswa_id->DbValue = $row['siswa_id'];
-		$this->Nomor_Induk->DbValue = $row['Nomor_Induk'];
-		$this->Nama->DbValue = $row['Nama'];
 		$this->rutin_id->DbValue = $row['rutin_id'];
-		$this->Pembayaran_Rutin->DbValue = $row['Pembayaran_Rutin'];
-		$this->nilai->DbValue = $row['nilai'];
 		$this->id->DbValue = $row['id'];
 		$this->siswarutin_id->DbValue = $row['siswarutin_id'];
 		$this->Bulan->DbValue = $row['Bulan'];
@@ -1888,10 +1638,6 @@ class cv02_rutin_list extends cv02_rutin {
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
 		// Convert decimal values if posted back
-		if ($this->nilai->FormValue == $this->nilai->CurrentValue && is_numeric(ew_StrToFloat($this->nilai->CurrentValue)))
-			$this->nilai->CurrentValue = ew_StrToFloat($this->nilai->CurrentValue);
-
-		// Convert decimal values if posted back
 		if ($this->Bayar_Jumlah->FormValue == $this->Bayar_Jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->Bayar_Jumlah->CurrentValue)))
 			$this->Bayar_Jumlah->CurrentValue = ew_StrToFloat($this->Bayar_Jumlah->CurrentValue);
 
@@ -1900,20 +1646,10 @@ class cv02_rutin_list extends cv02_rutin {
 
 		// Common render codes for all row types
 		// tahunajaran_id
-		// awal_bulan
-		// awal_tahun
-		// akhir_bulan
-		// akhir_tahun
 		// sekolah_id
-		// Sekolah
 		// kelas_id
-		// Kelas
 		// siswa_id
-		// Nomor_Induk
-		// Nama
 		// rutin_id
-		// Pembayaran_Rutin
-		// nilai
 		// id
 		// siswarutin_id
 		// Bulan
@@ -1926,9 +1662,9 @@ class cv02_rutin_list extends cv02_rutin {
 		// tahunajaran_id
 		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->tahunajaran_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `awal_bulan` AS `DispFld`, `awal_tahun` AS `Disp2Fld`, `akhir_bulan` AS `Disp3Fld`, `akhir_tahun` AS `Disp4Fld` FROM `t00_tahunajaran`";
+		$sSqlWrk = "SELECT `id`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v00_tahunajaran`";
 		$sWhereWrk = "";
-		$this->tahunajaran_id->LookupFilters = array("dx1" => '`awal_bulan`', "dx2" => '`awal_tahun`', "dx3" => '`akhir_bulan`', "dx4" => '`akhir_tahun`');
+		$this->tahunajaran_id->LookupFilters = array("dx1" => '`tahun_pelajaran`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -1936,9 +1672,6 @@ class cv02_rutin_list extends cv02_rutin {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$arwrk[3] = $rswrk->fields('Disp3Fld');
-				$arwrk[4] = $rswrk->fields('Disp4Fld');
 				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
@@ -1949,49 +1682,76 @@ class cv02_rutin_list extends cv02_rutin {
 		}
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
-		// awal_bulan
-		$this->awal_bulan->ViewValue = $this->awal_bulan->CurrentValue;
-		$this->awal_bulan->ViewCustomAttributes = "";
-
-		// awal_tahun
-		$this->awal_tahun->ViewValue = $this->awal_tahun->CurrentValue;
-		$this->awal_tahun->ViewCustomAttributes = "";
-
-		// akhir_bulan
-		$this->akhir_bulan->ViewValue = $this->akhir_bulan->CurrentValue;
-		$this->akhir_bulan->ViewCustomAttributes = "";
-
-		// akhir_tahun
-		$this->akhir_tahun->ViewValue = $this->akhir_tahun->CurrentValue;
-		$this->akhir_tahun->ViewCustomAttributes = "";
-
 		// sekolah_id
-		$this->sekolah_id->ViewValue = $this->sekolah_id->CurrentValue;
+		if (strval($this->sekolah_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->sekolah_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t01_sekolah`";
+		$sWhereWrk = "";
+		$this->sekolah_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->sekolah_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->sekolah_id->ViewValue = $this->sekolah_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->sekolah_id->ViewValue = $this->sekolah_id->CurrentValue;
+			}
+		} else {
+			$this->sekolah_id->ViewValue = NULL;
+		}
 		$this->sekolah_id->ViewCustomAttributes = "";
 
-		// Sekolah
-		$this->Sekolah->ViewValue = $this->Sekolah->CurrentValue;
-		$this->Sekolah->ViewCustomAttributes = "";
-
 		// kelas_id
-		$this->kelas_id->ViewValue = $this->kelas_id->CurrentValue;
+		if (strval($this->kelas_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->kelas_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_kelas`";
+		$sWhereWrk = "";
+		$this->kelas_id->LookupFilters = array("dx1" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->kelas_id->ViewValue = $this->kelas_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->kelas_id->ViewValue = $this->kelas_id->CurrentValue;
+			}
+		} else {
+			$this->kelas_id->ViewValue = NULL;
+		}
 		$this->kelas_id->ViewCustomAttributes = "";
 
-		// Kelas
-		$this->Kelas->ViewValue = $this->Kelas->CurrentValue;
-		$this->Kelas->ViewCustomAttributes = "";
-
 		// siswa_id
-		$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+		if (strval($this->siswa_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_siswa`";
+		$sWhereWrk = "";
+		$this->siswa_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+			}
+		} else {
+			$this->siswa_id->ViewValue = NULL;
+		}
 		$this->siswa_id->ViewCustomAttributes = "";
-
-		// Nomor_Induk
-		$this->Nomor_Induk->ViewValue = $this->Nomor_Induk->CurrentValue;
-		$this->Nomor_Induk->ViewCustomAttributes = "";
-
-		// Nama
-		$this->Nama->ViewValue = $this->Nama->CurrentValue;
-		$this->Nama->ViewCustomAttributes = "";
 
 		// rutin_id
 		if (strval($this->rutin_id->CurrentValue) <> "") {
@@ -2015,13 +1775,6 @@ class cv02_rutin_list extends cv02_rutin {
 			$this->rutin_id->ViewValue = NULL;
 		}
 		$this->rutin_id->ViewCustomAttributes = "";
-
-		// Pembayaran_Rutin
-		$this->Pembayaran_Rutin->ViewCustomAttributes = "";
-
-		// nilai
-		$this->nilai->ViewValue = $this->nilai->CurrentValue;
-		$this->nilai->ViewCustomAttributes = "";
 
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
@@ -2053,75 +1806,25 @@ class cv02_rutin_list extends cv02_rutin {
 			$this->tahunajaran_id->HrefValue = "";
 			$this->tahunajaran_id->TooltipValue = "";
 
-			// awal_bulan
-			$this->awal_bulan->LinkCustomAttributes = "";
-			$this->awal_bulan->HrefValue = "";
-			$this->awal_bulan->TooltipValue = "";
-
-			// awal_tahun
-			$this->awal_tahun->LinkCustomAttributes = "";
-			$this->awal_tahun->HrefValue = "";
-			$this->awal_tahun->TooltipValue = "";
-
-			// akhir_bulan
-			$this->akhir_bulan->LinkCustomAttributes = "";
-			$this->akhir_bulan->HrefValue = "";
-			$this->akhir_bulan->TooltipValue = "";
-
-			// akhir_tahun
-			$this->akhir_tahun->LinkCustomAttributes = "";
-			$this->akhir_tahun->HrefValue = "";
-			$this->akhir_tahun->TooltipValue = "";
-
 			// sekolah_id
 			$this->sekolah_id->LinkCustomAttributes = "";
 			$this->sekolah_id->HrefValue = "";
 			$this->sekolah_id->TooltipValue = "";
-
-			// Sekolah
-			$this->Sekolah->LinkCustomAttributes = "";
-			$this->Sekolah->HrefValue = "";
-			$this->Sekolah->TooltipValue = "";
 
 			// kelas_id
 			$this->kelas_id->LinkCustomAttributes = "";
 			$this->kelas_id->HrefValue = "";
 			$this->kelas_id->TooltipValue = "";
 
-			// Kelas
-			$this->Kelas->LinkCustomAttributes = "";
-			$this->Kelas->HrefValue = "";
-			$this->Kelas->TooltipValue = "";
-
 			// siswa_id
 			$this->siswa_id->LinkCustomAttributes = "";
 			$this->siswa_id->HrefValue = "";
 			$this->siswa_id->TooltipValue = "";
 
-			// Nomor_Induk
-			$this->Nomor_Induk->LinkCustomAttributes = "";
-			$this->Nomor_Induk->HrefValue = "";
-			$this->Nomor_Induk->TooltipValue = "";
-
-			// Nama
-			$this->Nama->LinkCustomAttributes = "";
-			$this->Nama->HrefValue = "";
-			$this->Nama->TooltipValue = "";
-
 			// rutin_id
 			$this->rutin_id->LinkCustomAttributes = "";
 			$this->rutin_id->HrefValue = "";
 			$this->rutin_id->TooltipValue = "";
-
-			// Pembayaran_Rutin
-			$this->Pembayaran_Rutin->LinkCustomAttributes = "";
-			$this->Pembayaran_Rutin->HrefValue = "";
-			$this->Pembayaran_Rutin->TooltipValue = "";
-
-			// nilai
-			$this->nilai->LinkCustomAttributes = "";
-			$this->nilai->HrefValue = "";
-			$this->nilai->TooltipValue = "";
 
 			// id
 			$this->id->LinkCustomAttributes = "";
@@ -2161,9 +1864,9 @@ class cv02_rutin_list extends cv02_rutin {
 			} else {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->tahunajaran_id->AdvancedSearch->SearchValue, EW_DATATYPE_NUMBER, "");
 			}
-			$sSqlWrk = "SELECT `id`, `awal_bulan` AS `DispFld`, `awal_tahun` AS `Disp2Fld`, `akhir_bulan` AS `Disp3Fld`, `akhir_tahun` AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t00_tahunajaran`";
+			$sSqlWrk = "SELECT `id`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v00_tahunajaran`";
 			$sWhereWrk = "";
-			$this->tahunajaran_id->LookupFilters = array("dx1" => '`awal_bulan`', "dx2" => '`awal_tahun`', "dx3" => '`akhir_bulan`', "dx4" => '`akhir_tahun`');
+			$this->tahunajaran_id->LookupFilters = array("dx1" => '`tahun_pelajaran`');
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -2171,9 +1874,6 @@ class cv02_rutin_list extends cv02_rutin {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-				$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
-				$arwrk[3] = ew_HtmlEncode($rswrk->fields('Disp3Fld'));
-				$arwrk[4] = ew_HtmlEncode($rswrk->fields('Disp4Fld'));
 				$this->tahunajaran_id->AdvancedSearch->ViewValue = $this->tahunajaran_id->DisplayValue($arwrk);
 			} else {
 				$this->tahunajaran_id->AdvancedSearch->ViewValue = $Language->Phrase("PleaseSelect");
@@ -2182,71 +1882,82 @@ class cv02_rutin_list extends cv02_rutin {
 			if ($rswrk) $rswrk->Close();
 			$this->tahunajaran_id->EditValue = $arwrk;
 
-			// awal_bulan
-			$this->awal_bulan->EditAttrs["class"] = "form-control";
-			$this->awal_bulan->EditCustomAttributes = "";
-			$this->awal_bulan->EditValue = ew_HtmlEncode($this->awal_bulan->AdvancedSearch->SearchValue);
-			$this->awal_bulan->PlaceHolder = ew_RemoveHtml($this->awal_bulan->FldCaption());
-
-			// awal_tahun
-			$this->awal_tahun->EditAttrs["class"] = "form-control";
-			$this->awal_tahun->EditCustomAttributes = "";
-			$this->awal_tahun->EditValue = ew_HtmlEncode($this->awal_tahun->AdvancedSearch->SearchValue);
-			$this->awal_tahun->PlaceHolder = ew_RemoveHtml($this->awal_tahun->FldCaption());
-
-			// akhir_bulan
-			$this->akhir_bulan->EditAttrs["class"] = "form-control";
-			$this->akhir_bulan->EditCustomAttributes = "";
-			$this->akhir_bulan->EditValue = ew_HtmlEncode($this->akhir_bulan->AdvancedSearch->SearchValue);
-			$this->akhir_bulan->PlaceHolder = ew_RemoveHtml($this->akhir_bulan->FldCaption());
-
-			// akhir_tahun
-			$this->akhir_tahun->EditAttrs["class"] = "form-control";
-			$this->akhir_tahun->EditCustomAttributes = "";
-			$this->akhir_tahun->EditValue = ew_HtmlEncode($this->akhir_tahun->AdvancedSearch->SearchValue);
-			$this->akhir_tahun->PlaceHolder = ew_RemoveHtml($this->akhir_tahun->FldCaption());
-
 			// sekolah_id
-			$this->sekolah_id->EditAttrs["class"] = "form-control";
 			$this->sekolah_id->EditCustomAttributes = "";
-			$this->sekolah_id->EditValue = ew_HtmlEncode($this->sekolah_id->AdvancedSearch->SearchValue);
-			$this->sekolah_id->PlaceHolder = ew_RemoveHtml($this->sekolah_id->FldCaption());
-
-			// Sekolah
-			$this->Sekolah->EditAttrs["class"] = "form-control";
-			$this->Sekolah->EditCustomAttributes = "";
-			$this->Sekolah->EditValue = ew_HtmlEncode($this->Sekolah->AdvancedSearch->SearchValue);
-			$this->Sekolah->PlaceHolder = ew_RemoveHtml($this->Sekolah->FldCaption());
+			if (trim(strval($this->sekolah_id->AdvancedSearch->SearchValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`id`" . ew_SearchString("=", $this->sekolah_id->AdvancedSearch->SearchValue, EW_DATATYPE_NUMBER, "");
+			}
+			$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t01_sekolah`";
+			$sWhereWrk = "";
+			$this->sekolah_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->sekolah_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+				$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
+				$this->sekolah_id->AdvancedSearch->ViewValue = $this->sekolah_id->DisplayValue($arwrk);
+			} else {
+				$this->sekolah_id->AdvancedSearch->ViewValue = $Language->Phrase("PleaseSelect");
+			}
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->sekolah_id->EditValue = $arwrk;
 
 			// kelas_id
-			$this->kelas_id->EditAttrs["class"] = "form-control";
 			$this->kelas_id->EditCustomAttributes = "";
-			$this->kelas_id->EditValue = ew_HtmlEncode($this->kelas_id->AdvancedSearch->SearchValue);
-			$this->kelas_id->PlaceHolder = ew_RemoveHtml($this->kelas_id->FldCaption());
-
-			// Kelas
-			$this->Kelas->EditAttrs["class"] = "form-control";
-			$this->Kelas->EditCustomAttributes = "";
-			$this->Kelas->EditValue = ew_HtmlEncode($this->Kelas->AdvancedSearch->SearchValue);
-			$this->Kelas->PlaceHolder = ew_RemoveHtml($this->Kelas->FldCaption());
+			if (trim(strval($this->kelas_id->AdvancedSearch->SearchValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`id`" . ew_SearchString("=", $this->kelas_id->AdvancedSearch->SearchValue, EW_DATATYPE_NUMBER, "");
+			}
+			$sSqlWrk = "SELECT `id`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, `sekolah_id` AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t02_kelas`";
+			$sWhereWrk = "";
+			$this->kelas_id->LookupFilters = array("dx1" => '`Nama`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+				$this->kelas_id->AdvancedSearch->ViewValue = $this->kelas_id->DisplayValue($arwrk);
+			} else {
+				$this->kelas_id->AdvancedSearch->ViewValue = $Language->Phrase("PleaseSelect");
+			}
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->kelas_id->EditValue = $arwrk;
 
 			// siswa_id
-			$this->siswa_id->EditAttrs["class"] = "form-control";
 			$this->siswa_id->EditCustomAttributes = "";
-			$this->siswa_id->EditValue = ew_HtmlEncode($this->siswa_id->AdvancedSearch->SearchValue);
-			$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
-
-			// Nomor_Induk
-			$this->Nomor_Induk->EditAttrs["class"] = "form-control";
-			$this->Nomor_Induk->EditCustomAttributes = "";
-			$this->Nomor_Induk->EditValue = ew_HtmlEncode($this->Nomor_Induk->AdvancedSearch->SearchValue);
-			$this->Nomor_Induk->PlaceHolder = ew_RemoveHtml($this->Nomor_Induk->FldCaption());
-
-			// Nama
-			$this->Nama->EditAttrs["class"] = "form-control";
-			$this->Nama->EditCustomAttributes = "";
-			$this->Nama->EditValue = ew_HtmlEncode($this->Nama->AdvancedSearch->SearchValue);
-			$this->Nama->PlaceHolder = ew_RemoveHtml($this->Nama->FldCaption());
+			if (trim(strval($this->siswa_id->AdvancedSearch->SearchValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->AdvancedSearch->SearchValue, EW_DATATYPE_NUMBER, "");
+			}
+			$sSqlWrk = "SELECT `id`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, `tahunajaran_id` AS `SelectFilterFld`, `kelas_id` AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t03_siswa`";
+			$sWhereWrk = "";
+			$this->siswa_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+				$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
+				$this->siswa_id->AdvancedSearch->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+			} else {
+				$this->siswa_id->AdvancedSearch->ViewValue = $Language->Phrase("PleaseSelect");
+			}
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->siswa_id->EditValue = $arwrk;
 
 			// rutin_id
 			$this->rutin_id->EditCustomAttributes = "";
@@ -2272,16 +1983,6 @@ class cv02_rutin_list extends cv02_rutin {
 			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 			if ($rswrk) $rswrk->Close();
 			$this->rutin_id->EditValue = $arwrk;
-
-			// Pembayaran_Rutin
-			$this->Pembayaran_Rutin->EditAttrs["class"] = "form-control";
-			$this->Pembayaran_Rutin->EditCustomAttributes = "";
-
-			// nilai
-			$this->nilai->EditAttrs["class"] = "form-control";
-			$this->nilai->EditCustomAttributes = "";
-			$this->nilai->EditValue = ew_HtmlEncode($this->nilai->AdvancedSearch->SearchValue);
-			$this->nilai->PlaceHolder = ew_RemoveHtml($this->nilai->FldCaption());
 
 			// id
 			$this->id->EditAttrs["class"] = "form-control";
@@ -2356,20 +2057,10 @@ class cv02_rutin_list extends cv02_rutin {
 	// Load advanced search
 	function LoadAdvancedSearch() {
 		$this->tahunajaran_id->AdvancedSearch->Load();
-		$this->awal_bulan->AdvancedSearch->Load();
-		$this->awal_tahun->AdvancedSearch->Load();
-		$this->akhir_bulan->AdvancedSearch->Load();
-		$this->akhir_tahun->AdvancedSearch->Load();
 		$this->sekolah_id->AdvancedSearch->Load();
-		$this->Sekolah->AdvancedSearch->Load();
 		$this->kelas_id->AdvancedSearch->Load();
-		$this->Kelas->AdvancedSearch->Load();
 		$this->siswa_id->AdvancedSearch->Load();
-		$this->Nomor_Induk->AdvancedSearch->Load();
-		$this->Nama->AdvancedSearch->Load();
 		$this->rutin_id->AdvancedSearch->Load();
-		$this->Pembayaran_Rutin->AdvancedSearch->Load();
-		$this->nilai->AdvancedSearch->Load();
 		$this->id->AdvancedSearch->Load();
 		$this->siswarutin_id->AdvancedSearch->Load();
 		$this->Bulan->AdvancedSearch->Load();
@@ -2420,7 +2111,7 @@ class cv02_rutin_list extends cv02_rutin {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_v02_rutin\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_v02_rutin',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fv02_rutinlist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_v02_rutin2\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_v02_rutin2',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fv02_rutin2list,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -2628,20 +2319,10 @@ class cv02_rutin_list extends cv02_rutin {
 
 		// Build QueryString for search
 		$this->AddSearchQueryString($sQry, $this->tahunajaran_id); // tahunajaran_id
-		$this->AddSearchQueryString($sQry, $this->awal_bulan); // awal_bulan
-		$this->AddSearchQueryString($sQry, $this->awal_tahun); // awal_tahun
-		$this->AddSearchQueryString($sQry, $this->akhir_bulan); // akhir_bulan
-		$this->AddSearchQueryString($sQry, $this->akhir_tahun); // akhir_tahun
 		$this->AddSearchQueryString($sQry, $this->sekolah_id); // sekolah_id
-		$this->AddSearchQueryString($sQry, $this->Sekolah); // Sekolah
 		$this->AddSearchQueryString($sQry, $this->kelas_id); // kelas_id
-		$this->AddSearchQueryString($sQry, $this->Kelas); // Kelas
 		$this->AddSearchQueryString($sQry, $this->siswa_id); // siswa_id
-		$this->AddSearchQueryString($sQry, $this->Nomor_Induk); // Nomor_Induk
-		$this->AddSearchQueryString($sQry, $this->Nama); // Nama
 		$this->AddSearchQueryString($sQry, $this->rutin_id); // rutin_id
-		$this->AddSearchQueryString($sQry, $this->Pembayaran_Rutin); // Pembayaran_Rutin
-		$this->AddSearchQueryString($sQry, $this->nilai); // nilai
 		$this->AddSearchQueryString($sQry, $this->id); // id
 		$this->AddSearchQueryString($sQry, $this->siswarutin_id); // siswarutin_id
 		$this->AddSearchQueryString($sQry, $this->Bulan); // Bulan
@@ -2690,12 +2371,48 @@ class cv02_rutin_list extends cv02_rutin {
 			switch ($fld->FldVar) {
 		case "x_tahunajaran_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id` AS `LinkFld`, `awal_bulan` AS `DispFld`, `awal_tahun` AS `Disp2Fld`, `akhir_bulan` AS `Disp3Fld`, `akhir_tahun` AS `Disp4Fld` FROM `t00_tahunajaran`";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `tahun_pelajaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v00_tahunajaran`";
 			$sWhereWrk = "{filter}";
-			$this->tahunajaran_id->LookupFilters = array("dx1" => '`awal_bulan`', "dx2" => '`awal_tahun`', "dx3" => '`akhir_bulan`', "dx4" => '`akhir_tahun`');
+			$this->tahunajaran_id->LookupFilters = array("dx1" => '`tahun_pelajaran`');
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_sekolah_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t01_sekolah`";
+			$sWhereWrk = "{filter}";
+			$this->sekolah_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->sekolah_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_kelas_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `Nama` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_kelas`";
+			$sWhereWrk = "{filter}";
+			$this->kelas_id->LookupFilters = array("dx1" => '`Nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "", "f1" => '`sekolah_id` IN ({filter_value})', "t1" => "3", "fn1" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_siswa_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `Nomor_Induk` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_siswa`";
+			$sWhereWrk = "{filter}";
+			$this->siswa_id->LookupFilters = array("dx1" => '`Nomor_Induk`', "dx2" => '`Nama`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "", "f1" => '`tahunajaran_id` IN ({filter_value})', "t1" => "3", "fn1" => "", "f2" => '`kelas_id` IN ({filter_value})', "t2" => "3", "fn2" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
@@ -2853,31 +2570,31 @@ class cv02_rutin_list extends cv02_rutin {
 <?php
 
 // Create page object
-if (!isset($v02_rutin_list)) $v02_rutin_list = new cv02_rutin_list();
+if (!isset($v02_rutin2_list)) $v02_rutin2_list = new cv02_rutin2_list();
 
 // Page init
-$v02_rutin_list->Page_Init();
+$v02_rutin2_list->Page_Init();
 
 // Page main
-$v02_rutin_list->Page_Main();
+$v02_rutin2_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$v02_rutin_list->Page_Render();
+$v02_rutin2_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = fv02_rutinlist = new ew_Form("fv02_rutinlist", "list");
-fv02_rutinlist.FormKeyCountName = '<?php echo $v02_rutin_list->FormKeyCountName ?>';
+var CurrentForm = fv02_rutin2list = new ew_Form("fv02_rutin2list", "list");
+fv02_rutin2list.FormKeyCountName = '<?php echo $v02_rutin2_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-fv02_rutinlist.Form_CustomValidate = 
+fv02_rutin2list.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -2886,20 +2603,23 @@ fv02_rutinlist.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-fv02_rutinlist.ValidateRequired = true;
+fv02_rutin2list.ValidateRequired = true;
 <?php } else { ?>
-fv02_rutinlist.ValidateRequired = false; 
+fv02_rutin2list.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-fv02_rutinlist.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_awal_bulan","x_awal_tahun","x_akhir_bulan","x_akhir_tahun"],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t00_tahunajaran"};
-fv02_rutinlist.Lists["x_rutin_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_rutin"};
+fv02_rutin2list.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_tahun_pelajaran","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v00_tahunajaran"};
+fv02_rutin2list.Lists["x_sekolah_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nomor_Induk","x_Nama","",""],"ParentFields":[],"ChildFields":["x_kelas_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_sekolah"};
+fv02_rutin2list.Lists["x_kelas_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_kelas"};
+fv02_rutin2list.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nomor_Induk","x_Nama","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t03_siswa"};
+fv02_rutin2list.Lists["x_rutin_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_rutin"};
 
 // Form object for search
-var CurrentSearchForm = fv02_rutinlistsrch = new ew_Form("fv02_rutinlistsrch");
+var CurrentSearchForm = fv02_rutin2listsrch = new ew_Form("fv02_rutin2listsrch");
 
 // Validate function for search
-fv02_rutinlistsrch.Validate = function(fobj) {
+fv02_rutin2listsrch.Validate = function(fobj) {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	fobj = fobj || this.Form;
@@ -2912,7 +2632,7 @@ fv02_rutinlistsrch.Validate = function(fobj) {
 }
 
 // Form_CustomValidate event
-fv02_rutinlistsrch.Form_CustomValidate = 
+fv02_rutin2listsrch.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -2921,127 +2641,181 @@ fv02_rutinlistsrch.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-fv02_rutinlistsrch.ValidateRequired = true; // Use JavaScript validation
+fv02_rutin2listsrch.ValidateRequired = true; // Use JavaScript validation
 <?php } else { ?>
-fv02_rutinlistsrch.ValidateRequired = false; // No JavaScript validation
+fv02_rutin2listsrch.ValidateRequired = false; // No JavaScript validation
 <?php } ?>
 
 // Dynamic selection lists
-fv02_rutinlistsrch.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_awal_bulan","x_awal_tahun","x_akhir_bulan","x_akhir_tahun"],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t00_tahunajaran"};
-fv02_rutinlistsrch.Lists["x_rutin_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_rutin"};
+fv02_rutin2listsrch.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_tahun_pelajaran","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v00_tahunajaran"};
+fv02_rutin2listsrch.Lists["x_sekolah_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nomor_Induk","x_Nama","",""],"ParentFields":[],"ChildFields":["x_kelas_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_sekolah"};
+fv02_rutin2listsrch.Lists["x_kelas_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":["x_sekolah_id"],"ChildFields":["x_siswa_id"],"FilterFields":["x_sekolah_id"],"Options":[],"Template":"","LinkTable":"t02_kelas"};
+fv02_rutin2listsrch.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nomor_Induk","x_Nama","",""],"ParentFields":["x_tahunajaran_id","x_kelas_id"],"ChildFields":[],"FilterFields":["x_tahunajaran_id","x_kelas_id"],"Options":[],"Template":"","LinkTable":"t03_siswa"};
+fv02_rutin2listsrch.Lists["x_rutin_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_Nama","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_rutin"};
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2->Export == "") { ?>
 <div class="ewToolbar">
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
-<?php if ($v02_rutin_list->TotalRecs > 0 && $v02_rutin_list->ExportOptions->Visible()) { ?>
-<?php $v02_rutin_list->ExportOptions->Render("body") ?>
+<?php if ($v02_rutin2_list->TotalRecs > 0 && $v02_rutin2_list->ExportOptions->Visible()) { ?>
+<?php $v02_rutin2_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($v02_rutin_list->SearchOptions->Visible()) { ?>
-<?php $v02_rutin_list->SearchOptions->Render("body") ?>
+<?php if ($v02_rutin2_list->SearchOptions->Visible()) { ?>
+<?php $v02_rutin2_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($v02_rutin_list->FilterOptions->Visible()) { ?>
-<?php $v02_rutin_list->FilterOptions->Render("body") ?>
+<?php if ($v02_rutin2_list->FilterOptions->Visible()) { ?>
+<?php $v02_rutin2_list->FilterOptions->Render("body") ?>
 <?php } ?>
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2->Export == "") { ?>
 <?php echo $Language->SelectionForm(); ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
-	$bSelectLimit = $v02_rutin_list->UseSelectLimit;
+	$bSelectLimit = $v02_rutin2_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($v02_rutin_list->TotalRecs <= 0)
-			$v02_rutin_list->TotalRecs = $v02_rutin->SelectRecordCount();
+		if ($v02_rutin2_list->TotalRecs <= 0)
+			$v02_rutin2_list->TotalRecs = $v02_rutin2->SelectRecordCount();
 	} else {
-		if (!$v02_rutin_list->Recordset && ($v02_rutin_list->Recordset = $v02_rutin_list->LoadRecordset()))
-			$v02_rutin_list->TotalRecs = $v02_rutin_list->Recordset->RecordCount();
+		if (!$v02_rutin2_list->Recordset && ($v02_rutin2_list->Recordset = $v02_rutin2_list->LoadRecordset()))
+			$v02_rutin2_list->TotalRecs = $v02_rutin2_list->Recordset->RecordCount();
 	}
-	$v02_rutin_list->StartRec = 1;
-	if ($v02_rutin_list->DisplayRecs <= 0 || ($v02_rutin->Export <> "" && $v02_rutin->ExportAll)) // Display all records
-		$v02_rutin_list->DisplayRecs = $v02_rutin_list->TotalRecs;
-	if (!($v02_rutin->Export <> "" && $v02_rutin->ExportAll))
-		$v02_rutin_list->SetUpStartRec(); // Set up start record position
+	$v02_rutin2_list->StartRec = 1;
+	if ($v02_rutin2_list->DisplayRecs <= 0 || ($v02_rutin2->Export <> "" && $v02_rutin2->ExportAll)) // Display all records
+		$v02_rutin2_list->DisplayRecs = $v02_rutin2_list->TotalRecs;
+	if (!($v02_rutin2->Export <> "" && $v02_rutin2->ExportAll))
+		$v02_rutin2_list->SetUpStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$v02_rutin_list->Recordset = $v02_rutin_list->LoadRecordset($v02_rutin_list->StartRec-1, $v02_rutin_list->DisplayRecs);
+		$v02_rutin2_list->Recordset = $v02_rutin2_list->LoadRecordset($v02_rutin2_list->StartRec-1, $v02_rutin2_list->DisplayRecs);
 
 	// Set no record found message
-	if ($v02_rutin->CurrentAction == "" && $v02_rutin_list->TotalRecs == 0) {
+	if ($v02_rutin2->CurrentAction == "" && $v02_rutin2_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$v02_rutin_list->setWarningMessage(ew_DeniedMsg());
-		if ($v02_rutin_list->SearchWhere == "0=101")
-			$v02_rutin_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$v02_rutin2_list->setWarningMessage(ew_DeniedMsg());
+		if ($v02_rutin2_list->SearchWhere == "0=101")
+			$v02_rutin2_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$v02_rutin_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$v02_rutin2_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
 
 	// Audit trail on search
-	if ($v02_rutin_list->AuditTrailOnSearch && $v02_rutin_list->Command == "search" && !$v02_rutin_list->RestoreSearch) {
+	if ($v02_rutin2_list->AuditTrailOnSearch && $v02_rutin2_list->Command == "search" && !$v02_rutin2_list->RestoreSearch) {
 		$searchparm = ew_ServerVar("QUERY_STRING");
-		$searchsql = $v02_rutin_list->getSessionWhere();
-		$v02_rutin_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
+		$searchsql = $v02_rutin2_list->getSessionWhere();
+		$v02_rutin2_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
 	}
-$v02_rutin_list->RenderOtherOptions();
+$v02_rutin2_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($v02_rutin->Export == "" && $v02_rutin->CurrentAction == "") { ?>
-<form name="fv02_rutinlistsrch" id="fv02_rutinlistsrch" class="form-inline ewForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($v02_rutin_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="fv02_rutinlistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($v02_rutin2->Export == "" && $v02_rutin2->CurrentAction == "") { ?>
+<form name="fv02_rutin2listsrch" id="fv02_rutin2listsrch" class="form-inline ewForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($v02_rutin2_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="fv02_rutin2listsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="v02_rutin">
+<input type="hidden" name="t" value="v02_rutin2">
 	<div class="ewBasicSearch">
 <?php
 if ($gsSearchError == "")
-	$v02_rutin_list->LoadAdvancedSearch(); // Load advanced search
+	$v02_rutin2_list->LoadAdvancedSearch(); // Load advanced search
 
 // Render for search
-$v02_rutin->RowType = EW_ROWTYPE_SEARCH;
+$v02_rutin2->RowType = EW_ROWTYPE_SEARCH;
 
 // Render row
-$v02_rutin->ResetAttrs();
-$v02_rutin_list->RenderRow();
+$v02_rutin2->ResetAttrs();
+$v02_rutin2_list->RenderRow();
 ?>
 <div id="xsr_1" class="ewRow">
-<?php if ($v02_rutin->tahunajaran_id->Visible) { // tahunajaran_id ?>
+<?php if ($v02_rutin2->tahunajaran_id->Visible) { // tahunajaran_id ?>
 	<div id="xsc_tahunajaran_id" class="ewCell form-group">
-		<label for="x_tahunajaran_id" class="ewSearchCaption ewLabel"><?php echo $v02_rutin->tahunajaran_id->FldCaption() ?></label>
+		<label for="x_tahunajaran_id" class="ewSearchCaption ewLabel"><?php echo $v02_rutin2->tahunajaran_id->FldCaption() ?></label>
 		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_tahunajaran_id" id="z_tahunajaran_id" value="="></span>
 		<span class="ewSearchField">
+<?php $v02_rutin2->tahunajaran_id->EditAttrs["onchange"] = "ew_UpdateOpt.call(this); " . @$v02_rutin2->tahunajaran_id->EditAttrs["onchange"]; ?>
 <span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_tahunajaran_id"><?php echo (strval($v02_rutin->tahunajaran_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v02_rutin->tahunajaran_id->AdvancedSearch->ViewValue); ?></span>
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_tahunajaran_id"><?php echo (strval($v02_rutin2->tahunajaran_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v02_rutin2->tahunajaran_id->AdvancedSearch->ViewValue); ?></span>
 </span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v02_rutin->tahunajaran_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_tahunajaran_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="v02_rutin" data-field="x_tahunajaran_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v02_rutin->tahunajaran_id->DisplayValueSeparatorAttribute() ?>" name="x_tahunajaran_id" id="x_tahunajaran_id" value="<?php echo $v02_rutin->tahunajaran_id->AdvancedSearch->SearchValue ?>"<?php echo $v02_rutin->tahunajaran_id->EditAttributes() ?>>
-<input type="hidden" name="s_x_tahunajaran_id" id="s_x_tahunajaran_id" value="<?php echo $v02_rutin->tahunajaran_id->LookupFilterQuery(false, "extbs") ?>">
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v02_rutin2->tahunajaran_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_tahunajaran_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="v02_rutin2" data-field="x_tahunajaran_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v02_rutin2->tahunajaran_id->DisplayValueSeparatorAttribute() ?>" name="x_tahunajaran_id" id="x_tahunajaran_id" value="<?php echo $v02_rutin2->tahunajaran_id->AdvancedSearch->SearchValue ?>"<?php echo $v02_rutin2->tahunajaran_id->EditAttributes() ?>>
+<input type="hidden" name="s_x_tahunajaran_id" id="s_x_tahunajaran_id" value="<?php echo $v02_rutin2->tahunajaran_id->LookupFilterQuery(false, "extbs") ?>">
 </span>
 	</div>
 <?php } ?>
 </div>
 <div id="xsr_2" class="ewRow">
-<?php if ($v02_rutin->rutin_id->Visible) { // rutin_id ?>
-	<div id="xsc_rutin_id" class="ewCell form-group">
-		<label for="x_rutin_id" class="ewSearchCaption ewLabel"><?php echo $v02_rutin->rutin_id->FldCaption() ?></label>
-		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_rutin_id" id="z_rutin_id" value="="></span>
+<?php if ($v02_rutin2->sekolah_id->Visible) { // sekolah_id ?>
+	<div id="xsc_sekolah_id" class="ewCell form-group">
+		<label for="x_sekolah_id" class="ewSearchCaption ewLabel"><?php echo $v02_rutin2->sekolah_id->FldCaption() ?></label>
+		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_sekolah_id" id="z_sekolah_id" value="="></span>
 		<span class="ewSearchField">
+<?php $v02_rutin2->sekolah_id->EditAttrs["onchange"] = "ew_UpdateOpt.call(this); " . @$v02_rutin2->sekolah_id->EditAttrs["onchange"]; ?>
 <span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_rutin_id"><?php echo (strval($v02_rutin->rutin_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v02_rutin->rutin_id->AdvancedSearch->ViewValue); ?></span>
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_sekolah_id"><?php echo (strval($v02_rutin2->sekolah_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v02_rutin2->sekolah_id->AdvancedSearch->ViewValue); ?></span>
 </span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v02_rutin->rutin_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_rutin_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="v02_rutin" data-field="x_rutin_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v02_rutin->rutin_id->DisplayValueSeparatorAttribute() ?>" name="x_rutin_id" id="x_rutin_id" value="<?php echo $v02_rutin->rutin_id->AdvancedSearch->SearchValue ?>"<?php echo $v02_rutin->rutin_id->EditAttributes() ?>>
-<input type="hidden" name="s_x_rutin_id" id="s_x_rutin_id" value="<?php echo $v02_rutin->rutin_id->LookupFilterQuery(false, "extbs") ?>">
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v02_rutin2->sekolah_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_sekolah_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="v02_rutin2" data-field="x_sekolah_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v02_rutin2->sekolah_id->DisplayValueSeparatorAttribute() ?>" name="x_sekolah_id" id="x_sekolah_id" value="<?php echo $v02_rutin2->sekolah_id->AdvancedSearch->SearchValue ?>"<?php echo $v02_rutin2->sekolah_id->EditAttributes() ?>>
+<input type="hidden" name="s_x_sekolah_id" id="s_x_sekolah_id" value="<?php echo $v02_rutin2->sekolah_id->LookupFilterQuery(false, "extbs") ?>">
 </span>
 	</div>
 <?php } ?>
 </div>
 <div id="xsr_3" class="ewRow">
+<?php if ($v02_rutin2->kelas_id->Visible) { // kelas_id ?>
+	<div id="xsc_kelas_id" class="ewCell form-group">
+		<label for="x_kelas_id" class="ewSearchCaption ewLabel"><?php echo $v02_rutin2->kelas_id->FldCaption() ?></label>
+		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_kelas_id" id="z_kelas_id" value="="></span>
+		<span class="ewSearchField">
+<?php $v02_rutin2->kelas_id->EditAttrs["onchange"] = "ew_UpdateOpt.call(this); " . @$v02_rutin2->kelas_id->EditAttrs["onchange"]; ?>
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_kelas_id"><?php echo (strval($v02_rutin2->kelas_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v02_rutin2->kelas_id->AdvancedSearch->ViewValue); ?></span>
+</span>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v02_rutin2->kelas_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_kelas_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="v02_rutin2" data-field="x_kelas_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v02_rutin2->kelas_id->DisplayValueSeparatorAttribute() ?>" name="x_kelas_id" id="x_kelas_id" value="<?php echo $v02_rutin2->kelas_id->AdvancedSearch->SearchValue ?>"<?php echo $v02_rutin2->kelas_id->EditAttributes() ?>>
+<input type="hidden" name="s_x_kelas_id" id="s_x_kelas_id" value="<?php echo $v02_rutin2->kelas_id->LookupFilterQuery(false, "extbs") ?>">
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_4" class="ewRow">
+<?php if ($v02_rutin2->siswa_id->Visible) { // siswa_id ?>
+	<div id="xsc_siswa_id" class="ewCell form-group">
+		<label for="x_siswa_id" class="ewSearchCaption ewLabel"><?php echo $v02_rutin2->siswa_id->FldCaption() ?></label>
+		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_siswa_id" id="z_siswa_id" value="="></span>
+		<span class="ewSearchField">
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_siswa_id"><?php echo (strval($v02_rutin2->siswa_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v02_rutin2->siswa_id->AdvancedSearch->ViewValue); ?></span>
+</span>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v02_rutin2->siswa_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_siswa_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="v02_rutin2" data-field="x_siswa_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v02_rutin2->siswa_id->DisplayValueSeparatorAttribute() ?>" name="x_siswa_id" id="x_siswa_id" value="<?php echo $v02_rutin2->siswa_id->AdvancedSearch->SearchValue ?>"<?php echo $v02_rutin2->siswa_id->EditAttributes() ?>>
+<input type="hidden" name="s_x_siswa_id" id="s_x_siswa_id" value="<?php echo $v02_rutin2->siswa_id->LookupFilterQuery(false, "extbs") ?>">
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_5" class="ewRow">
+<?php if ($v02_rutin2->rutin_id->Visible) { // rutin_id ?>
+	<div id="xsc_rutin_id" class="ewCell form-group">
+		<label for="x_rutin_id" class="ewSearchCaption ewLabel"><?php echo $v02_rutin2->rutin_id->FldCaption() ?></label>
+		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_rutin_id" id="z_rutin_id" value="="></span>
+		<span class="ewSearchField">
+<span class="ewLookupList">
+	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_rutin_id"><?php echo (strval($v02_rutin2->rutin_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v02_rutin2->rutin_id->AdvancedSearch->ViewValue); ?></span>
+</span>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v02_rutin2->rutin_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_rutin_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
+<input type="hidden" data-table="v02_rutin2" data-field="x_rutin_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v02_rutin2->rutin_id->DisplayValueSeparatorAttribute() ?>" name="x_rutin_id" id="x_rutin_id" value="<?php echo $v02_rutin2->rutin_id->AdvancedSearch->SearchValue ?>"<?php echo $v02_rutin2->rutin_id->EditAttributes() ?>>
+<input type="hidden" name="s_x_rutin_id" id="s_x_rutin_id" value="<?php echo $v02_rutin2->rutin_id->LookupFilterQuery(false, "extbs") ?>">
+</span>
+	</div>
+<?php } ?>
+</div>
+<div id="xsr_6" class="ewRow">
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("QuickSearchBtn") ?></button>
 </div>
 	</div>
@@ -3049,530 +2823,360 @@ $v02_rutin_list->RenderRow();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $v02_rutin_list->ShowPageHeader(); ?>
+<?php $v02_rutin2_list->ShowPageHeader(); ?>
 <?php
-$v02_rutin_list->ShowMessage();
+$v02_rutin2_list->ShowMessage();
 ?>
-<?php if ($v02_rutin_list->TotalRecs > 0 || $v02_rutin->CurrentAction <> "") { ?>
-<div class="panel panel-default ewGrid v02_rutin">
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2_list->TotalRecs > 0 || $v02_rutin2->CurrentAction <> "") { ?>
+<div class="panel panel-default ewGrid v02_rutin2">
+<?php if ($v02_rutin2->Export == "") { ?>
 <div class="panel-heading ewGridUpperPanel">
-<?php if ($v02_rutin->CurrentAction <> "gridadd" && $v02_rutin->CurrentAction <> "gridedit") { ?>
+<?php if ($v02_rutin2->CurrentAction <> "gridadd" && $v02_rutin2->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($v02_rutin_list->Pager)) $v02_rutin_list->Pager = new cPrevNextPager($v02_rutin_list->StartRec, $v02_rutin_list->DisplayRecs, $v02_rutin_list->TotalRecs) ?>
-<?php if ($v02_rutin_list->Pager->RecordCount > 0 && $v02_rutin_list->Pager->Visible) { ?>
+<?php if (!isset($v02_rutin2_list->Pager)) $v02_rutin2_list->Pager = new cPrevNextPager($v02_rutin2_list->StartRec, $v02_rutin2_list->DisplayRecs, $v02_rutin2_list->TotalRecs) ?>
+<?php if ($v02_rutin2_list->Pager->RecordCount > 0 && $v02_rutin2_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($v02_rutin_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($v02_rutin_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $v02_rutin_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $v02_rutin2_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($v02_rutin_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($v02_rutin_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $v02_rutin_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->PageCount ?></span>
 </div>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $v02_rutin_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $v02_rutin_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $v02_rutin_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
 </form>
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($v02_rutin_list->OtherOptions as &$option)
+	foreach ($v02_rutin2_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<form name="fv02_rutinlist" id="fv02_rutinlist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($v02_rutin_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $v02_rutin_list->Token ?>">
+<form name="fv02_rutin2list" id="fv02_rutin2list" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($v02_rutin2_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $v02_rutin2_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="v02_rutin">
-<div id="gmp_v02_rutin" class="<?php if (ew_IsResponsiveLayout()) { echo "table-responsive "; } ?>ewGridMiddlePanel">
-<?php if ($v02_rutin_list->TotalRecs > 0 || $v02_rutin->CurrentAction == "gridedit") { ?>
-<table id="tbl_v02_rutinlist" class="table ewTable">
-<?php echo $v02_rutin->TableCustomInnerHtml ?>
+<input type="hidden" name="t" value="v02_rutin2">
+<div id="gmp_v02_rutin2" class="<?php if (ew_IsResponsiveLayout()) { echo "table-responsive "; } ?>ewGridMiddlePanel">
+<?php if ($v02_rutin2_list->TotalRecs > 0 || $v02_rutin2->CurrentAction == "gridedit") { ?>
+<table id="tbl_v02_rutin2list" class="table ewTable">
+<?php echo $v02_rutin2->TableCustomInnerHtml ?>
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$v02_rutin_list->RowType = EW_ROWTYPE_HEADER;
+$v02_rutin2_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$v02_rutin_list->RenderListOptions();
+$v02_rutin2_list->RenderListOptions();
 
 // Render list options (header, left)
-$v02_rutin_list->ListOptions->Render("header", "left");
+$v02_rutin2_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($v02_rutin->tahunajaran_id->Visible) { // tahunajaran_id ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->tahunajaran_id) == "") { ?>
-		<th data-name="tahunajaran_id"><div id="elh_v02_rutin_tahunajaran_id" class="v02_rutin_tahunajaran_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->tahunajaran_id->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->tahunajaran_id->Visible) { // tahunajaran_id ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->tahunajaran_id) == "") { ?>
+		<th data-name="tahunajaran_id"><div id="elh_v02_rutin2_tahunajaran_id" class="v02_rutin2_tahunajaran_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->tahunajaran_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="tahunajaran_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->tahunajaran_id) ?>',2);"><div id="elh_v02_rutin_tahunajaran_id" class="v02_rutin_tahunajaran_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->tahunajaran_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->tahunajaran_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->tahunajaran_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="tahunajaran_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->tahunajaran_id) ?>',2);"><div id="elh_v02_rutin2_tahunajaran_id" class="v02_rutin2_tahunajaran_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->tahunajaran_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->tahunajaran_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->tahunajaran_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->awal_bulan->Visible) { // awal_bulan ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->awal_bulan) == "") { ?>
-		<th data-name="awal_bulan"><div id="elh_v02_rutin_awal_bulan" class="v02_rutin_awal_bulan"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->awal_bulan->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->sekolah_id->Visible) { // sekolah_id ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->sekolah_id) == "") { ?>
+		<th data-name="sekolah_id"><div id="elh_v02_rutin2_sekolah_id" class="v02_rutin2_sekolah_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->sekolah_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="awal_bulan"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->awal_bulan) ?>',2);"><div id="elh_v02_rutin_awal_bulan" class="v02_rutin_awal_bulan">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->awal_bulan->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->awal_bulan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->awal_bulan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="sekolah_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->sekolah_id) ?>',2);"><div id="elh_v02_rutin2_sekolah_id" class="v02_rutin2_sekolah_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->sekolah_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->sekolah_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->sekolah_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->awal_tahun->Visible) { // awal_tahun ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->awal_tahun) == "") { ?>
-		<th data-name="awal_tahun"><div id="elh_v02_rutin_awal_tahun" class="v02_rutin_awal_tahun"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->awal_tahun->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->kelas_id->Visible) { // kelas_id ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->kelas_id) == "") { ?>
+		<th data-name="kelas_id"><div id="elh_v02_rutin2_kelas_id" class="v02_rutin2_kelas_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->kelas_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="awal_tahun"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->awal_tahun) ?>',2);"><div id="elh_v02_rutin_awal_tahun" class="v02_rutin_awal_tahun">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->awal_tahun->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->awal_tahun->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->awal_tahun->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="kelas_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->kelas_id) ?>',2);"><div id="elh_v02_rutin2_kelas_id" class="v02_rutin2_kelas_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->kelas_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->kelas_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->kelas_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->akhir_bulan->Visible) { // akhir_bulan ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->akhir_bulan) == "") { ?>
-		<th data-name="akhir_bulan"><div id="elh_v02_rutin_akhir_bulan" class="v02_rutin_akhir_bulan"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->akhir_bulan->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->siswa_id->Visible) { // siswa_id ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->siswa_id) == "") { ?>
+		<th data-name="siswa_id"><div id="elh_v02_rutin2_siswa_id" class="v02_rutin2_siswa_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->siswa_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="akhir_bulan"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->akhir_bulan) ?>',2);"><div id="elh_v02_rutin_akhir_bulan" class="v02_rutin_akhir_bulan">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->akhir_bulan->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->akhir_bulan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->akhir_bulan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="siswa_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->siswa_id) ?>',2);"><div id="elh_v02_rutin2_siswa_id" class="v02_rutin2_siswa_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->siswa_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->siswa_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->siswa_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->akhir_tahun->Visible) { // akhir_tahun ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->akhir_tahun) == "") { ?>
-		<th data-name="akhir_tahun"><div id="elh_v02_rutin_akhir_tahun" class="v02_rutin_akhir_tahun"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->akhir_tahun->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->rutin_id->Visible) { // rutin_id ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->rutin_id) == "") { ?>
+		<th data-name="rutin_id"><div id="elh_v02_rutin2_rutin_id" class="v02_rutin2_rutin_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->rutin_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="akhir_tahun"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->akhir_tahun) ?>',2);"><div id="elh_v02_rutin_akhir_tahun" class="v02_rutin_akhir_tahun">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->akhir_tahun->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->akhir_tahun->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->akhir_tahun->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="rutin_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->rutin_id) ?>',2);"><div id="elh_v02_rutin2_rutin_id" class="v02_rutin2_rutin_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->rutin_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->rutin_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->rutin_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->sekolah_id->Visible) { // sekolah_id ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->sekolah_id) == "") { ?>
-		<th data-name="sekolah_id"><div id="elh_v02_rutin_sekolah_id" class="v02_rutin_sekolah_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->sekolah_id->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->id->Visible) { // id ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->id) == "") { ?>
+		<th data-name="id"><div id="elh_v02_rutin2_id" class="v02_rutin2_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="sekolah_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->sekolah_id) ?>',2);"><div id="elh_v02_rutin_sekolah_id" class="v02_rutin_sekolah_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->sekolah_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->sekolah_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->sekolah_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->id) ?>',2);"><div id="elh_v02_rutin2_id" class="v02_rutin2_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->Sekolah->Visible) { // Sekolah ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Sekolah) == "") { ?>
-		<th data-name="Sekolah"><div id="elh_v02_rutin_Sekolah" class="v02_rutin_Sekolah"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Sekolah->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->siswarutin_id->Visible) { // siswarutin_id ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->siswarutin_id) == "") { ?>
+		<th data-name="siswarutin_id"><div id="elh_v02_rutin2_siswarutin_id" class="v02_rutin2_siswarutin_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->siswarutin_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Sekolah"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Sekolah) ?>',2);"><div id="elh_v02_rutin_Sekolah" class="v02_rutin_Sekolah">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Sekolah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Sekolah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Sekolah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="siswarutin_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->siswarutin_id) ?>',2);"><div id="elh_v02_rutin2_siswarutin_id" class="v02_rutin2_siswarutin_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->siswarutin_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->siswarutin_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->siswarutin_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->kelas_id->Visible) { // kelas_id ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->kelas_id) == "") { ?>
-		<th data-name="kelas_id"><div id="elh_v02_rutin_kelas_id" class="v02_rutin_kelas_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->kelas_id->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->Bulan->Visible) { // Bulan ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->Bulan) == "") { ?>
+		<th data-name="Bulan"><div id="elh_v02_rutin2_Bulan" class="v02_rutin2_Bulan"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->Bulan->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="kelas_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->kelas_id) ?>',2);"><div id="elh_v02_rutin_kelas_id" class="v02_rutin_kelas_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->kelas_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->kelas_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->kelas_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Bulan"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->Bulan) ?>',2);"><div id="elh_v02_rutin2_Bulan" class="v02_rutin2_Bulan">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->Bulan->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->Bulan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->Bulan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->Kelas->Visible) { // Kelas ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Kelas) == "") { ?>
-		<th data-name="Kelas"><div id="elh_v02_rutin_Kelas" class="v02_rutin_Kelas"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Kelas->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->Tahun->Visible) { // Tahun ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->Tahun) == "") { ?>
+		<th data-name="Tahun"><div id="elh_v02_rutin2_Tahun" class="v02_rutin2_Tahun"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->Tahun->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Kelas"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Kelas) ?>',2);"><div id="elh_v02_rutin_Kelas" class="v02_rutin_Kelas">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Kelas->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Kelas->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Kelas->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Tahun"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->Tahun) ?>',2);"><div id="elh_v02_rutin2_Tahun" class="v02_rutin2_Tahun">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->Tahun->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->Tahun->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->Tahun->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->siswa_id->Visible) { // siswa_id ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->siswa_id) == "") { ?>
-		<th data-name="siswa_id"><div id="elh_v02_rutin_siswa_id" class="v02_rutin_siswa_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->siswa_id->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->Bayar_Tgl->Visible) { // Bayar_Tgl ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->Bayar_Tgl) == "") { ?>
+		<th data-name="Bayar_Tgl"><div id="elh_v02_rutin2_Bayar_Tgl" class="v02_rutin2_Bayar_Tgl"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->Bayar_Tgl->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="siswa_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->siswa_id) ?>',2);"><div id="elh_v02_rutin_siswa_id" class="v02_rutin_siswa_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->siswa_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->siswa_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->siswa_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Bayar_Tgl"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->Bayar_Tgl) ?>',2);"><div id="elh_v02_rutin2_Bayar_Tgl" class="v02_rutin2_Bayar_Tgl">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->Bayar_Tgl->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->Bayar_Tgl->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->Bayar_Tgl->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
-<?php if ($v02_rutin->Nomor_Induk->Visible) { // Nomor_Induk ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Nomor_Induk) == "") { ?>
-		<th data-name="Nomor_Induk"><div id="elh_v02_rutin_Nomor_Induk" class="v02_rutin_Nomor_Induk"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Nomor_Induk->FldCaption() ?></div></div></th>
+<?php if ($v02_rutin2->Bayar_Jumlah->Visible) { // Bayar_Jumlah ?>
+	<?php if ($v02_rutin2->SortUrl($v02_rutin2->Bayar_Jumlah) == "") { ?>
+		<th data-name="Bayar_Jumlah"><div id="elh_v02_rutin2_Bayar_Jumlah" class="v02_rutin2_Bayar_Jumlah"><div class="ewTableHeaderCaption"><?php echo $v02_rutin2->Bayar_Jumlah->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Nomor_Induk"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Nomor_Induk) ?>',2);"><div id="elh_v02_rutin_Nomor_Induk" class="v02_rutin_Nomor_Induk">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Nomor_Induk->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Nomor_Induk->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Nomor_Induk->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->Nama->Visible) { // Nama ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Nama) == "") { ?>
-		<th data-name="Nama"><div id="elh_v02_rutin_Nama" class="v02_rutin_Nama"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Nama->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Nama"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Nama) ?>',2);"><div id="elh_v02_rutin_Nama" class="v02_rutin_Nama">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Nama->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Nama->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Nama->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->rutin_id->Visible) { // rutin_id ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->rutin_id) == "") { ?>
-		<th data-name="rutin_id"><div id="elh_v02_rutin_rutin_id" class="v02_rutin_rutin_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->rutin_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="rutin_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->rutin_id) ?>',2);"><div id="elh_v02_rutin_rutin_id" class="v02_rutin_rutin_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->rutin_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->rutin_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->rutin_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->Pembayaran_Rutin->Visible) { // Pembayaran_Rutin ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Pembayaran_Rutin) == "") { ?>
-		<th data-name="Pembayaran_Rutin"><div id="elh_v02_rutin_Pembayaran_Rutin" class="v02_rutin_Pembayaran_Rutin"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Pembayaran_Rutin->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Pembayaran_Rutin"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Pembayaran_Rutin) ?>',2);"><div id="elh_v02_rutin_Pembayaran_Rutin" class="v02_rutin_Pembayaran_Rutin">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Pembayaran_Rutin->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Pembayaran_Rutin->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Pembayaran_Rutin->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->nilai->Visible) { // nilai ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->nilai) == "") { ?>
-		<th data-name="nilai"><div id="elh_v02_rutin_nilai" class="v02_rutin_nilai"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->nilai->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="nilai"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->nilai) ?>',2);"><div id="elh_v02_rutin_nilai" class="v02_rutin_nilai">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->nilai->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->nilai->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->nilai->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->id->Visible) { // id ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->id) == "") { ?>
-		<th data-name="id"><div id="elh_v02_rutin_id" class="v02_rutin_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->id) ?>',2);"><div id="elh_v02_rutin_id" class="v02_rutin_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->siswarutin_id->Visible) { // siswarutin_id ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->siswarutin_id) == "") { ?>
-		<th data-name="siswarutin_id"><div id="elh_v02_rutin_siswarutin_id" class="v02_rutin_siswarutin_id"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->siswarutin_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="siswarutin_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->siswarutin_id) ?>',2);"><div id="elh_v02_rutin_siswarutin_id" class="v02_rutin_siswarutin_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->siswarutin_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->siswarutin_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->siswarutin_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->Bulan->Visible) { // Bulan ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Bulan) == "") { ?>
-		<th data-name="Bulan"><div id="elh_v02_rutin_Bulan" class="v02_rutin_Bulan"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Bulan->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Bulan"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Bulan) ?>',2);"><div id="elh_v02_rutin_Bulan" class="v02_rutin_Bulan">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Bulan->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Bulan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Bulan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->Tahun->Visible) { // Tahun ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Tahun) == "") { ?>
-		<th data-name="Tahun"><div id="elh_v02_rutin_Tahun" class="v02_rutin_Tahun"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Tahun->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Tahun"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Tahun) ?>',2);"><div id="elh_v02_rutin_Tahun" class="v02_rutin_Tahun">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Tahun->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Tahun->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Tahun->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->Bayar_Tgl->Visible) { // Bayar_Tgl ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Bayar_Tgl) == "") { ?>
-		<th data-name="Bayar_Tgl"><div id="elh_v02_rutin_Bayar_Tgl" class="v02_rutin_Bayar_Tgl"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Bayar_Tgl->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Bayar_Tgl"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Bayar_Tgl) ?>',2);"><div id="elh_v02_rutin_Bayar_Tgl" class="v02_rutin_Bayar_Tgl">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Bayar_Tgl->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Bayar_Tgl->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Bayar_Tgl->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
-<?php if ($v02_rutin->Bayar_Jumlah->Visible) { // Bayar_Jumlah ?>
-	<?php if ($v02_rutin->SortUrl($v02_rutin->Bayar_Jumlah) == "") { ?>
-		<th data-name="Bayar_Jumlah"><div id="elh_v02_rutin_Bayar_Jumlah" class="v02_rutin_Bayar_Jumlah"><div class="ewTableHeaderCaption"><?php echo $v02_rutin->Bayar_Jumlah->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="Bayar_Jumlah"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin->SortUrl($v02_rutin->Bayar_Jumlah) ?>',2);"><div id="elh_v02_rutin_Bayar_Jumlah" class="v02_rutin_Bayar_Jumlah">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin->Bayar_Jumlah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin->Bayar_Jumlah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin->Bayar_Jumlah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Bayar_Jumlah"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $v02_rutin2->SortUrl($v02_rutin2->Bayar_Jumlah) ?>',2);"><div id="elh_v02_rutin2_Bayar_Jumlah" class="v02_rutin2_Bayar_Jumlah">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $v02_rutin2->Bayar_Jumlah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($v02_rutin2->Bayar_Jumlah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($v02_rutin2->Bayar_Jumlah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
 <?php
 
 // Render list options (header, right)
-$v02_rutin_list->ListOptions->Render("header", "right");
+$v02_rutin2_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($v02_rutin->ExportAll && $v02_rutin->Export <> "") {
-	$v02_rutin_list->StopRec = $v02_rutin_list->TotalRecs;
+if ($v02_rutin2->ExportAll && $v02_rutin2->Export <> "") {
+	$v02_rutin2_list->StopRec = $v02_rutin2_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($v02_rutin_list->TotalRecs > $v02_rutin_list->StartRec + $v02_rutin_list->DisplayRecs - 1)
-		$v02_rutin_list->StopRec = $v02_rutin_list->StartRec + $v02_rutin_list->DisplayRecs - 1;
+	if ($v02_rutin2_list->TotalRecs > $v02_rutin2_list->StartRec + $v02_rutin2_list->DisplayRecs - 1)
+		$v02_rutin2_list->StopRec = $v02_rutin2_list->StartRec + $v02_rutin2_list->DisplayRecs - 1;
 	else
-		$v02_rutin_list->StopRec = $v02_rutin_list->TotalRecs;
+		$v02_rutin2_list->StopRec = $v02_rutin2_list->TotalRecs;
 }
-$v02_rutin_list->RecCnt = $v02_rutin_list->StartRec - 1;
-if ($v02_rutin_list->Recordset && !$v02_rutin_list->Recordset->EOF) {
-	$v02_rutin_list->Recordset->MoveFirst();
-	$bSelectLimit = $v02_rutin_list->UseSelectLimit;
-	if (!$bSelectLimit && $v02_rutin_list->StartRec > 1)
-		$v02_rutin_list->Recordset->Move($v02_rutin_list->StartRec - 1);
-} elseif (!$v02_rutin->AllowAddDeleteRow && $v02_rutin_list->StopRec == 0) {
-	$v02_rutin_list->StopRec = $v02_rutin->GridAddRowCount;
+$v02_rutin2_list->RecCnt = $v02_rutin2_list->StartRec - 1;
+if ($v02_rutin2_list->Recordset && !$v02_rutin2_list->Recordset->EOF) {
+	$v02_rutin2_list->Recordset->MoveFirst();
+	$bSelectLimit = $v02_rutin2_list->UseSelectLimit;
+	if (!$bSelectLimit && $v02_rutin2_list->StartRec > 1)
+		$v02_rutin2_list->Recordset->Move($v02_rutin2_list->StartRec - 1);
+} elseif (!$v02_rutin2->AllowAddDeleteRow && $v02_rutin2_list->StopRec == 0) {
+	$v02_rutin2_list->StopRec = $v02_rutin2->GridAddRowCount;
 }
 
 // Initialize aggregate
-$v02_rutin->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$v02_rutin->ResetAttrs();
-$v02_rutin_list->RenderRow();
-while ($v02_rutin_list->RecCnt < $v02_rutin_list->StopRec) {
-	$v02_rutin_list->RecCnt++;
-	if (intval($v02_rutin_list->RecCnt) >= intval($v02_rutin_list->StartRec)) {
-		$v02_rutin_list->RowCnt++;
+$v02_rutin2->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$v02_rutin2->ResetAttrs();
+$v02_rutin2_list->RenderRow();
+while ($v02_rutin2_list->RecCnt < $v02_rutin2_list->StopRec) {
+	$v02_rutin2_list->RecCnt++;
+	if (intval($v02_rutin2_list->RecCnt) >= intval($v02_rutin2_list->StartRec)) {
+		$v02_rutin2_list->RowCnt++;
 
 		// Set up key count
-		$v02_rutin_list->KeyCount = $v02_rutin_list->RowIndex;
+		$v02_rutin2_list->KeyCount = $v02_rutin2_list->RowIndex;
 
 		// Init row class and style
-		$v02_rutin->ResetAttrs();
-		$v02_rutin->CssClass = "";
-		if ($v02_rutin->CurrentAction == "gridadd") {
+		$v02_rutin2->ResetAttrs();
+		$v02_rutin2->CssClass = "";
+		if ($v02_rutin2->CurrentAction == "gridadd") {
 		} else {
-			$v02_rutin_list->LoadRowValues($v02_rutin_list->Recordset); // Load row values
+			$v02_rutin2_list->LoadRowValues($v02_rutin2_list->Recordset); // Load row values
 		}
-		$v02_rutin->RowType = EW_ROWTYPE_VIEW; // Render view
+		$v02_rutin2->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$v02_rutin->RowAttrs = array_merge($v02_rutin->RowAttrs, array('data-rowindex'=>$v02_rutin_list->RowCnt, 'id'=>'r' . $v02_rutin_list->RowCnt . '_v02_rutin', 'data-rowtype'=>$v02_rutin->RowType));
+		$v02_rutin2->RowAttrs = array_merge($v02_rutin2->RowAttrs, array('data-rowindex'=>$v02_rutin2_list->RowCnt, 'id'=>'r' . $v02_rutin2_list->RowCnt . '_v02_rutin2', 'data-rowtype'=>$v02_rutin2->RowType));
 
 		// Render row
-		$v02_rutin_list->RenderRow();
+		$v02_rutin2_list->RenderRow();
 
 		// Render list options
-		$v02_rutin_list->RenderListOptions();
+		$v02_rutin2_list->RenderListOptions();
 ?>
-	<tr<?php echo $v02_rutin->RowAttributes() ?>>
+	<tr<?php echo $v02_rutin2->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$v02_rutin_list->ListOptions->Render("body", "left", $v02_rutin_list->RowCnt);
+$v02_rutin2_list->ListOptions->Render("body", "left", $v02_rutin2_list->RowCnt);
 ?>
-	<?php if ($v02_rutin->tahunajaran_id->Visible) { // tahunajaran_id ?>
-		<td data-name="tahunajaran_id"<?php echo $v02_rutin->tahunajaran_id->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_tahunajaran_id" class="v02_rutin_tahunajaran_id">
-<span<?php echo $v02_rutin->tahunajaran_id->ViewAttributes() ?>>
-<?php echo $v02_rutin->tahunajaran_id->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->tahunajaran_id->Visible) { // tahunajaran_id ?>
+		<td data-name="tahunajaran_id"<?php echo $v02_rutin2->tahunajaran_id->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_tahunajaran_id" class="v02_rutin2_tahunajaran_id">
+<span<?php echo $v02_rutin2->tahunajaran_id->ViewAttributes() ?>>
+<?php echo $v02_rutin2->tahunajaran_id->ListViewValue() ?></span>
 </span>
-<a id="<?php echo $v02_rutin_list->PageObjName . "_row_" . $v02_rutin_list->RowCnt ?>"></a></td>
+<a id="<?php echo $v02_rutin2_list->PageObjName . "_row_" . $v02_rutin2_list->RowCnt ?>"></a></td>
 	<?php } ?>
-	<?php if ($v02_rutin->awal_bulan->Visible) { // awal_bulan ?>
-		<td data-name="awal_bulan"<?php echo $v02_rutin->awal_bulan->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_awal_bulan" class="v02_rutin_awal_bulan">
-<span<?php echo $v02_rutin->awal_bulan->ViewAttributes() ?>>
-<?php echo $v02_rutin->awal_bulan->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->awal_tahun->Visible) { // awal_tahun ?>
-		<td data-name="awal_tahun"<?php echo $v02_rutin->awal_tahun->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_awal_tahun" class="v02_rutin_awal_tahun">
-<span<?php echo $v02_rutin->awal_tahun->ViewAttributes() ?>>
-<?php echo $v02_rutin->awal_tahun->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->sekolah_id->Visible) { // sekolah_id ?>
+		<td data-name="sekolah_id"<?php echo $v02_rutin2->sekolah_id->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_sekolah_id" class="v02_rutin2_sekolah_id">
+<span<?php echo $v02_rutin2->sekolah_id->ViewAttributes() ?>>
+<?php echo $v02_rutin2->sekolah_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->akhir_bulan->Visible) { // akhir_bulan ?>
-		<td data-name="akhir_bulan"<?php echo $v02_rutin->akhir_bulan->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_akhir_bulan" class="v02_rutin_akhir_bulan">
-<span<?php echo $v02_rutin->akhir_bulan->ViewAttributes() ?>>
-<?php echo $v02_rutin->akhir_bulan->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->kelas_id->Visible) { // kelas_id ?>
+		<td data-name="kelas_id"<?php echo $v02_rutin2->kelas_id->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_kelas_id" class="v02_rutin2_kelas_id">
+<span<?php echo $v02_rutin2->kelas_id->ViewAttributes() ?>>
+<?php echo $v02_rutin2->kelas_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->akhir_tahun->Visible) { // akhir_tahun ?>
-		<td data-name="akhir_tahun"<?php echo $v02_rutin->akhir_tahun->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_akhir_tahun" class="v02_rutin_akhir_tahun">
-<span<?php echo $v02_rutin->akhir_tahun->ViewAttributes() ?>>
-<?php echo $v02_rutin->akhir_tahun->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->siswa_id->Visible) { // siswa_id ?>
+		<td data-name="siswa_id"<?php echo $v02_rutin2->siswa_id->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_siswa_id" class="v02_rutin2_siswa_id">
+<span<?php echo $v02_rutin2->siswa_id->ViewAttributes() ?>>
+<?php echo $v02_rutin2->siswa_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->sekolah_id->Visible) { // sekolah_id ?>
-		<td data-name="sekolah_id"<?php echo $v02_rutin->sekolah_id->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_sekolah_id" class="v02_rutin_sekolah_id">
-<span<?php echo $v02_rutin->sekolah_id->ViewAttributes() ?>>
-<?php echo $v02_rutin->sekolah_id->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->rutin_id->Visible) { // rutin_id ?>
+		<td data-name="rutin_id"<?php echo $v02_rutin2->rutin_id->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_rutin_id" class="v02_rutin2_rutin_id">
+<span<?php echo $v02_rutin2->rutin_id->ViewAttributes() ?>>
+<?php echo $v02_rutin2->rutin_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->Sekolah->Visible) { // Sekolah ?>
-		<td data-name="Sekolah"<?php echo $v02_rutin->Sekolah->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Sekolah" class="v02_rutin_Sekolah">
-<span<?php echo $v02_rutin->Sekolah->ViewAttributes() ?>>
-<?php echo $v02_rutin->Sekolah->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->id->Visible) { // id ?>
+		<td data-name="id"<?php echo $v02_rutin2->id->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_id" class="v02_rutin2_id">
+<span<?php echo $v02_rutin2->id->ViewAttributes() ?>>
+<?php echo $v02_rutin2->id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->kelas_id->Visible) { // kelas_id ?>
-		<td data-name="kelas_id"<?php echo $v02_rutin->kelas_id->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_kelas_id" class="v02_rutin_kelas_id">
-<span<?php echo $v02_rutin->kelas_id->ViewAttributes() ?>>
-<?php echo $v02_rutin->kelas_id->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->siswarutin_id->Visible) { // siswarutin_id ?>
+		<td data-name="siswarutin_id"<?php echo $v02_rutin2->siswarutin_id->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_siswarutin_id" class="v02_rutin2_siswarutin_id">
+<span<?php echo $v02_rutin2->siswarutin_id->ViewAttributes() ?>>
+<?php echo $v02_rutin2->siswarutin_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->Kelas->Visible) { // Kelas ?>
-		<td data-name="Kelas"<?php echo $v02_rutin->Kelas->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Kelas" class="v02_rutin_Kelas">
-<span<?php echo $v02_rutin->Kelas->ViewAttributes() ?>>
-<?php echo $v02_rutin->Kelas->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->Bulan->Visible) { // Bulan ?>
+		<td data-name="Bulan"<?php echo $v02_rutin2->Bulan->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_Bulan" class="v02_rutin2_Bulan">
+<span<?php echo $v02_rutin2->Bulan->ViewAttributes() ?>>
+<?php echo $v02_rutin2->Bulan->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->siswa_id->Visible) { // siswa_id ?>
-		<td data-name="siswa_id"<?php echo $v02_rutin->siswa_id->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_siswa_id" class="v02_rutin_siswa_id">
-<span<?php echo $v02_rutin->siswa_id->ViewAttributes() ?>>
-<?php echo $v02_rutin->siswa_id->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->Tahun->Visible) { // Tahun ?>
+		<td data-name="Tahun"<?php echo $v02_rutin2->Tahun->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_Tahun" class="v02_rutin2_Tahun">
+<span<?php echo $v02_rutin2->Tahun->ViewAttributes() ?>>
+<?php echo $v02_rutin2->Tahun->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->Nomor_Induk->Visible) { // Nomor_Induk ?>
-		<td data-name="Nomor_Induk"<?php echo $v02_rutin->Nomor_Induk->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Nomor_Induk" class="v02_rutin_Nomor_Induk">
-<span<?php echo $v02_rutin->Nomor_Induk->ViewAttributes() ?>>
-<?php echo $v02_rutin->Nomor_Induk->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->Bayar_Tgl->Visible) { // Bayar_Tgl ?>
+		<td data-name="Bayar_Tgl"<?php echo $v02_rutin2->Bayar_Tgl->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_Bayar_Tgl" class="v02_rutin2_Bayar_Tgl">
+<span<?php echo $v02_rutin2->Bayar_Tgl->ViewAttributes() ?>>
+<?php echo $v02_rutin2->Bayar_Tgl->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($v02_rutin->Nama->Visible) { // Nama ?>
-		<td data-name="Nama"<?php echo $v02_rutin->Nama->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Nama" class="v02_rutin_Nama">
-<span<?php echo $v02_rutin->Nama->ViewAttributes() ?>>
-<?php echo $v02_rutin->Nama->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->rutin_id->Visible) { // rutin_id ?>
-		<td data-name="rutin_id"<?php echo $v02_rutin->rutin_id->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_rutin_id" class="v02_rutin_rutin_id">
-<span<?php echo $v02_rutin->rutin_id->ViewAttributes() ?>>
-<?php echo $v02_rutin->rutin_id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->Pembayaran_Rutin->Visible) { // Pembayaran_Rutin ?>
-		<td data-name="Pembayaran_Rutin"<?php echo $v02_rutin->Pembayaran_Rutin->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Pembayaran_Rutin" class="v02_rutin_Pembayaran_Rutin">
-<span<?php echo $v02_rutin->Pembayaran_Rutin->ViewAttributes() ?>>
-<?php echo $v02_rutin->Pembayaran_Rutin->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->nilai->Visible) { // nilai ?>
-		<td data-name="nilai"<?php echo $v02_rutin->nilai->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_nilai" class="v02_rutin_nilai">
-<span<?php echo $v02_rutin->nilai->ViewAttributes() ?>>
-<?php echo $v02_rutin->nilai->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->id->Visible) { // id ?>
-		<td data-name="id"<?php echo $v02_rutin->id->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_id" class="v02_rutin_id">
-<span<?php echo $v02_rutin->id->ViewAttributes() ?>>
-<?php echo $v02_rutin->id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->siswarutin_id->Visible) { // siswarutin_id ?>
-		<td data-name="siswarutin_id"<?php echo $v02_rutin->siswarutin_id->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_siswarutin_id" class="v02_rutin_siswarutin_id">
-<span<?php echo $v02_rutin->siswarutin_id->ViewAttributes() ?>>
-<?php echo $v02_rutin->siswarutin_id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->Bulan->Visible) { // Bulan ?>
-		<td data-name="Bulan"<?php echo $v02_rutin->Bulan->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Bulan" class="v02_rutin_Bulan">
-<span<?php echo $v02_rutin->Bulan->ViewAttributes() ?>>
-<?php echo $v02_rutin->Bulan->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->Tahun->Visible) { // Tahun ?>
-		<td data-name="Tahun"<?php echo $v02_rutin->Tahun->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Tahun" class="v02_rutin_Tahun">
-<span<?php echo $v02_rutin->Tahun->ViewAttributes() ?>>
-<?php echo $v02_rutin->Tahun->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->Bayar_Tgl->Visible) { // Bayar_Tgl ?>
-		<td data-name="Bayar_Tgl"<?php echo $v02_rutin->Bayar_Tgl->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Bayar_Tgl" class="v02_rutin_Bayar_Tgl">
-<span<?php echo $v02_rutin->Bayar_Tgl->ViewAttributes() ?>>
-<?php echo $v02_rutin->Bayar_Tgl->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($v02_rutin->Bayar_Jumlah->Visible) { // Bayar_Jumlah ?>
-		<td data-name="Bayar_Jumlah"<?php echo $v02_rutin->Bayar_Jumlah->CellAttributes() ?>>
-<span id="el<?php echo $v02_rutin_list->RowCnt ?>_v02_rutin_Bayar_Jumlah" class="v02_rutin_Bayar_Jumlah">
-<span<?php echo $v02_rutin->Bayar_Jumlah->ViewAttributes() ?>>
-<?php echo $v02_rutin->Bayar_Jumlah->ListViewValue() ?></span>
+	<?php if ($v02_rutin2->Bayar_Jumlah->Visible) { // Bayar_Jumlah ?>
+		<td data-name="Bayar_Jumlah"<?php echo $v02_rutin2->Bayar_Jumlah->CellAttributes() ?>>
+<span id="el<?php echo $v02_rutin2_list->RowCnt ?>_v02_rutin2_Bayar_Jumlah" class="v02_rutin2_Bayar_Jumlah">
+<span<?php echo $v02_rutin2->Bayar_Jumlah->ViewAttributes() ?>>
+<?php echo $v02_rutin2->Bayar_Jumlah->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$v02_rutin_list->ListOptions->Render("body", "right", $v02_rutin_list->RowCnt);
+$v02_rutin2_list->ListOptions->Render("body", "right", $v02_rutin2_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($v02_rutin->CurrentAction <> "gridadd")
-		$v02_rutin_list->Recordset->MoveNext();
+	if ($v02_rutin2->CurrentAction <> "gridadd")
+		$v02_rutin2_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($v02_rutin->CurrentAction == "") { ?>
+<?php if ($v02_rutin2->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -3580,61 +3184,61 @@ $v02_rutin_list->ListOptions->Render("body", "right", $v02_rutin_list->RowCnt);
 <?php
 
 // Close recordset
-if ($v02_rutin_list->Recordset)
-	$v02_rutin_list->Recordset->Close();
+if ($v02_rutin2_list->Recordset)
+	$v02_rutin2_list->Recordset->Close();
 ?>
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2->Export == "") { ?>
 <div class="panel-footer ewGridLowerPanel">
-<?php if ($v02_rutin->CurrentAction <> "gridadd" && $v02_rutin->CurrentAction <> "gridedit") { ?>
+<?php if ($v02_rutin2->CurrentAction <> "gridadd" && $v02_rutin2->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($v02_rutin_list->Pager)) $v02_rutin_list->Pager = new cPrevNextPager($v02_rutin_list->StartRec, $v02_rutin_list->DisplayRecs, $v02_rutin_list->TotalRecs) ?>
-<?php if ($v02_rutin_list->Pager->RecordCount > 0 && $v02_rutin_list->Pager->Visible) { ?>
+<?php if (!isset($v02_rutin2_list->Pager)) $v02_rutin2_list->Pager = new cPrevNextPager($v02_rutin2_list->StartRec, $v02_rutin2_list->DisplayRecs, $v02_rutin2_list->TotalRecs) ?>
+<?php if ($v02_rutin2_list->Pager->RecordCount > 0 && $v02_rutin2_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($v02_rutin_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($v02_rutin_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $v02_rutin_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $v02_rutin2_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($v02_rutin_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($v02_rutin_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $v02_rutin_list->PageUrl() ?>start=<?php echo $v02_rutin_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($v02_rutin2_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $v02_rutin2_list->PageUrl() ?>start=<?php echo $v02_rutin2_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $v02_rutin_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->PageCount ?></span>
 </div>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $v02_rutin_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $v02_rutin_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $v02_rutin_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $v02_rutin2_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
 </form>
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($v02_rutin_list->OtherOptions as &$option)
+	foreach ($v02_rutin2_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -3643,10 +3247,10 @@ if ($v02_rutin_list->Recordset)
 <?php } ?>
 </div>
 <?php } ?>
-<?php if ($v02_rutin_list->TotalRecs == 0 && $v02_rutin->CurrentAction == "") { // Show other options ?>
+<?php if ($v02_rutin2_list->TotalRecs == 0 && $v02_rutin2->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($v02_rutin_list->OtherOptions as &$option) {
+	foreach ($v02_rutin2_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -3654,19 +3258,19 @@ if ($v02_rutin_list->Recordset)
 </div>
 <div class="clearfix"></div>
 <?php } ?>
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2->Export == "") { ?>
 <script type="text/javascript">
-fv02_rutinlistsrch.FilterList = <?php echo $v02_rutin_list->GetFilterList() ?>;
-fv02_rutinlistsrch.Init();
-fv02_rutinlist.Init();
+fv02_rutin2listsrch.FilterList = <?php echo $v02_rutin2_list->GetFilterList() ?>;
+fv02_rutin2listsrch.Init();
+fv02_rutin2list.Init();
 </script>
 <?php } ?>
 <?php
-$v02_rutin_list->ShowPageFooter();
+$v02_rutin2_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($v02_rutin->Export == "") { ?>
+<?php if ($v02_rutin2->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -3676,5 +3280,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$v02_rutin_list->Page_Terminate();
+$v02_rutin2_list->Page_Terminate();
 ?>
