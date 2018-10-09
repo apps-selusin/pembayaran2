@@ -390,6 +390,9 @@ class ct03_siswa_view extends ct03_siswa {
 		$this->Nomor_Induk->SetVisibility();
 		$this->Nama->SetVisibility();
 
+		// Set up detail page object
+		$this->SetupDetailPages();
+
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
 
@@ -471,6 +474,7 @@ class ct03_siswa_view extends ct03_siswa {
 	var $RecKey = array();
 	var $IsModal = FALSE;
 	var $Recordset;
+	var $DetailPages; // Detail pages object
 
 	//
 	// Page main
@@ -1279,6 +1283,15 @@ class ct03_siswa_view extends ct03_siswa {
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
 
+	// Set up detail pages
+	function SetupDetailPages() {
+		$pages = new cSubPages();
+		$pages->Style = "tabs";
+		$pages->Add('t05_siswarutin');
+		$pages->Add('t06_siswarutinbayar');
+		$this->DetailPages = $pages;
+	}
+
 	// Setup lookup filters of a field
 	function SetupLookupFilters($fld, $pageId = null) {
 		global $gsLanguage;
@@ -1604,21 +1617,59 @@ $t03_siswa_view->ShowMessage();
 <div class="clearfix"></div>
 <?php } ?>
 <?php } ?>
+<?php if ($t03_siswa->getCurrentDetailTable() <> "") { ?>
+<?php
+	$t03_siswa_view->DetailPages->ValidKeys = explode(",", $t03_siswa->getCurrentDetailTable());
+	$FirstActiveDetailTable = $t03_siswa_view->DetailPages->ActivePageIndex();
+?>
+<div class="ewDetailPages">
+<div class="tabbable" id="t03_siswa_view_details">
+	<ul class="nav<?php echo $t03_siswa_view->DetailPages->NavStyle() ?>">
 <?php
 	if (in_array("t05_siswarutin", explode(",", $t03_siswa->getCurrentDetailTable())) && $t05_siswarutin->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t05_siswarutin") {
+			$FirstActiveDetailTable = "t05_siswarutin";
+		}
 ?>
-<?php if ($t03_siswa->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t05_siswarutin", "TblCaption") ?></h4>
-<?php } ?>
+		<li<?php echo $t03_siswa_view->DetailPages->TabStyle("t05_siswarutin") ?>><a href="#tab_t05_siswarutin" data-toggle="tab"><?php echo $Language->TablePhrase("t05_siswarutin", "TblCaption") ?></a></li>
+<?php
+	}
+?>
+<?php
+	if (in_array("t06_siswarutinbayar", explode(",", $t03_siswa->getCurrentDetailTable())) && $t06_siswarutinbayar->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t06_siswarutinbayar") {
+			$FirstActiveDetailTable = "t06_siswarutinbayar";
+		}
+?>
+		<li<?php echo $t03_siswa_view->DetailPages->TabStyle("t06_siswarutinbayar") ?>><a href="#tab_t06_siswarutinbayar" data-toggle="tab"><?php echo $Language->TablePhrase("t06_siswarutinbayar", "TblCaption") ?></a></li>
+<?php
+	}
+?>
+	</ul>
+	<div class="tab-content">
+<?php
+	if (in_array("t05_siswarutin", explode(",", $t03_siswa->getCurrentDetailTable())) && $t05_siswarutin->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t05_siswarutin") {
+			$FirstActiveDetailTable = "t05_siswarutin";
+		}
+?>
+		<div class="tab-pane<?php echo $t03_siswa_view->DetailPages->PageStyle("t05_siswarutin") ?>" id="tab_t05_siswarutin">
 <?php include_once "t05_siswarutingrid.php" ?>
+		</div>
 <?php } ?>
 <?php
 	if (in_array("t06_siswarutinbayar", explode(",", $t03_siswa->getCurrentDetailTable())) && $t06_siswarutinbayar->DetailView) {
+		if ($FirstActiveDetailTable == "" || $FirstActiveDetailTable == "t06_siswarutinbayar") {
+			$FirstActiveDetailTable = "t06_siswarutinbayar";
+		}
 ?>
-<?php if ($t03_siswa->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t06_siswarutinbayar", "TblCaption") ?></h4>
-<?php } ?>
+		<div class="tab-pane<?php echo $t03_siswa_view->DetailPages->PageStyle("t06_siswarutinbayar") ?>" id="tab_t06_siswarutinbayar">
 <?php include_once "t06_siswarutinbayargrid.php" ?>
+		</div>
+<?php } ?>
+	</div>
+</div>
+</div>
 <?php } ?>
 </form>
 <?php if ($t03_siswa->Export == "") { ?>
