@@ -293,8 +293,6 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->id->SetVisibility();
-		$this->id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->tahunajaran_id->SetVisibility();
 		$this->sekolah_id->SetVisibility();
 		$this->kelas_id->SetVisibility();
@@ -558,8 +556,6 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 
 		// Load from form
 		global $objForm;
-		if (!$this->id->FldIsDetailKey)
-			$this->id->setFormValue($objForm->GetValue("x_id"));
 		if (!$this->tahunajaran_id->FldIsDetailKey) {
 			$this->tahunajaran_id->setFormValue($objForm->GetValue("x_tahunajaran_id"));
 		}
@@ -588,6 +584,8 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 		if (!$this->Bayar_Jumlah->FldIsDetailKey) {
 			$this->Bayar_Jumlah->setFormValue($objForm->GetValue("x_Bayar_Jumlah"));
 		}
+		if (!$this->id->FldIsDetailKey)
+			$this->id->setFormValue($objForm->GetValue("x_id"));
 	}
 
 	// Restore form values
@@ -865,11 +863,6 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 		$this->Bayar_Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Bayar_Jumlah->ViewCustomAttributes = "";
 
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
-
 			// tahunajaran_id
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
@@ -915,12 +908,6 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 			$this->Bayar_Jumlah->HrefValue = "";
 			$this->Bayar_Jumlah->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
-
-			// id
-			$this->id->EditAttrs["class"] = "form-control";
-			$this->id->EditCustomAttributes = "";
-			$this->id->EditValue = $this->id->CurrentValue;
-			$this->id->ViewCustomAttributes = "";
 
 			// tahunajaran_id
 			$this->tahunajaran_id->EditCustomAttributes = "";
@@ -1124,12 +1111,8 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 			if (strval($this->Bayar_Jumlah->EditValue) <> "" && is_numeric($this->Bayar_Jumlah->EditValue)) $this->Bayar_Jumlah->EditValue = ew_FormatNumber($this->Bayar_Jumlah->EditValue, -2, -2, -2, -2);
 
 			// Edit refer script
-			// id
-
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-
 			// tahunajaran_id
+
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
 
@@ -1276,28 +1259,6 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 			// Bayar_Jumlah
 			$this->Bayar_Jumlah->SetDbValueDef($rsnew, $this->Bayar_Jumlah->CurrentValue, NULL, $this->Bayar_Jumlah->ReadOnly);
 
-			// Check referential integrity for master table 't05_siswarutin'
-			$bValidMasterRecord = TRUE;
-			$sMasterFilter = $this->SqlMasterFilter_t05_siswarutin();
-			$KeyValue = isset($rsnew['rutin_id']) ? $rsnew['rutin_id'] : $rsold['rutin_id'];
-			if (strval($KeyValue) <> "") {
-				$sMasterFilter = str_replace("@id@", ew_AdjustSql($KeyValue), $sMasterFilter);
-			} else {
-				$bValidMasterRecord = FALSE;
-			}
-			if ($bValidMasterRecord) {
-				if (!isset($GLOBALS["t05_siswarutin"])) $GLOBALS["t05_siswarutin"] = new ct05_siswarutin();
-				$rsmaster = $GLOBALS["t05_siswarutin"]->LoadRs($sMasterFilter);
-				$bValidMasterRecord = ($rsmaster && !$rsmaster->EOF);
-				$rsmaster->Close();
-			}
-			if (!$bValidMasterRecord) {
-				$sRelatedRecordMsg = str_replace("%t", "t05_siswarutin", $Language->Phrase("RelatedRecordRequired"));
-				$this->setFailureMessage($sRelatedRecordMsg);
-				$rs->Close();
-				return FALSE;
-			}
-
 			// Check referential integrity for master table 't03_siswa'
 			$bValidMasterRecord = TRUE;
 			$sMasterFilter = $this->SqlMasterFilter_t03_siswa();
@@ -1315,6 +1276,28 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 			}
 			if (!$bValidMasterRecord) {
 				$sRelatedRecordMsg = str_replace("%t", "t03_siswa", $Language->Phrase("RelatedRecordRequired"));
+				$this->setFailureMessage($sRelatedRecordMsg);
+				$rs->Close();
+				return FALSE;
+			}
+
+			// Check referential integrity for master table 't05_siswarutin'
+			$bValidMasterRecord = TRUE;
+			$sMasterFilter = $this->SqlMasterFilter_t05_siswarutin();
+			$KeyValue = isset($rsnew['rutin_id']) ? $rsnew['rutin_id'] : $rsold['rutin_id'];
+			if (strval($KeyValue) <> "") {
+				$sMasterFilter = str_replace("@id@", ew_AdjustSql($KeyValue), $sMasterFilter);
+			} else {
+				$bValidMasterRecord = FALSE;
+			}
+			if ($bValidMasterRecord) {
+				if (!isset($GLOBALS["t05_siswarutin"])) $GLOBALS["t05_siswarutin"] = new ct05_siswarutin();
+				$rsmaster = $GLOBALS["t05_siswarutin"]->LoadRs($sMasterFilter);
+				$bValidMasterRecord = ($rsmaster && !$rsmaster->EOF);
+				$rsmaster->Close();
+			}
+			if (!$bValidMasterRecord) {
+				$sRelatedRecordMsg = str_replace("%t", "t05_siswarutin", $Language->Phrase("RelatedRecordRequired"));
 				$this->setFailureMessage($sRelatedRecordMsg);
 				$rs->Close();
 				return FALSE;
@@ -1364,17 +1347,6 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 				$this->DbMasterFilter = "";
 				$this->DbDetailFilter = "";
 			}
-			if ($sMasterTblVar == "t05_siswarutin") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_id"] <> "") {
-					$GLOBALS["t05_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
-					$this->rutin_id->setQueryStringValue($GLOBALS["t05_siswarutin"]->id->QueryStringValue);
-					$this->rutin_id->setSessionValue($this->rutin_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
 			if ($sMasterTblVar == "t03_siswa") {
 				$bValidMaster = TRUE;
 				if (@$_GET["fk_id"] <> "") {
@@ -1386,23 +1358,23 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 					$bValidMaster = FALSE;
 				}
 			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
+					$this->rutin_id->setQueryStringValue($GLOBALS["t05_siswarutin"]->id->QueryStringValue);
+					$this->rutin_id->setSessionValue($this->rutin_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
 		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
 			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
 			if ($sMasterTblVar == "") {
 				$bValidMaster = TRUE;
 				$this->DbMasterFilter = "";
 				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t05_siswarutin") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_id"] <> "") {
-					$GLOBALS["t05_siswarutin"]->id->setFormValue($_POST["fk_id"]);
-					$this->rutin_id->setFormValue($GLOBALS["t05_siswarutin"]->id->FormValue);
-					$this->rutin_id->setSessionValue($this->rutin_id->FormValue);
-					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
 			}
 			if ($sMasterTblVar == "t03_siswa") {
 				$bValidMaster = TRUE;
@@ -1411,6 +1383,17 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 					$this->siswa_id->setFormValue($GLOBALS["t03_siswa"]->id->FormValue);
 					$this->siswa_id->setSessionValue($this->siswa_id->FormValue);
 					if (!is_numeric($GLOBALS["t03_siswa"]->id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setFormValue($_POST["fk_id"]);
+					$this->rutin_id->setFormValue($GLOBALS["t05_siswarutin"]->id->FormValue);
+					$this->rutin_id->setSessionValue($this->rutin_id->FormValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
 				} else {
 					$bValidMaster = FALSE;
 				}
@@ -1427,11 +1410,11 @@ class ct06_siswarutinbayar_edit extends ct06_siswarutinbayar {
 			$this->setStartRecordNumber($this->StartRec);
 
 			// Clear previous master key from Session
-			if ($sMasterTblVar <> "t05_siswarutin") {
-				if ($this->rutin_id->CurrentValue == "") $this->rutin_id->setSessionValue("");
-			}
 			if ($sMasterTblVar <> "t03_siswa") {
 				if ($this->siswa_id->CurrentValue == "") $this->siswa_id->setSessionValue("");
+			}
+			if ($sMasterTblVar <> "t05_siswarutin") {
+				if ($this->rutin_id->CurrentValue == "") $this->rutin_id->setSessionValue("");
 			}
 		}
 		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
@@ -1773,27 +1756,15 @@ $t06_siswarutinbayar_edit->ShowMessage();
 <?php if ($t06_siswarutinbayar_edit->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
-<?php if ($t06_siswarutinbayar->getCurrentMasterTable() == "t05_siswarutin") { ?>
-<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t05_siswarutin">
-<input type="hidden" name="fk_id" value="<?php echo $t06_siswarutinbayar->rutin_id->getSessionValue() ?>">
-<?php } ?>
 <?php if ($t06_siswarutinbayar->getCurrentMasterTable() == "t03_siswa") { ?>
 <input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t03_siswa">
 <input type="hidden" name="fk_id" value="<?php echo $t06_siswarutinbayar->siswa_id->getSessionValue() ?>">
 <?php } ?>
-<div>
-<?php if ($t06_siswarutinbayar->id->Visible) { // id ?>
-	<div id="r_id" class="form-group">
-		<label id="elh_t06_siswarutinbayar_id" class="col-sm-2 control-label ewLabel"><?php echo $t06_siswarutinbayar->id->FldCaption() ?></label>
-		<div class="col-sm-10"><div<?php echo $t06_siswarutinbayar->id->CellAttributes() ?>>
-<span id="el_t06_siswarutinbayar_id">
-<span<?php echo $t06_siswarutinbayar->id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $t06_siswarutinbayar->id->EditValue ?></p></span>
-</span>
-<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_id" name="x_id" id="x_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->id->CurrentValue) ?>">
-<?php echo $t06_siswarutinbayar->id->CustomMsg ?></div></div>
-	</div>
+<?php if ($t06_siswarutinbayar->getCurrentMasterTable() == "t05_siswarutin") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t05_siswarutin">
+<input type="hidden" name="fk_id" value="<?php echo $t06_siswarutinbayar->rutin_id->getSessionValue() ?>">
 <?php } ?>
+<div>
 <?php if ($t06_siswarutinbayar->tahunajaran_id->Visible) { // tahunajaran_id ?>
 	<div id="r_tahunajaran_id" class="form-group">
 		<label id="elh_t06_siswarutinbayar_tahunajaran_id" for="x_tahunajaran_id" class="col-sm-2 control-label ewLabel"><?php echo $t06_siswarutinbayar->tahunajaran_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
@@ -1936,6 +1907,7 @@ ew_CreateCalendar("ft06_siswarutinbayaredit", "x_Bayar_Tgl", 7);
 	</div>
 <?php } ?>
 </div>
+<input type="hidden" data-table="t06_siswarutinbayar" data-field="x_id" name="x_id" id="x_id" value="<?php echo ew_HtmlEncode($t06_siswarutinbayar->id->CurrentValue) ?>">
 <?php if (!$t06_siswarutinbayar_edit->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">

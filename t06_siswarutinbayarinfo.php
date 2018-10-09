@@ -179,15 +179,15 @@ class ct06_siswarutinbayar extends cTable {
 
 		// Master filter
 		$sMasterFilter = "";
-		if ($this->getCurrentMasterTable() == "t05_siswarutin") {
-			if ($this->rutin_id->getSessionValue() <> "")
-				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->rutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
 		if ($this->getCurrentMasterTable() == "t03_siswa") {
 			if ($this->siswa_id->getSessionValue() <> "")
 				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->siswa_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
+		if ($this->getCurrentMasterTable() == "t05_siswarutin") {
+			if ($this->rutin_id->getSessionValue() <> "")
+				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->rutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
 			else
 				return "";
 		}
@@ -199,29 +199,19 @@ class ct06_siswarutinbayar extends cTable {
 
 		// Detail filter
 		$sDetailFilter = "";
-		if ($this->getCurrentMasterTable() == "t05_siswarutin") {
-			if ($this->rutin_id->getSessionValue() <> "")
-				$sDetailFilter .= "`rutin_id`=" . ew_QuotedValue($this->rutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
 		if ($this->getCurrentMasterTable() == "t03_siswa") {
 			if ($this->siswa_id->getSessionValue() <> "")
 				$sDetailFilter .= "`siswa_id`=" . ew_QuotedValue($this->siswa_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
 			else
 				return "";
 		}
+		if ($this->getCurrentMasterTable() == "t05_siswarutin") {
+			if ($this->rutin_id->getSessionValue() <> "")
+				$sDetailFilter .= "`rutin_id`=" . ew_QuotedValue($this->rutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
 		return $sDetailFilter;
-	}
-
-	// Master filter
-	function SqlMasterFilter_t05_siswarutin() {
-		return "`id`=@id@";
-	}
-
-	// Detail filter
-	function SqlDetailFilter_t05_siswarutin() {
-		return "`rutin_id`=@rutin_id@";
 	}
 
 	// Master filter
@@ -232,6 +222,16 @@ class ct06_siswarutinbayar extends cTable {
 	// Detail filter
 	function SqlDetailFilter_t03_siswa() {
 		return "`siswa_id`=@siswa_id@";
+	}
+
+	// Master filter
+	function SqlMasterFilter_t05_siswarutin() {
+		return "`id`=@id@";
+	}
+
+	// Detail filter
+	function SqlDetailFilter_t05_siswarutin() {
+		return "`rutin_id`=@rutin_id@";
 	}
 
 	// Table level SQL
@@ -614,13 +614,13 @@ class ct06_siswarutinbayar extends cTable {
 
 	// Add master url
 	function AddMasterUrl($url) {
-		if ($this->getCurrentMasterTable() == "t05_siswarutin" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
-			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
-			$url .= "&fk_id=" . urlencode($this->rutin_id->CurrentValue);
-		}
 		if ($this->getCurrentMasterTable() == "t03_siswa" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
 			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
 			$url .= "&fk_id=" . urlencode($this->siswa_id->CurrentValue);
+		}
+		if ($this->getCurrentMasterTable() == "t05_siswarutin" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
+			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
+			$url .= "&fk_id=" . urlencode($this->rutin_id->CurrentValue);
 		}
 		return $url;
 	}
@@ -1085,7 +1085,6 @@ class ct06_siswarutinbayar extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
 					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
 					if ($this->sekolah_id->Exportable) $Doc->ExportCaption($this->sekolah_id);
 					if ($this->kelas_id->Exportable) $Doc->ExportCaption($this->kelas_id);
@@ -1137,7 +1136,6 @@ class ct06_siswarutinbayar extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->id->Exportable) $Doc->ExportField($this->id);
 						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
 						if ($this->sekolah_id->Exportable) $Doc->ExportField($this->sekolah_id);
 						if ($this->kelas_id->Exportable) $Doc->ExportField($this->kelas_id);

@@ -391,8 +391,6 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->id->SetVisibility();
-		$this->id->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 		$this->tahunajaran_id->SetVisibility();
 		$this->sekolah_id->SetVisibility();
 		$this->kelas_id->SetVisibility();
@@ -930,11 +928,6 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 		$this->Bayar_Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Bayar_Jumlah->ViewCustomAttributes = "";
 
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
-
 			// tahunajaran_id
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
@@ -1245,17 +1238,6 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 				$this->DbMasterFilter = "";
 				$this->DbDetailFilter = "";
 			}
-			if ($sMasterTblVar == "t05_siswarutin") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_id"] <> "") {
-					$GLOBALS["t05_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
-					$this->rutin_id->setQueryStringValue($GLOBALS["t05_siswarutin"]->id->QueryStringValue);
-					$this->rutin_id->setSessionValue($this->rutin_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
 			if ($sMasterTblVar == "t03_siswa") {
 				$bValidMaster = TRUE;
 				if (@$_GET["fk_id"] <> "") {
@@ -1267,23 +1249,23 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 					$bValidMaster = FALSE;
 				}
 			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
+					$this->rutin_id->setQueryStringValue($GLOBALS["t05_siswarutin"]->id->QueryStringValue);
+					$this->rutin_id->setSessionValue($this->rutin_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
 		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
 			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
 			if ($sMasterTblVar == "") {
 				$bValidMaster = TRUE;
 				$this->DbMasterFilter = "";
 				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t05_siswarutin") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_id"] <> "") {
-					$GLOBALS["t05_siswarutin"]->id->setFormValue($_POST["fk_id"]);
-					$this->rutin_id->setFormValue($GLOBALS["t05_siswarutin"]->id->FormValue);
-					$this->rutin_id->setSessionValue($this->rutin_id->FormValue);
-					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
 			}
 			if ($sMasterTblVar == "t03_siswa") {
 				$bValidMaster = TRUE;
@@ -1292,6 +1274,17 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 					$this->siswa_id->setFormValue($GLOBALS["t03_siswa"]->id->FormValue);
 					$this->siswa_id->setSessionValue($this->siswa_id->FormValue);
 					if (!is_numeric($GLOBALS["t03_siswa"]->id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setFormValue($_POST["fk_id"]);
+					$this->rutin_id->setFormValue($GLOBALS["t05_siswarutin"]->id->FormValue);
+					$this->rutin_id->setSessionValue($this->rutin_id->FormValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
 				} else {
 					$bValidMaster = FALSE;
 				}
@@ -1308,11 +1301,11 @@ class ct06_siswarutinbayar_view extends ct06_siswarutinbayar {
 			$this->setStartRecordNumber($this->StartRec);
 
 			// Clear previous master key from Session
-			if ($sMasterTblVar <> "t05_siswarutin") {
-				if ($this->rutin_id->CurrentValue == "") $this->rutin_id->setSessionValue("");
-			}
 			if ($sMasterTblVar <> "t03_siswa") {
 				if ($this->siswa_id->CurrentValue == "") $this->siswa_id->setSessionValue("");
+			}
+			if ($sMasterTblVar <> "t05_siswarutin") {
+				if ($this->rutin_id->CurrentValue == "") $this->rutin_id->setSessionValue("");
 			}
 		}
 		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
@@ -1571,17 +1564,6 @@ $t06_siswarutinbayar_view->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <table class="table table-bordered table-striped ewViewTable">
-<?php if ($t06_siswarutinbayar->id->Visible) { // id ?>
-	<tr id="r_id">
-		<td><span id="elh_t06_siswarutinbayar_id"><?php echo $t06_siswarutinbayar->id->FldCaption() ?></span></td>
-		<td data-name="id"<?php echo $t06_siswarutinbayar->id->CellAttributes() ?>>
-<span id="el_t06_siswarutinbayar_id">
-<span<?php echo $t06_siswarutinbayar->id->ViewAttributes() ?>>
-<?php echo $t06_siswarutinbayar->id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 <?php if ($t06_siswarutinbayar->tahunajaran_id->Visible) { // tahunajaran_id ?>
 	<tr id="r_tahunajaran_id">
 		<td><span id="elh_t06_siswarutinbayar_tahunajaran_id"><?php echo $t06_siswarutinbayar->tahunajaran_id->FldCaption() ?></span></td>

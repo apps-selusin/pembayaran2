@@ -1166,26 +1166,6 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 	function AddRow($rsold = NULL) {
 		global $Language, $Security;
 
-		// Check referential integrity for master table 't05_siswarutin'
-		$bValidMasterRecord = TRUE;
-		$sMasterFilter = $this->SqlMasterFilter_t05_siswarutin();
-		if (strval($this->rutin_id->CurrentValue) <> "") {
-			$sMasterFilter = str_replace("@id@", ew_AdjustSql($this->rutin_id->CurrentValue, "DB"), $sMasterFilter);
-		} else {
-			$bValidMasterRecord = FALSE;
-		}
-		if ($bValidMasterRecord) {
-			if (!isset($GLOBALS["t05_siswarutin"])) $GLOBALS["t05_siswarutin"] = new ct05_siswarutin();
-			$rsmaster = $GLOBALS["t05_siswarutin"]->LoadRs($sMasterFilter);
-			$bValidMasterRecord = ($rsmaster && !$rsmaster->EOF);
-			$rsmaster->Close();
-		}
-		if (!$bValidMasterRecord) {
-			$sRelatedRecordMsg = str_replace("%t", "t05_siswarutin", $Language->Phrase("RelatedRecordRequired"));
-			$this->setFailureMessage($sRelatedRecordMsg);
-			return FALSE;
-		}
-
 		// Check referential integrity for master table 't03_siswa'
 		$bValidMasterRecord = TRUE;
 		$sMasterFilter = $this->SqlMasterFilter_t03_siswa();
@@ -1202,6 +1182,26 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 		}
 		if (!$bValidMasterRecord) {
 			$sRelatedRecordMsg = str_replace("%t", "t03_siswa", $Language->Phrase("RelatedRecordRequired"));
+			$this->setFailureMessage($sRelatedRecordMsg);
+			return FALSE;
+		}
+
+		// Check referential integrity for master table 't05_siswarutin'
+		$bValidMasterRecord = TRUE;
+		$sMasterFilter = $this->SqlMasterFilter_t05_siswarutin();
+		if (strval($this->rutin_id->CurrentValue) <> "") {
+			$sMasterFilter = str_replace("@id@", ew_AdjustSql($this->rutin_id->CurrentValue, "DB"), $sMasterFilter);
+		} else {
+			$bValidMasterRecord = FALSE;
+		}
+		if ($bValidMasterRecord) {
+			if (!isset($GLOBALS["t05_siswarutin"])) $GLOBALS["t05_siswarutin"] = new ct05_siswarutin();
+			$rsmaster = $GLOBALS["t05_siswarutin"]->LoadRs($sMasterFilter);
+			$bValidMasterRecord = ($rsmaster && !$rsmaster->EOF);
+			$rsmaster->Close();
+		}
+		if (!$bValidMasterRecord) {
+			$sRelatedRecordMsg = str_replace("%t", "t05_siswarutin", $Language->Phrase("RelatedRecordRequired"));
 			$this->setFailureMessage($sRelatedRecordMsg);
 			return FALSE;
 		}
@@ -1282,17 +1282,6 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 				$this->DbMasterFilter = "";
 				$this->DbDetailFilter = "";
 			}
-			if ($sMasterTblVar == "t05_siswarutin") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_id"] <> "") {
-					$GLOBALS["t05_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
-					$this->rutin_id->setQueryStringValue($GLOBALS["t05_siswarutin"]->id->QueryStringValue);
-					$this->rutin_id->setSessionValue($this->rutin_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
 			if ($sMasterTblVar == "t03_siswa") {
 				$bValidMaster = TRUE;
 				if (@$_GET["fk_id"] <> "") {
@@ -1304,23 +1293,23 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 					$bValidMaster = FALSE;
 				}
 			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
+					$this->rutin_id->setQueryStringValue($GLOBALS["t05_siswarutin"]->id->QueryStringValue);
+					$this->rutin_id->setSessionValue($this->rutin_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
 		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
 			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
 			if ($sMasterTblVar == "") {
 				$bValidMaster = TRUE;
 				$this->DbMasterFilter = "";
 				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "t05_siswarutin") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_id"] <> "") {
-					$GLOBALS["t05_siswarutin"]->id->setFormValue($_POST["fk_id"]);
-					$this->rutin_id->setFormValue($GLOBALS["t05_siswarutin"]->id->FormValue);
-					$this->rutin_id->setSessionValue($this->rutin_id->FormValue);
-					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
 			}
 			if ($sMasterTblVar == "t03_siswa") {
 				$bValidMaster = TRUE;
@@ -1329,6 +1318,17 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 					$this->siswa_id->setFormValue($GLOBALS["t03_siswa"]->id->FormValue);
 					$this->siswa_id->setSessionValue($this->siswa_id->FormValue);
 					if (!is_numeric($GLOBALS["t03_siswa"]->id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+			if ($sMasterTblVar == "t05_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_id"] <> "") {
+					$GLOBALS["t05_siswarutin"]->id->setFormValue($_POST["fk_id"]);
+					$this->rutin_id->setFormValue($GLOBALS["t05_siswarutin"]->id->FormValue);
+					$this->rutin_id->setSessionValue($this->rutin_id->FormValue);
+					if (!is_numeric($GLOBALS["t05_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
 				} else {
 					$bValidMaster = FALSE;
 				}
@@ -1344,11 +1344,11 @@ class ct06_siswarutinbayar_add extends ct06_siswarutinbayar {
 			$this->setStartRecordNumber($this->StartRec);
 
 			// Clear previous master key from Session
-			if ($sMasterTblVar <> "t05_siswarutin") {
-				if ($this->rutin_id->CurrentValue == "") $this->rutin_id->setSessionValue("");
-			}
 			if ($sMasterTblVar <> "t03_siswa") {
 				if ($this->siswa_id->CurrentValue == "") $this->siswa_id->setSessionValue("");
+			}
+			if ($sMasterTblVar <> "t05_siswarutin") {
+				if ($this->rutin_id->CurrentValue == "") $this->rutin_id->setSessionValue("");
 			}
 		}
 		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
@@ -1645,13 +1645,13 @@ $t06_siswarutinbayar_add->ShowMessage();
 <?php if ($t06_siswarutinbayar_add->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
-<?php if ($t06_siswarutinbayar->getCurrentMasterTable() == "t05_siswarutin") { ?>
-<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t05_siswarutin">
-<input type="hidden" name="fk_id" value="<?php echo $t06_siswarutinbayar->rutin_id->getSessionValue() ?>">
-<?php } ?>
 <?php if ($t06_siswarutinbayar->getCurrentMasterTable() == "t03_siswa") { ?>
 <input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t03_siswa">
 <input type="hidden" name="fk_id" value="<?php echo $t06_siswarutinbayar->siswa_id->getSessionValue() ?>">
+<?php } ?>
+<?php if ($t06_siswarutinbayar->getCurrentMasterTable() == "t05_siswarutin") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="t05_siswarutin">
+<input type="hidden" name="fk_id" value="<?php echo $t06_siswarutinbayar->rutin_id->getSessionValue() ?>">
 <?php } ?>
 <div>
 <?php if ($t06_siswarutinbayar->tahunajaran_id->Visible) { // tahunajaran_id ?>
